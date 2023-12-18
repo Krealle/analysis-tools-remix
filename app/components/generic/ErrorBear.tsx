@@ -4,7 +4,7 @@ import {
   ReportParseError,
   reportParseErrorIconMap,
   reportParseErrorMap,
-} from "../../wcl/gql/util/parseWCLUrl";
+} from "../../wcl/util/parseWCLUrl";
 
 interface ErrorBearProps {
   error: ReportParseError;

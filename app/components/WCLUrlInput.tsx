@@ -1,10 +1,12 @@
 import { ChangeEvent, FormEvent, useState } from "react";
 import "../styles/WCLUrlInput.css";
-import { ReportParseError, parseWCLUrl } from "../wcl/gql/util/parseWCLUrl";
+import { ReportParseError, parseWCLUrl } from "../wcl/util/parseWCLUrl";
 import useWCLUrlInputStore from "../zustand/WCLUrlInputStore";
 import ErrorBear from "./generic/ErrorBear";
 import useStatusStore from "../zustand/statusStore";
 import { WCLAuthorization } from "./WCLAuthorization";
+import { getFights } from "../wcl/util/queryWCL";
+import useFightBoxesStore from "../zustand/fightBoxesStore";
 
 export const WCLUrlInput = () => {
   const [url, setUrl] = useState<string>("");
@@ -12,6 +14,7 @@ export const WCLUrlInput = () => {
 
   const WCLReport = useWCLUrlInputStore();
   const status = useStatusStore();
+  const { setSelectedIds } = useFightBoxesStore();
 
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
@@ -23,10 +26,22 @@ export const WCLUrlInput = () => {
       }
       return;
     }
-    status.setIsFetching(true);
-
     setErrorBear(undefined);
-    status.setIsFetching(false);
+    status.setIsFetching(true);
+    try {
+      const newFightReport = await getFights({ reportID: reportCode });
+
+      if (newFightReport?.code !== WCLReport.fightReport?.code) {
+        setSelectedIds([]);
+      }
+      console.log(newFightReport);
+
+      WCLReport.setFightReport(newFightReport);
+    } catch (error) {
+      // Handle errors here
+    } finally {
+      status.setIsFetching(false);
+    }
   };
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -52,13 +67,12 @@ export const WCLUrlInput = () => {
             disabled={status.isFetching}
             className="wclUrlButton"
           >
-            {/* isSubmitting ? "Fetching..." : */ "Fetch Fights"}
+            {status.isFetching ? "Fetching..." : "Fetch Fights"}
           </button>
         </div>
       </form>
       {errorBear && <ErrorBear error={errorBear} />}
       {!status.hasAuth && <WCLAuthorization />}
-      {/* {!hasAuth && <HandleUserAuthorization />}*/}
     </>
   );
 };

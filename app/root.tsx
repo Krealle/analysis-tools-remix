@@ -11,6 +11,7 @@ import {
 
 import "./styles/fonts.css";
 import "./styles/App.css";
+import "./styles/classColors.css";
 
 export const links: LinksFunction = () => [
   ...(cssBundleHref ? [{ rel: "stylesheet", href: cssBundleHref }] : []),

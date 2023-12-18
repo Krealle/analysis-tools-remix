@@ -1,4 +1,7 @@
-export const getReportQuery = `
+export type QueryTypes = typeof Queries;
+
+export const Queries = {
+  getReportQuery: `
 query getReport($reportID: String!) {
   reportData {
     report(code: $reportID) {
@@ -26,9 +29,9 @@ query getReport($reportID: String!) {
     }
   }
 }
-`;
+`,
 
-export const getFightsQuery = `
+  getFightsQuery: `
 query getReport($reportID: String!) {
   reportData {
     report(code: $reportID) {
@@ -67,9 +70,9 @@ query getReport($reportID: String!) {
     }
   }
 }
-`;
+`,
 
-export const getPlayerDetailsQuery = `
+  getPlayerDetailsQuery: `
 query getReport($reportID: String!, $fightIDs: [Int]!) {
   reportData {
     report(code: $reportID) {
@@ -77,9 +80,9 @@ query getReport($reportID: String!, $fightIDs: [Int]!) {
     }
   }
 }
-`;
+`,
 
-export const getEventsQuery = `
+  getEventsQuery: `
   query getEvents(
     $reportID: String!
     $startTime: Float!
@@ -100,9 +103,9 @@ export const getEventsQuery = `
         }
       }
     }
-  }`;
+  }`,
 
-export const getSummaryTableQuery = ` query getTable(
+  getSummaryTableQuery: ` query getTable(
     $reportID: String!
     $fightIDs: [Int]!
   ) {
@@ -111,4 +114,5 @@ export const getSummaryTableQuery = ` query getTable(
         table(dataType: Summary, fightIDs: $fightIDs)
       }
     }
-  }`;
+  }`,
+} as const;

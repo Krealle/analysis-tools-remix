@@ -1,19 +1,16 @@
 export const WCLAuthorization: React.FC = () => {
   const handleAuthorization = async () => {
     try {
-      const response = await fetch("/api/authorize", {
-        method: "POST",
-      });
+      const response = await fetch("/api/userAuth");
+      const data = await response.json();
 
       if (response.ok) {
-        const result = await response.json();
-        console.log("Success:", result.message);
+        window.location.href = data.headers.Location;
       } else {
-        const errorResult = await response.json();
-        console.error("Authorization failed:", errorResult.error);
+        console.error(data);
       }
     } catch (error) {
-      console.error("Error during authorization:", error);
+      console.error("Error fetching WCL authorization:", error);
     }
   };
 
