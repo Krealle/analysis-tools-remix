@@ -11,7 +11,7 @@ type ButtonCheckboxProps = {
   content?: JSX.Element;
 };
 
-export const ButtonCheckbox: React.FC<ButtonCheckboxProps> = ({
+const ButtonCheckbox: React.FC<ButtonCheckboxProps> = ({
   onClick,
   selected,
   flavorText,

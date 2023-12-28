@@ -1,10 +1,4 @@
-import { RootReport } from "../gql/types";
-/* import {
-  getEventsQuery,
-  getFightsQuery,
-  getPlayerDetailsQuery,
-  getSummaryTableQuery,
-} from "../gql/queries"; */
+import { RootReport, WCLReport } from "../gql/types";
 import { AnyEvent, EventType } from "../events/types";
 import { QueryTypes } from "../gql/queries";
 
@@ -22,28 +16,41 @@ export type EventVariables = Variables & {
   endTime: number;
 };
 
+/**
+ * Fetches report data from the server.
+ * @param requestType - The type of the query request.
+ * @param variables - The variables to be passed in the query request.
+ * @returns A WCLReport containing information based on the requestType.
+ * @throws An error if all retries fail.
+ */
 export async function fetchReportData(
   requestType: keyof QueryTypes,
   variables: Variables
-) {
-  try {
-    const queryParams = new URLSearchParams({
-      requestType: requestType,
-      variables: JSON.stringify(variables),
-    });
-    const response = await fetch(`api/graphqlClient?${queryParams}`);
-    console.time(".json");
-    const data = await response.json();
-    console.timeEnd(".json");
-    const rootReport = data.data as RootReport;
+): Promise<WCLReport> {
+  const MAX_RETRIES = 3;
+  let attempts = 0;
 
-    const report = rootReport.reportData.report;
+  while (attempts < MAX_RETRIES) {
+    try {
+      const queryParams = new URLSearchParams({
+        requestType: requestType,
+        variables: JSON.stringify(variables),
+      });
+      const response = await fetch(`api/graphqlClient?${queryParams}`);
+      const data = await response.json();
+      const rootReport = data.data as RootReport;
 
-    return report;
-  } catch (error) {
-    console.error("GraphQL request error:", error);
-    throw new Error("GraphQL request error");
+      const report = rootReport.reportData.report;
+
+      return report;
+    } catch (error) {
+      console.error("GraphQL request error:", error);
+      attempts++;
+    }
   }
+
+  // If all retries fail, throw an error
+  throw new Error("GraphQL request error");
 }
 
 export async function getSummaryTable(variables: Variables) {
@@ -56,11 +63,12 @@ export async function getSummaryTable(variables: Variables) {
 }
 
 export async function getFights(variables: Variables) {
-  const response = await fetchReportData("getFightsQuery", variables);
-  if (!response) {
-    return;
+  try {
+    const response = await fetchReportData("getFightsQuery", variables);
+    return response;
+  } catch (error) {
+    throw new Error("Failed to get fights");
   }
-  return response;
 }
 
 export async function getPlayerDetails(variables: Variables) {
@@ -92,14 +100,14 @@ export async function getEvents<T extends AnyEvent>(
       variables.filterExpression += variables.filterExpression
         ? ` AND ` + eventFilter
         : eventFilter;
-      console.log(`added type: "` + eventType + `" to filter`);
+      //console.log(`added type: "` + eventType + `" to filter`);
     }
     //console.log("filter for fetching Events:", variables.filterExpression);
   }
 
   const response = await fetchReportData("getEventsQuery", variables);
 
-  console.log("Event response:", response);
+  //console.log("Event response:", response);
 
   const { data = [], nextPageTimestamp = null } = response?.events ?? {};
 

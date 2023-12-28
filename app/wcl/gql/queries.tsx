@@ -47,6 +47,8 @@ query getReport($reportID: String!) {
           id
         }
         name
+        keystoneLevel
+        keystoneTime
         fightPercentage
         lastPhase
         difficulty

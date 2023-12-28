@@ -4,11 +4,11 @@ import { ReportParseError, parseWCLUrl } from "../wcl/util/parseWCLUrl";
 import useWCLUrlInputStore from "../zustand/WCLUrlInputStore";
 import ErrorBear from "./generic/ErrorBear";
 import useStatusStore from "../zustand/statusStore";
-import { WCLAuthorization } from "./WCLAuthorization";
 import { getFights } from "../wcl/util/queryWCL";
 import useFightBoxesStore from "../zustand/fightBoxesStore";
+import WCLAuthorization from "./WCLAuthorization";
 
-export const WCLUrlInput = () => {
+const WCLUrlInput = () => {
   const [url, setUrl] = useState<string>("");
   const [errorBear, setErrorBear] = useState<ReportParseError | undefined>();
 
@@ -26,19 +26,30 @@ export const WCLUrlInput = () => {
       }
       return;
     }
+
     setErrorBear(undefined);
     status.setIsFetching(true);
+
     try {
       const newFightReport = await getFights({ reportID: reportCode });
 
-      if (newFightReport?.code !== WCLReport.fightReport?.code) {
+      if (
+        !newFightReport?.fights ||
+        !newFightReport?.fights.length ||
+        !newFightReport
+      ) {
+        setErrorBear(ReportParseError.EMPTY_REPORT);
+        WCLReport.setFightReport(undefined);
+        return;
+      }
+
+      if (newFightReport.code !== WCLReport.fightReport?.code) {
         setSelectedIds([]);
       }
-      console.log(newFightReport);
 
       WCLReport.setFightReport(newFightReport);
     } catch (error) {
-      // Handle errors here
+      setErrorBear(ReportParseError.NETWORK_ERROR);
     } finally {
       status.setIsFetching(false);
     }
@@ -72,7 +83,9 @@ export const WCLUrlInput = () => {
         </div>
       </form>
       {errorBear && <ErrorBear error={errorBear} />}
-      {!status.hasAuth && <WCLAuthorization />}
+      {errorBear === ReportParseError.NETWORK_ERROR && <WCLAuthorization />}
     </>
   );
 };
+
+export default WCLUrlInput;

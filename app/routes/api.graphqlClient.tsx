@@ -2,47 +2,51 @@ import { LoaderFunction, json } from "@remix-run/node";
 import { GraphQLClient } from "graphql-request";
 import { Queries, QueryTypes } from "../wcl/gql/queries";
 import { Variables } from "../wcl/util/queryWCL";
+import { AccessSession, getSession } from "./sessions";
 
-const cache = new Map<string, unknown>();
+/** Cache for storing reports, to not have to re-fetch data after a refresh */
+const CACHE = new Map<string, unknown>();
 
 export const loader: LoaderFunction = async ({ request }) => {
   const url = new URL(request.url);
   const requestType = url.searchParams.get("requestType") as keyof QueryTypes;
   const variables = url.searchParams.get("variables");
+  const session = await getSession(request.headers.get("Cookie"));
 
   if (!requestType) return json({ error: `Missing request type` });
   if (!variables) return json({ error: "Missing variables" });
 
   const cacheKey = `${requestType}-${variables}`;
-  const cachedData = cache.get(cacheKey);
-  if (cachedData) {
+  const cachedData = CACHE.get(cacheKey);
+  /** Make sure we allow for fetching new fights */
+  if (cachedData && requestType !== "getFightsQuery") {
     return { data: cachedData };
   }
 
   const parsedVariables = JSON.parse(variables) as Variables;
 
-  const cookieHeader = request.headers.get("cookie");
-
-  const cookies = cookieHeader?.split(";").reduce((acc, cookie) => {
-    const [name, value] = cookie.trim().split("=");
-    acc[name] = value;
-    return acc;
-  }, {} as Record<string, string>);
-
-  const accessToken = cookies?.accessToken;
-
-  if (!accessToken) return json({ error: `Missing authorization` });
+  const accessSession = session.get("accToken") as AccessSession;
+  if (
+    !accessSession ||
+    !accessSession.expirationTime ||
+    accessSession.expirationTime < Math.floor(Date.now() / 1000)
+  ) {
+    return json({ error: `Missing authorization` });
+  }
 
   try {
-    const API_URL = "https://www.warcraftlogs.com/api/v2/user";
+    const API_URL =
+      process.env.NODE_ENV !== "development"
+        ? "https://www.warcraftlogs.com/api/v2/user"
+        : "https://www.warcraftlogs.com/api/v2/client";
     const client = new GraphQLClient(API_URL, {
       headers: {
-        authorization: `Bearer ${accessToken}`,
+        authorization: `Bearer ${accessSession.accessToken}`,
       },
     });
 
     const data = await client.request(Queries[requestType], parsedVariables);
-    cache.set(cacheKey, data);
+    CACHE.set(cacheKey, data);
 
     return { data };
   } catch (error) {

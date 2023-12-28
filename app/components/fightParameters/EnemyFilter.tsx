@@ -3,7 +3,7 @@ import {
   EncounterImages,
   EncounterNames,
 } from "../../util/enemyTables";
-import { ButtonCheckbox } from "../generic/ButtonCheckbox";
+import ButtonCheckbox from "../generic/ButtonCheckbox";
 import PopupContent from "../generic/PopupContent";
 import "../../styles/fightParameterStyling.css";
 import useStatusStore from "../../zustand/statusStore";

@@ -1,13 +1,13 @@
 import { formatDuration, formatUnixTime, toCamelCase } from "../util/format";
-import { ButtonCheckbox } from "./generic/ButtonCheckbox";
+import ButtonCheckbox from "./generic/ButtonCheckbox";
 import "../styles/FightBoxes.css";
 import { EncounterImages } from "../util/enemyTables";
 import useWCLUrlInputStore from "../zustand/WCLUrlInputStore";
 import useStatusStore from "../zustand/statusStore";
 import useFightBoxesStore from "../zustand/fightBoxesStore";
 
-export const FightBoxes = () => {
-  const { selectedIds, removeId, addId } = useFightBoxesStore();
+const FightBoxes = () => {
+  const { selectedIds, removeId, addId, setSelectedIds } = useFightBoxesStore();
 
   const isFetching = useStatusStore((state) => state.isFetching);
   const report = useWCLUrlInputStore((state) => state.fightReport);
@@ -19,6 +19,10 @@ export const FightBoxes = () => {
     } else {
       addId(id);
     }
+  };
+
+  const handleSelectFights = (ids: number[]) => {
+    setSelectedIds(ids);
   };
 
   if (!report?.fights) {
@@ -40,6 +44,8 @@ export const FightBoxes = () => {
       {Object.entries(fightsByName).map(([groupName, fights]) => {
         const normalizedGroupName = toCamelCase(groupName);
         /* const imageUrl = `https://assets.rpglogs.com/img/warcraft/bosses/${EncounterIds[normalizedGroupName]}-tile.jpg`; */
+        const fightIds = fights.flatMap((fight) => fight.id);
+
         return (
           <div
             key={groupName}
@@ -51,6 +57,12 @@ export const FightBoxes = () => {
             <div className="flex fightsName">
               <img src={EncounterImages[normalizedGroupName]} alt="" />
               {groupName}
+              <button
+                className="fightSelectAll"
+                onClick={() => handleSelectFights(fightIds)}
+              >
+                Select All
+              </button>
             </div>
             <div className="flex fights">
               {fights.map((fight) => {
@@ -79,14 +91,21 @@ export const FightBoxes = () => {
                         {fight.kill ? "KILL" : `${fight.fightPercentage}%`}
                       </span>
                       <span className="phase">
-                        {fight.lastPhase ?? 0 > 0 ? `P${fight.lastPhase}` : ""}
+                        {fight.lastPhase ?? 0 > 0
+                          ? `P${fight.lastPhase}`
+                          : fight.keystoneLevel
+                          ? `M ${fight.keystoneLevel}`
+                          : ""}
                       </span>
                     </div>
                     <div className="flex column">
                       <span className={fight.kill ? "kill" : "wipe"}>
-                        {`${fight.id} - (${formatDuration(
-                          fight.endTime - fight.startTime
-                        )})`}
+                        {`${fight.id} - (${
+                          fight.keystoneTime
+                            ? formatDuration(fight.keystoneTime)
+                            : formatDuration(fight.endTime - fight.startTime)
+                        })`}
+                        {}
                       </span>
                       <span>
                         {formatUnixTime(fight.startTime + report.startTime)}
@@ -113,3 +132,5 @@ export const FightBoxes = () => {
     </div>
   );
 };
+
+export default FightBoxes;

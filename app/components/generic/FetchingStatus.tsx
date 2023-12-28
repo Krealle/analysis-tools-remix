@@ -5,8 +5,8 @@ export enum FetchStatus {
 }
 
 export const fetchStatusMap: Record<FetchStatus, string> = {
-  FETCHING: "Fetching data",
-  ANALYZING: "Analyzing data",
+  FETCHING: "Fetching fights",
+  ANALYZING: "Analyzing fights",
 };
 
 export const fetchStatusIconMap: Record<FetchStatus, string> = {

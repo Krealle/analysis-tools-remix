@@ -2,13 +2,14 @@ import PopupContent from "../generic/PopupContent";
 import "../../styles/fightParameterStyling.css";
 import useStatusStore from "../../zustand/statusStore";
 import useFightParametersStore from "../../zustand/fightParametersStore";
+import TimePeriodFilter from "./TimePeriodFilter";
 
 const IntervalSettings: React.FC = () => {
   const {
     intervalTimer,
-    ebonMightWeight,
+    intervalEbonMightWeight: ebonMightWeight,
     setIntervalTimer,
-    setEbonMightWeight,
+    setIntervalEbonMightWeight: setEbonMightWeight,
   } = useFightParametersStore();
   const isFetching = useStatusStore((state) => state.isFetching);
 
@@ -57,6 +58,7 @@ const IntervalSettings: React.FC = () => {
           </select>
         </div>
       </div>
+      <TimePeriodFilter />
     </div>
   );
 

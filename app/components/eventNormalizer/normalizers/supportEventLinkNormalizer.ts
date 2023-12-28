@@ -64,19 +64,24 @@ export function supportEventLinkNormalizer(
       } else {
         const supportedEventIndex = eventRecord[eventKey];
 
-        if (!supportedEventIndex) {
-          console.warn("We done fucked up", event);
+        if (isNaN(supportedEventIndex)) {
+          console.warn("Support Event without Parent found");
+          console.log(event);
+          console.log(normEvents[idx - 1]);
+          console.log(eventRecord);
+          console.log(eventKey);
         } else {
           const delay =
             event.timestamp - normEvents[supportedEventIndex].timestamp;
 
           if (delay > bufferMS) {
-            console.error(
-              "support event delayed more than expected",
-              event,
-              "eventMap",
-              normEvents[supportedEventIndex]
+            console.group(
+              "support event delayed more than expected:",
+              delay + "ms"
             );
+            console.log("Event:", normEvents[supportedEventIndex]);
+            console.log("Support Event:", event);
+            console.groupEnd();
           }
 
           const hookType =

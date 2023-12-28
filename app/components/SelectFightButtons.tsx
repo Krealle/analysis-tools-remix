@@ -1,7 +1,7 @@
 import useWCLUrlInputStore from "../zustand/WCLUrlInputStore";
 import useFightBoxesStore from "../zustand/fightBoxesStore";
 
-export const SelectFightButtons = () => {
+const SelectFightButtons = () => {
   const fightReport = useWCLUrlInputStore((state) => state.fightReport);
   const { setSelectedIds } = useFightBoxesStore();
 
@@ -35,3 +35,5 @@ export const SelectFightButtons = () => {
     </div>
   );
 };
+
+export default SelectFightButtons;

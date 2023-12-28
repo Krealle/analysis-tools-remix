@@ -1,11 +1,8 @@
 import {
   COMBUSTION_BUFF,
   EBON_MIGHT,
-  EBON_MIGHT_CORRECTION_VALUE,
   PRESCIENCE,
-  PRESCIENCE_CORRECTION_VALUE,
   SHIFTING_SANDS,
-  SHIFTING_SANDS_CORRECTION_VALUE,
 } from "../../../util/constants";
 import {
   AttributionHook,
@@ -13,14 +10,15 @@ import {
   HitType,
   NormalizedDamageEvent,
 } from "../../../wcl/events/types";
-import { AbilityFilters } from "../EventNormalizer";
+import { AbilityFilters, Weights } from "../EventNormalizer";
 import { Buff } from "../combatant/buffs";
 import { Combatant } from "../combatant/combatants";
 
 export function correctSupportEvents(
   events: NormalizedDamageEvent[],
   combatants: Combatant[],
-  abilityFilters: AbilityFilters
+  abilityFilters: AbilityFilters,
+  weights: Weights
 ): NormalizedDamageEvent[] {
   const correctedEvents = events.reduce<NormalizedDamageEvent[]>(
     (corEvents, event) => {
@@ -36,7 +34,7 @@ export function correctSupportEvents(
       event.supportEvents.forEach((e) => {
         const supEvent = e.event;
 
-        const trueSupportDamage = getSupportDamage(event, supEvent);
+        const trueSupportDamage = getSupportDamage(event, supEvent, weights);
 
         if (supEvent.normalizedAmount === 0 && trueSupportDamage !== 0) {
           supEvent.modified = true;
@@ -59,7 +57,12 @@ export function correctSupportEvents(
       });
 
       playerBuffs.forEach((buff) => {
-        const fabricatedSupportEvent = fabricateEvent(event, buff, combatants);
+        const fabricatedSupportEvent = fabricateEvent(
+          event,
+          buff,
+          combatants,
+          weights
+        );
 
         if (fabricatedSupportEvent) {
           supEvents.push(fabricatedSupportEvent);
@@ -87,7 +90,8 @@ export function correctSupportEvents(
 function fabricateEvent(
   event: NormalizedDamageEvent,
   buff: Buff,
-  combatants: Combatant[]
+  combatants: Combatant[],
+  weights: Weights
 ): NormalizedDamageEvent | undefined {
   /** whenever EM drops/applies on the same tick weird stuff happens, so lets just ignore these edge cases */
   if (buff.end === event.timestamp || buff.start === event.timestamp) {
@@ -97,7 +101,7 @@ function fabricateEvent(
   const player = combatants.find((player) => player.id === buff.sourceID);
 
   const attributedAmount =
-    event.normalizedAmount * getAbilityMultiplier(buff.abilityGameID);
+    event.normalizedAmount * getAbilityMultiplier(buff.abilityGameID, weights);
 
   const fabricatedSupportEvent: NormalizedDamageEvent = {
     abilityGameID: buff.abilityGameID,
@@ -177,30 +181,26 @@ function getRelevantPlayerBuffs(
 
 function getSupportDamage(
   event: NormalizedDamageEvent,
-  supEvent: NormalizedDamageEvent
+  supEvent: NormalizedDamageEvent,
+  weights: Weights
 ) {
   let attributedAmount = supEvent.normalizedAmount;
 
   if (attributedAmount === 0 && event.normalizedAmount !== 0) {
     attributedAmount =
-      event.normalizedAmount * getAbilityMultiplier(supEvent.abilityGameID);
+      event.normalizedAmount *
+      getAbilityMultiplier(supEvent.abilityGameID, weights);
   }
   return attributedAmount;
 }
 
-/**
- * Important note about this:
- *
- * These values are essentially a lowball estimation of provided value,
- * without proper tracking of stats this is kinda the best we can do for now.
- */
-function getAbilityMultiplier(abilityId: number): number {
+function getAbilityMultiplier(abilityId: number, weights: Weights): number {
   const multiplier =
     abilityId === EBON_MIGHT
-      ? EBON_MIGHT_CORRECTION_VALUE
+      ? weights.ebonMightWeight
       : abilityId === SHIFTING_SANDS
-      ? SHIFTING_SANDS_CORRECTION_VALUE
-      : PRESCIENCE_CORRECTION_VALUE;
+      ? weights.shiftingSandsWeight
+      : weights.prescienceWeight;
 
   return multiplier;
 }

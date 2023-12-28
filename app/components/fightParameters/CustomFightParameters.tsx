@@ -2,10 +2,10 @@ import { useEffect } from "react";
 import { formatTime } from "../../util/format";
 import EnemyFilter from "./EnemyFilter";
 import AbilityFilter from "./AbilityFilter";
-import TimePeriodFilter from "./TimePeriodFilter";
 import IntervalSettings from "./IntervalSettings";
 import DeathFilter from "./DeathFilter";
 import useFightParametersStore from "../../zustand/fightParametersStore";
+import Weights from "./Weights";
 
 const CustomFightParameters = () => {
   const {
@@ -16,7 +16,6 @@ const CustomFightParameters = () => {
     abilityNoShiftingScaling,
     timeSkipIntervals,
     setParameterError,
-    setParameterErrorMsg,
   } = useFightParametersStore();
 
   useEffect(() => {
@@ -28,8 +27,7 @@ const CustomFightParameters = () => {
         !formattedEndTime ||
         formattedStartTime > formattedEndTime
       ) {
-        setParameterErrorMsg("Invalid time interval");
-        setParameterError(true);
+        setParameterError("Invalid time interval");
         return;
       }
     }
@@ -45,13 +43,11 @@ const CustomFightParameters = () => {
       regex.test(abilityNoScaling) &&
       regex.test(abilityNoShiftingScaling);
     if (!abilityFilterValid) {
-      setParameterErrorMsg("Invalid ability filter");
-      setParameterError(true);
+      setParameterError("Invalid ability filter");
       return;
     }
 
-    setParameterErrorMsg("");
-    setParameterError(false);
+    setParameterError(undefined);
   }, [
     abilityBlacklist,
     abilityNoBoEScaling,
@@ -59,13 +55,12 @@ const CustomFightParameters = () => {
     abilityNoScaling,
     timeSkipIntervals,
     abilityNoShiftingScaling,
-    setParameterErrorMsg,
     setParameterError,
   ]);
 
   return (
-    <div className={`flex gap`}>
-      <TimePeriodFilter />
+    <div className="flex gap">
+      <Weights />
       <AbilityFilter />
       <EnemyFilter />
       <IntervalSettings />

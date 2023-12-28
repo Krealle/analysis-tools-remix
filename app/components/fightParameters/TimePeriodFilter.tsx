@@ -1,6 +1,4 @@
-import PopupContent from "../generic/PopupContent";
 import "../../styles/fightParameterStyling.css";
-import useStatusStore from "../../zustand/statusStore";
 import useFightParametersStore from "../../zustand/fightParametersStore";
 
 const TimePeriodFilter: React.FC = () => {
@@ -10,9 +8,8 @@ const TimePeriodFilter: React.FC = () => {
     changeTimeSkipInterval,
     addTimeSkipInterval,
   } = useFightParametersStore();
-  const isFetching = useStatusStore((state) => state.isFetching);
 
-  const content = (
+  return (
     <div className="time-intervals-container">
       <p>Time intervals to skip</p>
       {timeSkipIntervals.map((interval, index) => (
@@ -49,14 +46,6 @@ const TimePeriodFilter: React.FC = () => {
         Add period
       </button>
     </div>
-  );
-
-  return (
-    <PopupContent
-      content={content}
-      name={"Time Filter"}
-      disabled={isFetching}
-    />
   );
 };
 

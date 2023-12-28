@@ -1,18 +1,26 @@
-export const WCLAuthorization: React.FC = () => {
-  const handleAuthorization = async () => {
-    try {
-      const response = await fetch("/api/userAuth");
-      const data = await response.json();
+import { useState } from "react";
 
-      if (response.ok) {
-        window.location.href = data.headers.Location;
-      } else {
-        console.error(data);
-      }
-    } catch (error) {
-      console.error("Error fetching WCL authorization:", error);
+const WCLAuthorization: React.FC = () => {
+  const [authorizationUrl, setAuthorizationUrl] = useState<string | null>(null);
+
+  const handleAuthorization = async () => {
+    const response = await fetch("/api/userAuth?init");
+
+    /** Dev token set */
+    if (response.redirected) return (window.location.href = response.url);
+
+    const data = await response.json();
+
+    if (response.ok) {
+      setAuthorizationUrl(data.authorizationUrl);
+    } else {
+      console.error(data);
     }
   };
+
+  if (authorizationUrl) {
+    window.location.href = authorizationUrl;
+  }
 
   return (
     <>
@@ -21,3 +29,5 @@ export const WCLAuthorization: React.FC = () => {
     </>
   );
 };
+
+export default WCLAuthorization;

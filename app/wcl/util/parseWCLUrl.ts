@@ -1,11 +1,10 @@
-//import "public/static/bear/ahegao-256.png"
-
 export enum ReportParseError {
   INVALID_HOST = "INVALID_HOST",
   INVALID_REPORT_ID = "INVALID_REPORT_ID",
   INVALID_URL = "INVALID_URL",
   INVALID_FILTER = "INVALID_FILTER",
-  FAILED_AUTH = "FAILED_AUTH",
+  EMPTY_REPORT = "EMPTY_REPORT",
+  NETWORK_ERROR = "NETWORK_ERROR",
 }
 
 export const reportParseErrorMap: Record<ReportParseError, string> = {
@@ -13,7 +12,9 @@ export const reportParseErrorMap: Record<ReportParseError, string> = {
   INVALID_REPORT_ID: "The report ID seems to be malformed.",
   INVALID_URL: "This doesn't seem to be a valid URL.",
   INVALID_FILTER: "This filter is not valid.",
-  FAILED_AUTH: "Failed to get authorization, please try again.",
+  EMPTY_REPORT: "This report appears to be empty.",
+  NETWORK_ERROR:
+    "Failed to fetch fights from WCL. You might need to re-authorize.",
 };
 
 export const reportParseErrorIconMap: Record<ReportParseError, string> = {
@@ -21,7 +22,8 @@ export const reportParseErrorIconMap: Record<ReportParseError, string> = {
   INVALID_REPORT_ID: "/static/bear/concern-48.png",
   INVALID_URL: "/static/bear/bonk-48.png",
   INVALID_FILTER: "/static/bear/shrug-48.png",
-  FAILED_AUTH: "/static/bear/lost-48.png",
+  EMPTY_REPORT: "/static/bear/lost-48.png",
+  NETWORK_ERROR: "/static/bear/dead-48.png",
 };
 
 export const parseWCLUrl = (maybeURL: string) => {

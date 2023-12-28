@@ -17,7 +17,7 @@ const AbilityFilter: React.FC = () => {
   const isFetching = useStatusStore((state) => state.isFetching);
 
   const content = (
-    <div className="flex">
+    <div className="flex flex-wrap">
       <div className="flex container">
         <div className="flex title">
           <big>No EM Scaling</big>

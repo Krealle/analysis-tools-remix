@@ -225,6 +225,8 @@ export type ReportFight = {
   endTime: number;
   gameZone: GameZone;
   fightPercentage?: number;
+  keystoneLevel?: number;
+  keystoneTime?: number;
   lastPhase?: number;
   name?: string;
   difficulty?: number;

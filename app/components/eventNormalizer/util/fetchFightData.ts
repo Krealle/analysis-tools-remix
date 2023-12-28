@@ -13,10 +13,16 @@ export type FightDataSet = {
   events: AnyEvent[];
 };
 
-export async function fetchFightData(
+/**
+ * Fetches fight data from a WCLReport for the specified fights.
+ * @param WCLReport - The WCLReport object containing the fights.
+ * @param fightsToFetch - An array of fight IDs to fetch.
+ * @returns An async iterable of FightDataSet objects.
+ */
+export async function* fetchFightData(
   WCLReport: WCLReport,
   fightsToFetch: number[]
-): Promise<FightDataSet[]> {
+): AsyncIterable<FightDataSet> {
   const fightsToGenerate = WCLReport.fights!.filter((fight) =>
     fightsToFetch.includes(fight.id)
   );
@@ -41,7 +47,7 @@ export async function fetchFightData(
     };
   });
 
-  const result = await Promise.all(fetchPromises);
-
-  return result;
+  for (const fetchPromise of fetchPromises) {
+    yield await fetchPromise;
+  }
 }

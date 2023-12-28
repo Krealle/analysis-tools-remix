@@ -94,28 +94,27 @@ export const AberrusEnemies: EnemyMap = {
   ],
 };
 
-// prettier-ignore
 export const EncounterNames: Record<string, string> = {
   /** Aberrus */
-  "Kazzara": "Kazzara",
-  "AssaultOfTheZaqali": "Assault of the Zaqali",
-  "RashokTheElder": "Rashok, the Elder",
-  "TheAmalgamationChamber": "The Amalgamation Chamber",
-  "TheForgottenExperiments": "The Forgotten Experiments",
-  "TheVigilantStewardZskarn": "The Vigilant Steward, Zskarn",
-  "Magmorax": "Magmorax",
-  "EchoOfNeltharion": "Echo of Neltharion",
-  "ScalecommanderSarkareth": "Scalecommander Sarkareth",
+  Kazzara: "Kazzara",
+  AssaultOfTheZaqali: "Assault of the Zaqali",
+  RashokTheElder: "Rashok, the Elder",
+  TheAmalgamationChamber: "The Amalgamation Chamber",
+  TheForgottenExperiments: "The Forgotten Experiments",
+  TheVigilantStewardZskarn: "The Vigilant Steward, Zskarn",
+  Magmorax: "Magmorax",
+  EchoOfNeltharion: "Echo of Neltharion",
+  ScalecommanderSarkareth: "Scalecommander Sarkareth",
   /** Amirdrassil */
-  "Gnarlroot": "Gnarlroot",
-  "IgiraTheCruel": "Igira the Cruel",
-  "Volcoross": "Volcoross",
-  "CouncilOfDreams": "Council of Dreams",
-  "LarodarKeeperOfTheFlame": "Larodar, Keeper of the Flame",
-  "NymueWeaverOfTheCycle": "Nymue, Weaver of the Cycle",
-  "Smolderon": "Smolderon",
-  "TindralSageswiftSeerOfTheFlame": "Tindral Sageswift, Seer of the Flame",
-  "FyrakkTheBlazing": "Fyrakk the Blazing",
+  Gnarlroot: "Gnarlroot",
+  IgiraTheCruel: "Igira the Cruel",
+  Volcoross: "Volcoross",
+  CouncilOfDreams: "Council of Dreams",
+  LarodarKeeperOfTheFlame: "Larodar, Keeper of the Flame",
+  NymueWeaverOfTheCycle: "Nymue, Weaver of the Cycle",
+  Smolderon: "Smolderon",
+  TindralSageswiftSeerOfTheFlame: "Tindral Sageswift, Seer of the Flame",
+  FyrakkTheBlazing: "Fyrakk the Blazing",
 };
 
 // prettier-ignore
@@ -137,20 +136,19 @@ export const EncounterImages: Record<string, string> = {
   "LarodarKeeperOfTheFlame": "https://wow.zamimg.com/images/wow/journal/ui-ej-boss-larodar-keeper-of-the-flame.png",
   "NymueWeaverOfTheCycle": "https://wow.zamimg.com/images/wow/journal/ui-ej-boss-nymue-weaver-of-the-cycle.png",
   "Smolderon": "https://wow.zamimg.com/images/wow/journal/ui-ej-boss-smolderon.png",
-  "TindralSageswiftSeerOfTheFlame": "https://wow.zamimg.com/images/wow/journal/ui-ej-boss-tindral-sageswift-of-the-flame.png",//"https://assets.rpglogs.com/img/warcraft/bosses/2786-icon.jpg",
+  "TindralSageswiftSeerOfTheFlame": "https://wow.zamimg.com/images/wow/journal/ui-ej-boss-tindral-sageswift-seer-of-flame.png",
   "FyrakkTheBlazing": "https://wow.zamimg.com/images/wow/journal/ui-ej-boss-fyrakk-the-burning.png",
 }
 
-// prettier-ignore
 export const EncounterIds: Record<string, string> = {
   /** Amirdrassil */
-  "Gnarlroot": "2820",
-  "IgiraTheCruel": "2709",
-  "Volcoross": "2737",
-  "CouncilOfDreams": "2728",
-  "LarodarKeeperOfTheFlame": "2731",
-  "NymueWeaverOfTheCycle": "2708",
-  "Smolderon": "2824",
-  "TindralSageswiftSeerOfTheFlame": "2786",
-  "FyrakkTheBlazing": "2677",
+  Gnarlroot: "2820",
+  IgiraTheCruel: "2709",
+  Volcoross: "2737",
+  CouncilOfDreams: "2728",
+  LarodarKeeperOfTheFlame: "2731",
+  NymueWeaverOfTheCycle: "2708",
+  Smolderon: "2824",
+  TindralSageswiftSeerOfTheFlame: "2786",
+  FyrakkTheBlazing: "2677",
 };

@@ -1,4 +1,4 @@
-function Footer() {
+const Footer = () => {
   return (
     <div className="footer">
       <footer>
@@ -25,10 +25,21 @@ function Footer() {
             </a>
             .
           </span>
+          <span>
+            Results shown here are not 100% accurate, for more details&nbsp;
+            <a
+              href="https://github.com/Krealle/analysis-tools-remix/issues/1"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              click here
+            </a>
+            .
+          </span>
         </small>
       </footer>
     </div>
   );
-}
+};
 
 export default Footer;

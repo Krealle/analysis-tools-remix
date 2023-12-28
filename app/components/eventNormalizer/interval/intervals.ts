@@ -25,7 +25,8 @@ export function getAverageIntervals(
   for (const fight of fights) {
     if (
       !selectedFights.includes(fight.fightId) ||
-      fight.reportCode !== currentReportCode
+      fight.reportCode !== currentReportCode ||
+      fight.difficulty === 10 // M+
     ) {
       continue;
     }

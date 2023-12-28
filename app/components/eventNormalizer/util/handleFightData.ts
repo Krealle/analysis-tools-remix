@@ -9,7 +9,7 @@ import {
   NormalizedDamageEvent,
   PhaseStartEvent,
 } from "../../../wcl/events/types";
-import { AbilityFilters } from "../EventNormalizer";
+import { AbilityFilters, Weights } from "../EventNormalizer";
 import { Buff, generateBuffHistories } from "../combatant/buffs";
 import { Combatant, generateCombatants } from "../combatant/combatants";
 import { eventLinkNormalizer } from "../normalizers/eventLinkNormalizer";
@@ -20,6 +20,7 @@ import { WCLReport } from "../../../wcl/gql/types";
 
 export type Fight = {
   fightId: number;
+  difficulty?: number;
   reportCode: string;
   startTime: number;
   endTime: number;
@@ -34,7 +35,8 @@ export type Fight = {
 export function handleFightData(
   WCLReport: WCLReport,
   FightDataSets: FightDataSet[],
-  abilityFilters: AbilityFilters
+  abilityFilters: AbilityFilters,
+  weights: Weights
 ): Fight[] {
   const newFights: Fight[] = [];
 
@@ -94,11 +96,13 @@ export function handleFightData(
     const correctedEvents = correctSupportEvents(
       linkedSupportEvent,
       combatants,
-      abilityFilters
+      abilityFilters,
+      weights
     );
 
     newFights.push({
       fightId: fightDataSet.fight.id,
+      difficulty: fightDataSet.fight.difficulty,
       reportCode: WCLReport.code,
       startTime: fightDataSet.fight.startTime,
       endTime: fightDataSet.fight.endTime,
