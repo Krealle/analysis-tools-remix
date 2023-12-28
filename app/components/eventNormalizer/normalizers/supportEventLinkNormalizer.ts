@@ -66,12 +66,12 @@ export function supportEventLinkNormalizer(
       } else {
         const supportedEventIndex = eventRecord[eventKey];
 
-        if (isNaN(supportedEventIndex)) {
-          isDev && console.warn("Support Event without Parent found");
-          isDev && console.log(event);
-          isDev && console.log(normEvents[idx - 1]);
-          isDev && console.log(eventRecord);
-          isDev && console.log(eventKey);
+        if (isNaN(supportedEventIndex) && isDev) {
+          console.warn("Support Event without Parent found");
+          console.log(event);
+          console.log(normEvents[idx - 1]);
+          console.log(eventRecord);
+          console.log(eventKey);
         } else {
           const delay =
             event.timestamp - normEvents[supportedEventIndex].timestamp;
