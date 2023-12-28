@@ -7,6 +7,8 @@ import {
 import { getBuffs } from "../combatant/buffs";
 import { Combatant, Pet } from "../combatant/combatants";
 
+const isDev = process.env.NODE_ENV === "development";
+
 export function supportEventLinkNormalizer(
   events: DamageEvent[],
   combatants: Combatant[]
@@ -65,23 +67,24 @@ export function supportEventLinkNormalizer(
         const supportedEventIndex = eventRecord[eventKey];
 
         if (isNaN(supportedEventIndex)) {
-          console.warn("Support Event without Parent found");
-          console.log(event);
-          console.log(normEvents[idx - 1]);
-          console.log(eventRecord);
-          console.log(eventKey);
+          isDev && console.warn("Support Event without Parent found");
+          isDev && console.log(event);
+          isDev && console.log(normEvents[idx - 1]);
+          isDev && console.log(eventRecord);
+          isDev && console.log(eventKey);
         } else {
           const delay =
             event.timestamp - normEvents[supportedEventIndex].timestamp;
 
           if (delay > bufferMS) {
-            console.group(
-              "support event delayed more than expected:",
-              delay + "ms"
-            );
-            console.log("Event:", normEvents[supportedEventIndex]);
-            console.log("Support Event:", event);
-            console.groupEnd();
+            isDev &&
+              console.group(
+                "support event delayed more than expected:",
+                delay + "ms"
+              );
+            isDev && console.log("Event:", normEvents[supportedEventIndex]);
+            isDev && console.log("Support Event:", event);
+            isDev && console.groupEnd();
           }
 
           const hookType =
