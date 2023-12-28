@@ -61,13 +61,33 @@ const intervalRenderer = (
 
   return (
     <>
-      <table className="intervalTable">
-        <tbody>
-          {headerRow}
-          {tableRows}
-        </tbody>
-      </table>
-      {noteTextbox}
+      <div className="flex gap flex-wrap flex-top">
+        <div>
+          <h3>Intervals</h3>
+          <table className="intervalTable">
+            <tbody>
+              {headerRow}
+              {tableRows}
+            </tbody>
+          </table>
+        </div>
+        <div>
+          <h3>MRT note</h3>
+          <p className="small">
+            This note is meant to be used with{" "}
+            <a href="https://wago.io/yrmx6ZQSG">Prescience Helper</a> WA by{" "}
+            <b>HenryG</b>.
+            <br />
+            It will also work with{" "}
+            <a href="https://wago.io/KP-BlDV58">Frame Glows</a> WA by{" "}
+            <b>Zephy</b>.
+            <br />
+            It is not meant for hyper-optimized play, but rather as a helping
+            hand.
+          </p>
+          {noteTextbox}
+        </div>
+      </div>
     </>
   );
 };

@@ -187,17 +187,16 @@ const tableRenderer = (
   );
 
   return (
-    <>
-      <div>
-        <table className="comparison-table">
-          <tbody>
-            {headerRow}
-            {tableRows}
-            {bottomRow}
-          </tbody>
-        </table>
-      </div>
-    </>
+    <div>
+      <h2>Damage Table</h2>
+      <table className="comparison-table">
+        <tbody>
+          {headerRow}
+          {tableRows}
+          {bottomRow}
+        </tbody>
+      </table>
+    </div>
   );
 };
 

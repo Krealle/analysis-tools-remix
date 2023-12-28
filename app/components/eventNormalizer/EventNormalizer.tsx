@@ -242,8 +242,11 @@ const EventNormalizer = () => {
           }
         />
       )}
-      {!isFetching && wclTableContent}
-      {!isFetching && intervalsContent}
+      {!isFetching && (
+        <>
+          {wclTableContent} {intervalsContent}
+        </>
+      )}
     </div>
   );
 };

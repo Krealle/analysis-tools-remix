@@ -43,7 +43,7 @@ export const loader = async ({
 export default function Index() {
   const fightReport = useWCLUrlInputStore((state) => state.fightReport);
   const { hasAccessToken } = useLoaderData<typeof loader>();
-  const { setHasAuth, hasAuth } = useStatusStore();
+  const { setHasAuth } = useStatusStore();
 
   useEffect(() => {
     setHasAuth(hasAccessToken);
@@ -51,7 +51,7 @@ export default function Index() {
 
   return (
     <>
-      {hasAuth ? (
+      {hasAccessToken ? (
         <>
           <h1>WCL URL</h1>
           <WCLUrlInput />
