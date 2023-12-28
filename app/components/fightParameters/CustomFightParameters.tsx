@@ -59,12 +59,15 @@ const CustomFightParameters = () => {
   ]);
 
   return (
-    <div className="flex gap">
-      <Weights />
-      <AbilityFilter />
-      <EnemyFilter />
-      <IntervalSettings />
-      <DeathFilter />
+    <div className="container">
+      <b>Options</b>
+      <div className="flex gap">
+        <Weights />
+        <AbilityFilter />
+        <EnemyFilter />
+        <IntervalSettings />
+        <DeathFilter />
+      </div>
     </div>
   );
 };

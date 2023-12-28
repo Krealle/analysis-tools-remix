@@ -8,7 +8,7 @@ const DeathFilter: React.FC = () => {
 
   const content = (
     <div className="flex">
-      <div className="flex container">
+      <div className="flex container" id="death-filter">
         <div className="flex">
           Ignore Events After Player Deaths:
           <input
