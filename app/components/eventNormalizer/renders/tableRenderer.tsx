@@ -104,6 +104,7 @@ const tableRenderer = (
         playerDamage[curPlayerIndex].normalizedAmount += normalizedDamage;
         playerDamage[curPlayerIndex].wclAmount += wclDamage;
         playerDamage[curPlayerIndex].fabricatedEvents += fabricatedEvents;
+        playerDamage[curPlayerIndex].emptyEvents += emptyEvents;
       } else {
         playerDamage.push({
           combatant: player,
@@ -177,9 +178,9 @@ const tableRenderer = (
   const bottomRow = (
     <tr>
       <td>Total</td>
-      <td>{totalWclDamage}</td>
-      <td>{Math.round(totalNormalizedDamage)}</td>
-      <td>{Math.round(totalDifference)}</td>
+      <td>{formatNumber(totalWclDamage)}</td>
+      <td>{formatNumber(totalNormalizedDamage)}</td>
+      <td>{formatNumber(totalDifference)}</td>
       <td>{}</td>
       <td>{totalFabricatedEvents}</td>
       <td>{totalEmptyEvents}</td>
