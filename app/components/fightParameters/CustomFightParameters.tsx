@@ -1,22 +1,15 @@
 import { useEffect } from "react";
 import { formatTime } from "../../util/format";
 import EnemyFilter from "./EnemyFilter";
-import AbilityFilter from "./AbilityFilter";
+import AbilityFilterSettings from "./AbilityFilterSettings";
 import IntervalSettings from "./IntervalSettings";
 import DeathFilter from "./DeathFilter";
 import useFightParametersStore from "../../zustand/fightParametersStore";
-import Weights from "./Weights";
+import WeightsSettings from "./WeightsSettings";
 
 const CustomFightParameters = () => {
-  const {
-    abilityBlacklist,
-    abilityNoBoEScaling,
-    abilityNoEMScaling,
-    abilityNoScaling,
-    abilityNoShiftingScaling,
-    timeSkipIntervals,
-    setParameterError,
-  } = useFightParametersStore();
+  const { abilityFilters, timeSkipIntervals, setParameterError } =
+    useFightParametersStore();
 
   useEffect(() => {
     for (const interval of timeSkipIntervals) {
@@ -39,34 +32,24 @@ const CustomFightParameters = () => {
       const parts = str.split(",");
       return parts.every((part) => /^\s*\d{1,10}\s*$/.test(part));
     };
-    const abilityFilterValid =
-      isNumberListValid(abilityBlacklist) &&
-      isNumberListValid(abilityNoBoEScaling) &&
-      isNumberListValid(abilityNoEMScaling) &&
-      isNumberListValid(abilityNoScaling) &&
-      isNumberListValid(abilityNoShiftingScaling);
+    const abilityFilterValid = Object.values(abilityFilters).reduce(
+      (acc, val) => acc && isNumberListValid(val),
+      true
+    );
     if (!abilityFilterValid) {
       setParameterError("Invalid ability filter");
       return;
     }
 
     setParameterError(undefined);
-  }, [
-    abilityBlacklist,
-    abilityNoBoEScaling,
-    abilityNoEMScaling,
-    abilityNoScaling,
-    timeSkipIntervals,
-    abilityNoShiftingScaling,
-    setParameterError,
-  ]);
+  }, [abilityFilters, timeSkipIntervals, setParameterError]);
 
   return (
     <div className="container">
       <b>Options</b>
       <div className="flex gap">
-        <Weights />
-        <AbilityFilter />
+        <WeightsSettings />
+        <AbilityFilterSettings />
         <EnemyFilter />
         <IntervalSettings />
         <DeathFilter />

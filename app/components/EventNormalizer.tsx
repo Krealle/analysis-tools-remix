@@ -15,20 +15,9 @@ import useStatusStore from "../zustand/statusStore";
 import { FormattedTimeSkipIntervals } from "../util/types";
 import FightButtons from "./FightButtons";
 import CustomFightParameters from "./fightParameters/CustomFightParameters";
-import useFightParametersStore from "../zustand/fightParametersStore";
-
-export type AbilityFilters = {
-  noScaling: number[];
-  noEMScaling: number[];
-  noShiftingScaling: number[];
-  blacklist: number[];
-};
-
-export type Weights = {
-  ebonMightWeight: number;
-  shiftingSandsWeight: number;
-  prescienceWeight: number;
-};
+import useFightParametersStore, {
+  AbilityFilters,
+} from "../zustand/fightParametersStore";
 
 const fights: Fight[] = [];
 const fetchedFightDataSets: FightDataSet[] = [];
@@ -52,17 +41,12 @@ const EventNormalizer = () => {
   const {
     parameterError,
     timeSkipIntervals,
-    abilityNoEMScaling,
-    abilityBlacklist,
-    abilityNoScaling,
+    abilityFilters,
     enemyBlacklist,
-    abilityNoShiftingScaling,
     intervalEbonMightWeight,
     intervalTimer,
     deathCountFilter,
-    ebonMightWeight,
-    shiftingSandsWeight,
-    prescienceWeight,
+    weights,
   } = useFightParametersStore();
   const { isFetching, setIsFetching, setHasAuth } = useStatusStore();
 
@@ -81,7 +65,7 @@ const EventNormalizer = () => {
   useEffect(() => {
     // TODO: This should be revisited, but in general it should be fine
     fights.splice(0, fights.length);
-  }, [abilityNoEMScaling, abilityNoScaling, abilityNoShiftingScaling]);
+  }, [abilityFilters]);
 
   const attemptNormalize = async () => {
     if (selectedFights.length === 0) {
@@ -99,19 +83,6 @@ const EventNormalizer = () => {
 
     setIsFetching(true);
     setNormalizeStatus(FetchStatus.FETCHING);
-
-    const abilityFilters: AbilityFilters = {
-      noScaling: abilityNoScaling.split(",").map(Number),
-      noEMScaling: abilityNoEMScaling.split(",").map(Number),
-      noShiftingScaling: abilityNoShiftingScaling.split(",").map(Number),
-      blacklist: abilityBlacklist.split(",").map(Number),
-    };
-
-    const weights: Weights = {
-      ebonMightWeight,
-      shiftingSandsWeight,
-      prescienceWeight,
-    };
 
     const fightsToFetch = selectedFights.filter(
       (id) => !fetchedFightDataSets.map((f) => f.fight.id).includes(id)
@@ -145,10 +116,16 @@ const EventNormalizer = () => {
         (id) => !fights.map((f) => f.fightId).includes(id.fight.id)
       );
 
+      const formattedAbilityFilters = Object.fromEntries(
+        Object.entries(abilityFilters).map(([key, value]) => {
+          return [key, value.split(",").map(Number)];
+        })
+      ) as AbilityFilters<number[]>;
+
       const newFights = handleFightData(
         WCLReport,
         fightsToHandle,
-        abilityFilters,
+        formattedAbilityFilters,
         weights
       );
 
@@ -163,7 +140,7 @@ const EventNormalizer = () => {
       const wclTableContent = tableRenderer(
         fightsToRender,
         enemyTracker,
-        abilityBlacklist.split(",").map(Number),
+        formattedAbilityFilters.blacklist,
         enemyBlacklist,
         Number(deathCountFilter)
       );
@@ -186,7 +163,7 @@ const EventNormalizer = () => {
         WCLReport.code,
         formattedTimeSkipIntervals,
         enemyTracker,
-        abilityFilters,
+        formattedAbilityFilters,
         intervalEbonMightWeight,
         intervalTimer,
         enemyBlacklist,

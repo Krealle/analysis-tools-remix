@@ -10,14 +10,14 @@ import {
   HitType,
   NormalizedDamageEvent,
 } from "../../wcl/events/types";
-import { AbilityFilters, Weights } from "../../components/EventNormalizer";
 import { Buff } from "../combatant/buffs";
 import { Combatant } from "../combatant/combatants";
+import { AbilityFilters, Weights } from "../../zustand/fightParametersStore";
 
 export function correctSupportEvents(
   events: NormalizedDamageEvent[],
   combatants: Combatant[],
-  abilityFilters: AbilityFilters,
+  abilityFilters: AbilityFilters<number[]>,
   weights: Weights
 ): NormalizedDamageEvent[] {
   const correctedEvents = events.reduce<NormalizedDamageEvent[]>(
@@ -135,7 +135,7 @@ function fabricateEvent(
 
 function getRelevantPlayerBuffs(
   event: NormalizedDamageEvent,
-  abilityFilters: AbilityFilters
+  abilityFilters: AbilityFilters<number[]>
 ): Buff[] {
   const hasCombustion = event.activeBuffs.find(
     (buff) => buff.abilityGameID === COMBUSTION_BUFF

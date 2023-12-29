@@ -5,7 +5,7 @@ import {
   IntervalSet,
   TotInterval,
 } from "../../util/types";
-import { AbilityFilters } from "../../components/EventNormalizer";
+import { AbilityFilters } from "../../zustand/fightParametersStore";
 import { Fight } from "../util/handleFightData";
 
 export function getAverageIntervals(
@@ -14,7 +14,7 @@ export function getAverageIntervals(
   currentReportCode: string,
   timeSkipIntervals: FormattedTimeSkipIntervals[],
   enemyTracker: EnemyTracker,
-  abilityFilters: AbilityFilters,
+  abilityFilters: AbilityFilters<number[]>,
   ebonWeight: number,
   intervalDuration: number,
   enemyBlacklist: number[],

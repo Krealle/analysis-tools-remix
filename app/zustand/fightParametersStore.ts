@@ -2,7 +2,6 @@ import { create } from "zustand";
 import { TimeSkipIntervals } from "../util/types";
 import {
   ABILITY_BLACKLIST,
-  ABILITY_NO_BOE_SCALING,
   ABILITY_NO_EM_SCALING,
   ABILITY_NO_SCALING,
   ABILITY_NO_SHIFTING_SCALING,
@@ -11,22 +10,30 @@ import {
   SHIFTING_SANDS_CORRECTION_VALUE,
 } from "../util/constants";
 
+export type AbilityFilters<T> = {
+  noEMScaling: T;
+  noShiftingScaling: T;
+  noScaling: T;
+  blacklist: T;
+};
+
+export type Weights = {
+  ebonMightWeight: number;
+  shiftingSandsWeight: number;
+  prescienceWeight: number;
+};
+
 type FightParametersStore = {
   timeSkipIntervals: TimeSkipIntervals[];
   parameterError: string | undefined;
   showOptions: boolean;
   enemyBlacklist: number[];
-  abilityBlacklist: string;
-  abilityNoScaling: string;
-  abilityNoBoEScaling: string;
-  abilityNoEMScaling: string;
-  abilityNoShiftingScaling: string;
+  abilityFilters: AbilityFilters<string>;
+  weights: Weights;
   intervalEbonMightWeight: number;
   intervalTimer: number;
   deathCountFilter: string;
-  ebonMightWeight: number;
-  shiftingSandsWeight: number;
-  prescienceWeight: number;
+
   setTimeSkipIntervals: (payload: TimeSkipIntervals[]) => void;
   addTimeSkipInterval: (payload: TimeSkipIntervals) => void;
   removeTimeSkipInterval: (payload: number) => void;
@@ -38,15 +45,12 @@ type FightParametersStore = {
   setParameterError: (payload: string | undefined) => void;
   setShowOptions: (payload: boolean) => void;
   modifyEnemyBlacklist: (payload: { value: number; add: boolean }) => void;
-  setAbilityBlacklist: (payload: string) => void;
-  setAbilityNoScaling: (payload: string) => void;
-  setAbilityNoBoEScaling: (payload: string) => void;
-  setAbilityNoEMScaling: (payload: string) => void;
-  setAbilityNoShiftingScaling: (payload: string) => void;
+  setAbilityFilter: (payload: {
+    ability: keyof AbilityFilters<string>;
+    value: string;
+  }) => void;
   setIntervalEbonMightWeight: (payload: number) => void;
-  setEbonMightWeight: (payload: number) => void;
-  setShiftingSandsWeight: (payload: number) => void;
-  setPrescienceWeight: (payload: number) => void;
+  setWeights: (payload: { ability: keyof Weights; value: string }) => void;
   setIntervalTimer: (payload: number) => void;
   setDeathCountFilter: (payload: string) => void;
 };
@@ -57,17 +61,20 @@ const useFightParametersStore = create<FightParametersStore>((set) => ({
   parameterErrorMsg: "",
   showOptions: false,
   enemyBlacklist: [],
-  abilityBlacklist: ABILITY_BLACKLIST.toString(),
-  abilityNoScaling: ABILITY_NO_SCALING.toString(),
-  abilityNoBoEScaling: ABILITY_NO_BOE_SCALING.toString(),
-  abilityNoEMScaling: ABILITY_NO_EM_SCALING.toString(),
-  abilityNoShiftingScaling: ABILITY_NO_SHIFTING_SCALING.toString(),
+  abilityFilters: {
+    noEMScaling: ABILITY_NO_EM_SCALING.toString(),
+    noShiftingScaling: ABILITY_NO_SHIFTING_SCALING.toString(),
+    noScaling: ABILITY_NO_SCALING.toString(),
+    blacklist: ABILITY_BLACKLIST.toString(),
+  },
   intervalEbonMightWeight: 0.5,
   intervalTimer: 30,
   deathCountFilter: "",
-  ebonMightWeight: EBON_MIGHT_CORRECTION_VALUE,
-  shiftingSandsWeight: SHIFTING_SANDS_CORRECTION_VALUE,
-  prescienceWeight: PRESCIENCE_CORRECTION_VALUE,
+  weights: {
+    ebonMightWeight: EBON_MIGHT_CORRECTION_VALUE,
+    shiftingSandsWeight: SHIFTING_SANDS_CORRECTION_VALUE,
+    prescienceWeight: PRESCIENCE_CORRECTION_VALUE,
+  },
 
   /** Time skips */
   setTimeSkipIntervals: (payload) => set({ timeSkipIntervals: payload }),
@@ -106,21 +113,26 @@ const useFightParametersStore = create<FightParametersStore>((set) => ({
         ? [...state.enemyBlacklist, payload.value]
         : state.enemyBlacklist.filter((item) => item !== payload.value),
     })),
-  setAbilityBlacklist: (payload) => set({ abilityBlacklist: payload }),
-  setAbilityNoScaling: (payload) => set({ abilityNoScaling: payload }),
-  setAbilityNoBoEScaling: (payload) => set({ abilityNoBoEScaling: payload }),
-  setAbilityNoEMScaling: (payload) => set({ abilityNoEMScaling: payload }),
-  setAbilityNoShiftingScaling: (payload) =>
-    set({ abilityNoShiftingScaling: payload }),
+  setAbilityFilter: (payload) =>
+    set((state) => ({
+      abilityFilters: {
+        ...state.abilityFilters,
+        [payload.ability]: payload.value,
+      },
+    })),
   setIntervalTimer: (payload) => set({ intervalTimer: payload }),
   setDeathCountFilter: (payload) => set({ deathCountFilter: payload }),
 
   /** Weights */
   setIntervalEbonMightWeight: (payload) =>
     set({ intervalEbonMightWeight: payload }),
-  setEbonMightWeight: (payload) => set({ ebonMightWeight: payload }),
-  setShiftingSandsWeight: (payload) => set({ shiftingSandsWeight: payload }),
-  setPrescienceWeight: (payload) => set({ prescienceWeight: payload }),
+  setWeights: (payload) =>
+    set((state) => ({
+      weights: {
+        ...state.weights,
+        [payload.ability]: payload.value,
+      },
+    })),
 }));
 
 export default useFightParametersStore;
