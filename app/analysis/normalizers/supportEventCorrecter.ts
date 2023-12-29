@@ -3,14 +3,14 @@ import {
   EBON_MIGHT,
   PRESCIENCE,
   SHIFTING_SANDS,
-} from "../../../util/constants";
+} from "../../util/constants";
 import {
   AttributionHook,
   EventType,
   HitType,
   NormalizedDamageEvent,
-} from "../../../wcl/events/types";
-import { AbilityFilters, Weights } from "../EventNormalizer";
+} from "../../wcl/events/types";
+import { AbilityFilters, Weights } from "../../components/EventNormalizer";
 import { Buff } from "../combatant/buffs";
 import { Combatant } from "../combatant/combatants";
 

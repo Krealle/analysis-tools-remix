@@ -1,4 +1,4 @@
-import { AnyBuffEvent, EventType } from "../../../wcl/events/types";
+import { AnyBuffEvent, EventType } from "../../wcl/events/types";
 import { Combatant } from "./combatants";
 
 export type Buff = {

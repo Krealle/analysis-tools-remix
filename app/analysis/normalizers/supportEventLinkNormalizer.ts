@@ -1,9 +1,9 @@
-import { SNAPSHOTTED_DOTS } from "../../../util/constants";
+import { SNAPSHOTTED_DOTS } from "../../util/constants";
 import {
   AttributionHook,
   DamageEvent,
   NormalizedDamageEvent,
-} from "../../../wcl/events/types";
+} from "../../wcl/events/types";
 import { getBuffs } from "../combatant/buffs";
 import { Combatant, Pet } from "../combatant/combatants";
 

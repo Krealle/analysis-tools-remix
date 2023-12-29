@@ -4,8 +4,8 @@ import {
   IntervalEntry,
   IntervalSet,
   TotInterval,
-} from "../../../util/types";
-import { AbilityFilters } from "../EventNormalizer";
+} from "../../util/types";
+import { AbilityFilters } from "../../components/EventNormalizer";
 import { Fight } from "../util/handleFightData";
 
 export function getAverageIntervals(

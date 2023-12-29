@@ -1,6 +1,6 @@
-import { mrtColorMap } from "../../../util/constants";
-import { formatDuration } from "../../../util/format";
-import { IntervalSet, TotInterval } from "../../../util/types";
+import { mrtColorMap } from "../../util/constants";
+import { formatDuration } from "../../util/format";
+import { IntervalSet, TotInterval } from "../../util/types";
 import { Combatant } from "../combatant/combatants";
 
 export function getMRTNote(

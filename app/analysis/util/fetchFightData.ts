@@ -1,11 +1,11 @@
-import { AnyEvent } from "../../../wcl/events/types";
-import { ReportFight, SummaryTable, WCLReport } from "../../../wcl/gql/types";
-import { getFilter } from "../../../wcl/util/filters";
+import { AnyEvent } from "../../wcl/events/types";
+import { ReportFight, SummaryTable, WCLReport } from "../../wcl/gql/types";
+import { getFilter } from "../../wcl/util/filters";
 import {
   EventVariables,
   getEvents,
   getSummaryTable,
-} from "../../../wcl/util/queryWCL";
+} from "../../wcl/util/queryWCL";
 
 export type FightDataSet = {
   fight: ReportFight;

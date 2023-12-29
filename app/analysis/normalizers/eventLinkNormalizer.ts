@@ -6,7 +6,7 @@ import {
   EventType,
   RefreshDebuffEvent,
   RemoveDebuffEvent,
-} from "../../../wcl/events/types";
+} from "../../wcl/events/types";
 
 /**
  * The goal of this normalizer is to link dot ticks up with their application

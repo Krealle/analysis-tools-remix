@@ -10,7 +10,7 @@ import Footer from "../components/Footer";
 import useWCLUrlInputStore from "../zustand/WCLUrlInputStore";
 import FightBoxes from "../components/FightBoxes";
 import SelectFightButtons from "../components/SelectFightButtons";
-import EventNormalizer from "../components/eventNormalizer/EventNormalizer";
+import EventNormalizer from "../components/EventNormalizer";
 import { useLoaderData } from "@remix-run/react";
 import useStatusStore from "../zustand/statusStore";
 import { useEffect } from "react";

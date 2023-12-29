@@ -1,21 +1,21 @@
 import { useEffect, useState } from "react";
-import tableRenderer from "./renders/tableRenderer";
-import { formatTime } from "../../util/format";
-import { getAverageIntervals } from "./interval/intervals";
-import intervalRenderer from "./renders/intervalRenderer";
-import { Combatant } from "./combatant/combatants";
-import ErrorBear from "../generic/ErrorBear";
-import { ReportParseError } from "../../wcl/util/parseWCLUrl";
-import { FightDataSet, fetchFightData } from "./util/fetchFightData";
-import { Fight, handleFightData } from "./util/handleFightData";
-import FetchingStatus, { FetchStatus } from "../generic/FetchingStatus";
-import useWCLUrlInputStore from "../../zustand/WCLUrlInputStore";
-import useFightBoxesStore from "../../zustand/fightBoxesStore";
-import useStatusStore from "../../zustand/statusStore";
-import { FormattedTimeSkipIntervals } from "../../util/types";
-import FightButtons from "../FightButtons";
-import CustomFightParameters from "../fightParameters/CustomFightParameters";
-import useFightParametersStore from "../../zustand/fightParametersStore";
+import tableRenderer from "../analysis/renders/tableRenderer";
+import { formatTime } from "../util/format";
+import { getAverageIntervals } from "../analysis/interval/intervals";
+import intervalRenderer from "../analysis/renders/intervalRenderer";
+import { Combatant } from "../analysis/combatant/combatants";
+import ErrorBear from "./generic/ErrorBear";
+import { ReportParseError } from "../wcl/util/parseWCLUrl";
+import { FightDataSet, fetchFightData } from "../analysis/util/fetchFightData";
+import { Fight, handleFightData } from "../analysis/util/handleFightData";
+import FetchingStatus, { FetchStatus } from "./generic/FetchingStatus";
+import useWCLUrlInputStore from "../zustand/WCLUrlInputStore";
+import useFightBoxesStore from "../zustand/fightBoxesStore";
+import useStatusStore from "../zustand/statusStore";
+import { FormattedTimeSkipIntervals } from "../util/types";
+import FightButtons from "./FightButtons";
+import CustomFightParameters from "./fightParameters/CustomFightParameters";
+import useFightParametersStore from "../zustand/fightParametersStore";
 
 export type AbilityFilters = {
   noScaling: number[];
