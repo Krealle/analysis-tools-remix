@@ -3,7 +3,7 @@ import tableRenderer from "../analysis/renders/tableRenderer";
 import { formatTime } from "../util/format";
 import { getAverageIntervals } from "../analysis/interval/intervals";
 import intervalRenderer from "../analysis/renders/intervalRenderer";
-import { Combatant } from "../analysis/combatant/combatants";
+import { Combatant, Combatants } from "../analysis/combatant/combatants";
 import ErrorBear from "./generic/ErrorBear";
 import { ReportParseError } from "../wcl/util/parseWCLUrl";
 import { FightDataSet, fetchFightData } from "../analysis/util/fetchFightData";
@@ -97,18 +97,20 @@ const EventNormalizer = () => {
       let fightNumber = 0;
       for await (const fightData of fightDataGenerator) {
         fightNumber++;
-        /** Artificial pause to allow re-render */
         await new Promise((resolve) => {
           setProgress(fightNumber);
-          setTimeout(resolve, 100);
+          requestAnimationFrame(() => {
+            requestAnimationFrame(resolve);
+          });
         });
         fetchedFightDataSets.push(fightData);
       }
 
-      /** Artificial pause to allow re-render */
       await new Promise((resolve) => {
         setNormalizeStatus(FetchStatus.ANALYZING);
-        setTimeout(resolve, 400);
+        requestAnimationFrame(() => {
+          requestAnimationFrame(resolve);
+        });
       });
     } catch (error) {
       console.error(error);
@@ -124,12 +126,14 @@ const EventNormalizer = () => {
         })
       ) as AbilityFilters<number[]>;
 
+      console.time("handleFightData");
       const newFights = handleFightData(
         WCLReport,
         fightsToHandle,
         formattedAbilityFilters,
         weights
       );
+      console.timeEnd("handleFightData");
 
       fights.push(...newFights);
 
@@ -172,18 +176,14 @@ const EventNormalizer = () => {
         Number(deathCountFilter)
       );
 
-      const combinedCombatants: Combatant[] = [];
+      const combinedCombatants: Combatants = new Map<number, Combatant>();
 
       fightsToRender.forEach((fight) => {
         const combatants = fight.combatants;
 
         combatants.forEach((combatant) => {
-          const isUnique = !combinedCombatants.some(
-            (unique) => unique.id === combatant.id
-          );
-
-          if (isUnique) {
-            combinedCombatants.push(combatant);
+          if (!combinedCombatants.has(combatant.id)) {
+            combinedCombatants.set(combatant.id, combatant);
           }
         });
       });

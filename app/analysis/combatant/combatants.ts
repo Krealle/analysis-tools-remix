@@ -25,6 +25,8 @@ export type Combatant = {
   combatantInfo: CombatantInfo | never[];
 };
 
+export type Combatants = Map<number, Combatant>;
+
 export type Pet = {
   name: string;
   id: number;
@@ -35,26 +37,28 @@ export function generateCombatants(
   buffHistories: Buff[],
   playerDetails: PlayerDetails,
   actors: Actor[] | undefined
-): Combatant[] {
-  const combatants: Combatant[] = Object.keys(playerDetails)
-    .flatMap((key) => {
-      return playerDetails[key as keyof PlayerDetails].map((player) => {
-        return {
-          id: player.id,
-          name: player.name,
-          pets: findPets(player.id, actors),
-          buffHistory: getBuffHistory(player.id, buffHistories),
-          //baseStats: getBaseStats(player),
-          class: player.type,
-          server: player.server,
-          icon: player.icon,
-          spec: player.specs[0],
-          role: key,
-          combatantInfo: player.combatantInfo,
-        };
-      });
-    })
-    .sort((a, b) => a.id - b.id);
+): Combatants {
+  const combatants: Combatants = new Map();
+
+  Object.keys(playerDetails).forEach((key) => {
+    playerDetails[key as keyof PlayerDetails].forEach((player) => {
+      const combatant = {
+        id: player.id,
+        name: player.name,
+        pets: findPets(player.id, actors),
+        buffHistory: getBuffHistory(player.id, buffHistories),
+        //baseStats: getBaseStats(player),
+        class: player.type,
+        server: player.server,
+        icon: player.icon,
+        spec: player.specs[0],
+        role: key,
+        combatantInfo: player.combatantInfo,
+      };
+      combatants.set(player.id, combatant);
+    });
+  });
+
   return combatants;
 }
 

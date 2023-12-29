@@ -1,11 +1,11 @@
 import { mrtColorMap } from "../../util/constants";
 import { formatDuration } from "../../util/format";
 import { IntervalSet, TotInterval } from "../../util/types";
-import { Combatant } from "../combatant/combatants";
+import { Combatants } from "../combatant/combatants";
 
 export function getMRTNote(
   avgTopPumpersData: TotInterval[],
-  combatants: Combatant[]
+  combatants: Combatants
 ): string {
   const threshold: number = 1.5;
   const defaultTargets: Set<number> = getDefaultTargets(avgTopPumpersData);
@@ -13,7 +13,7 @@ export function getMRTNote(
   let note: string = "prescGlowsStart \n" + "defaultTargets - ";
   note += [...defaultTargets]
     .map((id) => {
-      const player = combatants.find((player) => player.id === id);
+      const player = combatants.get(id);
 
       return mrtColorMap.get(player?.class ?? "") + (player?.name ?? "") + "|r";
     })
@@ -50,7 +50,7 @@ export function getMRTNote(
 
     note += [...top2]
       .map((id) => {
-        const player = combatants.find((player) => player.id === id);
+        const player = combatants.get(id);
 
         return (
           mrtColorMap.get(player?.class ?? "") + (player?.name ?? "") + "|r"

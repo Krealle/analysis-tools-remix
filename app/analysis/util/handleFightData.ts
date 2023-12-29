@@ -10,7 +10,7 @@ import {
   PhaseStartEvent,
 } from "../../wcl/events/types";
 import { Buff, generateBuffHistories } from "../combatant/buffs";
-import { Combatant, generateCombatants } from "../combatant/combatants";
+import { Combatants, generateCombatants } from "../combatant/combatants";
 import { eventLinkNormalizer } from "../normalizers/eventLinkNormalizer";
 import { correctSupportEvents } from "../normalizers/supportEventCorrecter";
 import { supportEventLinkNormalizer } from "../normalizers/supportEventLinkNormalizer";
@@ -28,7 +28,7 @@ export type Fight = {
   normalizedDamageEvents: NormalizedDamageEvent[];
   deathEvents: DeathEvent[];
   buffHistory: Buff[];
-  combatants: Combatant[];
+  combatants: Combatants;
   phaseHistory?: PhaseStartEvent[];
 };
 
@@ -80,7 +80,7 @@ export function handleFightData(
       fightDataSet.fight.endTime
     );
 
-    const combatants: Combatant[] = generateCombatants(
+    const combatants: Combatants = generateCombatants(
       buffHistories,
       fightDataSet.summaryTable.playerDetails,
       WCLReport.masterData?.actors

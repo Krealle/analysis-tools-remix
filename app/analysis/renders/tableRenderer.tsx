@@ -48,7 +48,7 @@ const tableRenderer = (
         ? fight.deathEvents[deathCutOff - 1].timestamp
         : undefined;
 
-    for (const player of combatants) {
+    for (const [, player] of combatants) {
       let wclDamage = 0;
       let normalizedDamage = 0;
       let fabricatedEvents = 0;

@@ -5,34 +5,38 @@ import {
   NormalizedDamageEvent,
 } from "../../wcl/events/types";
 import { getBuffs } from "../combatant/buffs";
-import { Combatant, Pet } from "../combatant/combatants";
+import { Combatants, Pet } from "../combatant/combatants";
 
-const isDev = process.env.NODE_ENV === "development";
+const isDev = false; //process.env.NODE_ENV === "development";
 
 export function supportEventLinkNormalizer(
   events: DamageEvent[],
-  combatants: Combatant[]
+  combatants: Combatants
 ): NormalizedDamageEvent[] {
   if (events.length === 0) {
     throw new Error("No events to normalize");
   }
-  if (combatants.length === 0) {
+  if (combatants.size === 0) {
     throw new Error("No combatants");
   }
 
   const bufferMS = 30;
 
   const eventRecord: { [key: string]: number } = {};
-  const pets: Pet[] = combatants.flatMap((player) => player.pets);
+
+  const pets: Map<number, Pet> = new Map();
+  for (const player of combatants.values()) {
+    for (const pet of player.pets) {
+      pets.set(pet.id, pet);
+    }
+  }
 
   let idx = 0;
   const normalizedEvents = events.reduce<NormalizedDamageEvent[]>(
     (normEvents, event) => {
-      const petOwner = pets.find((pet) => pet.id === event.sourceID);
-
-      const player = combatants.find(
-        (player) =>
-          player.id === (petOwner ? petOwner.petOwner : event.sourceID)
+      const petOwner = pets.get(event.sourceID);
+      const player = combatants.get(
+        petOwner ? petOwner.petOwner : event.sourceID
       );
 
       const activeBuffs =
@@ -76,15 +80,14 @@ export function supportEventLinkNormalizer(
           const delay =
             event.timestamp - normEvents[supportedEventIndex].timestamp;
 
-          if (delay > bufferMS) {
-            isDev &&
-              console.group(
-                "support event delayed more than expected:",
-                delay + "ms"
-              );
-            isDev && console.log("Event:", normEvents[supportedEventIndex]);
-            isDev && console.log("Support Event:", event);
-            isDev && console.groupEnd();
+          if (delay > bufferMS && isDev) {
+            console.group(
+              "support event delayed more than expected:",
+              delay + "ms"
+            );
+            console.log("Event:", normEvents[supportedEventIndex]);
+            console.log("Support Event:", event);
+            console.groupEnd();
           }
 
           const hookType =

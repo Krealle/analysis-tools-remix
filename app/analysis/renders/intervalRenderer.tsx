@@ -1,5 +1,5 @@
 import { formatDuration, formatNumber } from "../../util/format";
-import { Combatant } from "../combatant/combatants";
+import { Combatants } from "../combatant/combatants";
 import { getTop4Pumpers } from "../interval/intervals";
 import "../../styles/intervalRenderer.css";
 import { getMRTNote } from "../interval/mrtNote";
@@ -7,7 +7,7 @@ import { TotInterval } from "../../util/types";
 
 const intervalRenderer = (
   intervals: TotInterval[],
-  combatants: Combatant[]
+  combatants: Combatants
 ): JSX.Element => {
   if (intervals.length === 0) {
     return <>No data found</>;
@@ -30,15 +30,9 @@ const intervalRenderer = (
       (entries) =>
         entries.map((player) => (
           <td key={player.id}>
-            <span
-              className={
-                combatants.find((combatant) => combatant.id === player.id)
-                  ?.class ?? ""
-              }
-            >
-              {combatants.find((combatant) => combatant.id === player.id)
-                ?.name ?? ""}{" "}
-              - {formatNumber(player.damage)}
+            <span className={combatants.get(player.id)?.class ?? ""}>
+              {combatants.get(player.id)?.name ?? ""} -{" "}
+              {formatNumber(player.damage)}
             </span>
           </td>
         ))

@@ -30,80 +30,49 @@ export function eventLinkNormalizer(
 ): DamageEvent[] {
   const linkedEvents: DamageEvent[] = [];
 
-  const parentDotEventRecord: Record<
+  const parentDotEventRecord = new Map<
     string,
     ApplyDebuffEvent | RefreshDebuffEvent | undefined
-  > = {};
-  const parentCastEventRecord: Record<string, CastEvent | undefined> = {};
+  >();
+  const parentCastEventRecord = new Map<string, CastEvent | undefined>();
+  const parentDotEventRemovedRecord = new Map<
+    string,
+    ApplyDebuffEvent | RefreshDebuffEvent | undefined
+  >();
 
   let lastDebuffRemoveTimestamp = 0;
-
-  const parentDotEventRemovedRecord: Record<
-    string,
-    ApplyDebuffEvent | RefreshDebuffEvent | undefined
-  > = {};
 
   for (const event of events) {
     const key = getKey(event);
 
     if (event.type === EventType.RemoveDebuffEvent) {
-      parentDotEventRemovedRecord[key] = parentDotEventRecord[key];
-      parentDotEventRecord[key] = undefined;
+      parentDotEventRemovedRecord.set(key, parentDotEventRecord.get(key));
+      parentDotEventRecord.delete(key);
       lastDebuffRemoveTimestamp = event.timestamp;
     }
     if (event.type === EventType.CastEvent) {
       const castKey = getCastKey(event);
-      parentCastEventRecord[castKey] = event;
+      parentCastEventRecord.set(castKey, event);
     }
 
     if (
       event.type === EventType.ApplyDebuffEvent ||
       event.type === EventType.RefreshDebuffEvent
     ) {
-      parentDotEventRecord[key] = event;
+      parentDotEventRecord.set(key, event);
     }
     if (event.type === EventType.DamageEvent) {
-      /* if (!event.tick) {
-        linkedEvents.push(event);
-        continue;
-      } */
-      /* if (
-        parentCastEventRecord[key] === undefined &&
-        event.abilityGameID !== 1 &&
-        event.abilityGameID !== 75 &&
-        event.abilityGameID !== 1822
-      ) {
-        console.log(event);
-        console.log(parentCastEventRecord[key]);
-        throw new Error(`parentCastEventRecord[key] is undefined`);
-      } */
       const castKey = getCastKey(event);
-      const newEvent = {
-        ...event,
-        parentDotEvent: parentDotEventRecord[key],
-        castEvent: parentCastEventRecord[castKey],
-      };
-      const lastRecord = parentDotEventRemovedRecord[key];
+      event.parentDotEvent = parentDotEventRecord.get(key);
+      event.castEvent = parentCastEventRecord.get(castKey);
 
-      if (!newEvent.parentDotEvent) {
+      if (!event.parentDotEvent) {
         if (lastDebuffRemoveTimestamp === event.timestamp) {
-          newEvent.parentDotEvent = lastRecord;
-          /* console.log("parent event not found but we corrected it", newEvent); */
-        } else {
-          // This should only happen for prepull dots, lets just ignore those for now.
-          /* console.error(
-            "parent event not found and we weren't able to correct it"
-          );
-          console.warn("newEvent", newEvent);
-          console.log("key", key);
-          console.log("parentEventRecord event", parentEventRecord[key]);
-          console.log("parentEventRecord", parentEventRecord);
-          console.log("lastRecord", lastRecord); */
-          //throw new Error(`parent event not found`);
+          event.parentDotEvent = parentDotEventRemovedRecord.get(key);
         }
       }
 
-      linkedEvents.push(newEvent);
+      linkedEvents.push(event);
     }
   }
 

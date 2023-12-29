@@ -11,12 +11,12 @@ import {
   NormalizedDamageEvent,
 } from "../../wcl/events/types";
 import { Buff } from "../combatant/buffs";
-import { Combatant } from "../combatant/combatants";
+import { Combatants } from "../combatant/combatants";
 import { AbilityFilters, Weights } from "../../zustand/fightParametersStore";
 
 export function correctSupportEvents(
   events: NormalizedDamageEvent[],
-  combatants: Combatant[],
+  combatants: Combatants,
   abilityFilters: AbilityFilters<number[]>,
   weights: Weights
 ): NormalizedDamageEvent[] {
@@ -77,8 +77,7 @@ export function correctSupportEvents(
 
       event.normalizedAmount -= supportDamage;
 
-      corEvents.push(event);
-      corEvents.push(...supEvents);
+      corEvents.push(event, ...supEvents);
 
       return corEvents;
     },
@@ -90,7 +89,7 @@ export function correctSupportEvents(
 function fabricateEvent(
   event: NormalizedDamageEvent,
   buff: Buff,
-  combatants: Combatant[],
+  combatants: Combatants,
   weights: Weights
 ): NormalizedDamageEvent | undefined {
   /** whenever EM drops/applies on the same tick weird stuff happens, so lets just ignore these edge cases */
@@ -98,7 +97,7 @@ function fabricateEvent(
     return;
   }
 
-  const player = combatants.find((player) => player.id === buff.sourceID);
+  const player = combatants.get(buff.sourceID);
 
   const attributedAmount =
     event.normalizedAmount * getAbilityMultiplier(buff.abilityGameID, weights);
