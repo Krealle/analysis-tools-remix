@@ -9,12 +9,15 @@ const CACHE = new Map<string, unknown>();
 
 export const loader: LoaderFunction = async ({ request }) => {
   const url = new URL(request.url);
-  const requestType = url.searchParams.get("requestType") as keyof QueryTypes;
+  const requestType = url.searchParams.get("requestType");
   const variables = url.searchParams.get("variables");
   const session = await getSession(request.headers.get("Cookie"));
 
   if (!requestType) return json({ error: `Missing request type` });
   if (!variables) return json({ error: "Missing variables" });
+  if (!(requestType in Queries)) {
+    return json({ error: `Invalid request type` });
+  }
 
   const cacheKey = `${requestType}-${variables}`;
   const cachedData = CACHE.get(cacheKey);
@@ -45,7 +48,10 @@ export const loader: LoaderFunction = async ({ request }) => {
       },
     });
 
-    const data = await client.request(Queries[requestType], parsedVariables);
+    const data = await client.request(
+      Queries[requestType as keyof QueryTypes],
+      parsedVariables
+    );
     CACHE.set(cacheKey, data);
 
     return { data };

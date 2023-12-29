@@ -35,13 +35,16 @@ const CustomFightParameters = () => {
     /** In my eyes this is black magic but all
      * it does is check if blacklist format is correct:
      * eg. "23,25,25" / "24, 255, 23478" */
-    const regex = /^(\s*\d+\s*,\s*)*\s*\d*\s*$/;
+    const isNumberListValid = (str: string) => {
+      const parts = str.split(",");
+      return parts.every((part) => /^\s*\d{1,10}\s*$/.test(part));
+    };
     const abilityFilterValid =
-      regex.test(abilityBlacklist) &&
-      regex.test(abilityNoBoEScaling) &&
-      regex.test(abilityNoEMScaling) &&
-      regex.test(abilityNoScaling) &&
-      regex.test(abilityNoShiftingScaling);
+      isNumberListValid(abilityBlacklist) &&
+      isNumberListValid(abilityNoBoEScaling) &&
+      isNumberListValid(abilityNoEMScaling) &&
+      isNumberListValid(abilityNoScaling) &&
+      isNumberListValid(abilityNoShiftingScaling);
     if (!abilityFilterValid) {
       setParameterError("Invalid ability filter");
       return;
