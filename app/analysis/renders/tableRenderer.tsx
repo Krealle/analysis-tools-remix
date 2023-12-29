@@ -1,7 +1,7 @@
 import { formatNumber } from "../../util/format";
 import { AttributionHook } from "../../wcl/events/types";
 import { Combatant } from "../combatant/combatants";
-import "../../../styles/styling.css";
+import "../../styles/styling.css";
 import { Fight } from "../util/handleFightData";
 import { EnemyTracker } from "../../util/types";
 

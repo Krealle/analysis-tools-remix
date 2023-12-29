@@ -1,7 +1,7 @@
 import { formatDuration, formatNumber } from "../../util/format";
 import { Combatant } from "../combatant/combatants";
 import { getTop4Pumpers } from "../interval/intervals";
-import "../../../styles/intervalRenderer.css";
+import "../../styles/intervalRenderer.css";
 import { getMRTNote } from "../interval/mrtNote";
 import { TotInterval } from "../../util/types";
 
