@@ -31,3 +31,5 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+app/routes/api.graphqlClientPost.tsx
+app/routes/api.graphqlClientXHR.tsx
