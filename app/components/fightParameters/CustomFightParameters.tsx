@@ -7,6 +7,14 @@ import DeathFilter from "./DeathFilter";
 import useFightParametersStore from "../../zustand/fightParametersStore";
 import WeightsSettings from "./WeightsSettings";
 
+/** In my eyes this is black magic but all
+ * it does is check if blacklist format is correct:
+ * eg. "23,25,25" / "24, 255, 23478" */
+const isNumberListValid = (str: string) => {
+  const parts = str.split(",");
+  return parts.every((part) => /^\s*\d{1,10}\s*$/.test(part));
+};
+
 const CustomFightParameters = () => {
   const { abilityFilters, timeSkipIntervals, setParameterError } =
     useFightParametersStore();
@@ -25,17 +33,8 @@ const CustomFightParameters = () => {
       }
     }
 
-    /** In my eyes this is black magic but all
-     * it does is check if blacklist format is correct:
-     * eg. "23,25,25" / "24, 255, 23478" */
-    const isNumberListValid = (str: string) => {
-      const parts = str.split(",");
-      return parts.every((part) => /^\s*\d{1,10}\s*$/.test(part));
-    };
-    const abilityFilterValid = Object.values(abilityFilters).reduce(
-      (acc, val) => acc && isNumberListValid(val),
-      true
-    );
+    const abilityFilterValid =
+      Object.values(abilityFilters).every(isNumberListValid);
     if (!abilityFilterValid) {
       setParameterError("Invalid ability filter");
       return;

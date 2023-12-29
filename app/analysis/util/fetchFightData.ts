@@ -21,10 +21,10 @@ export type FightDataSet = {
  */
 export async function* fetchFightData(
   WCLReport: WCLReport,
-  fightsToFetch: number[]
+  fightsToFetch: Set<number>
 ): AsyncIterable<FightDataSet> {
   const fightsToGenerate = WCLReport.fights!.filter((fight) =>
-    fightsToFetch.includes(fight.id)
+    fightsToFetch.has(fight.id)
   );
 
   const fetchPromises = fightsToGenerate.map(async (fight) => {

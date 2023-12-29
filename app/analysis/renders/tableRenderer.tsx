@@ -9,7 +9,7 @@ const tableRenderer = (
   fights: Fight[],
   enemyTracker: EnemyTracker,
   abilityBlacklist: number[],
-  enemyBlacklist: number[],
+  enemyBlacklist: Set<number>,
   deathCutOff: number
 ): JSX.Element => {
   const headerRow = (
@@ -60,7 +60,7 @@ const tableRenderer = (
 
       for (const event of playerEvents) {
         if (
-          enemyBlacklist.includes(enemyTracker.get(event.targetID) ?? -1) ||
+          enemyBlacklist.has(enemyTracker.get(event.targetID) ?? -1) ||
           abilityBlacklist.includes(event.abilityGameID)
         ) {
           continue;

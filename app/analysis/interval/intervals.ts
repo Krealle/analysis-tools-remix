@@ -10,21 +10,21 @@ import { Fight } from "../util/handleFightData";
 
 export function getAverageIntervals(
   fights: Fight[],
-  selectedFights: number[],
+  selectedFights: Set<number>,
   currentReportCode: string,
   timeSkipIntervals: FormattedTimeSkipIntervals[],
   enemyTracker: EnemyTracker,
   abilityFilters: AbilityFilters<number[]>,
   ebonWeight: number,
   intervalDuration: number,
-  enemyBlacklist: number[],
+  enemyBlacklist: Set<number>,
   deathCutOff: number
 ): TotInterval[] {
   const sortedIntervals: TotInterval[] = [];
 
   for (const fight of fights) {
     if (
-      !selectedFights.includes(fight.fightId) ||
+      !selectedFights.has(fight.fightId) ||
       fight.reportCode !== currentReportCode ||
       fight.difficulty === 10 // M+
     ) {
@@ -46,7 +46,7 @@ export function getAverageIntervals(
       if (
         event.source.spec === "Augmentation" ||
         event.normalizedAmount === 0 ||
-        enemyBlacklist.includes(enemyTracker.get(event.targetID) ?? -1) ||
+        enemyBlacklist.has(enemyTracker.get(event.targetID) ?? -1) ||
         abilityFilters.blacklist.includes(event.abilityGameID) ||
         abilityFilters.noScaling.includes(event.abilityGameID) ||
         event.source.id === -1

@@ -228,6 +228,7 @@ export type ReportFight = {
   keystoneLevel?: number;
   keystoneTime?: number;
   lastPhase?: number;
+  lastPhaseIsIntermission?: boolean;
   name?: string;
   difficulty?: number;
   kill?: boolean;

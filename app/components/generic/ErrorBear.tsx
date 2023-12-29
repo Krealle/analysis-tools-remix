@@ -11,7 +11,10 @@ interface ErrorBearProps {
   customMsg?: string;
 }
 
-const ErrorBear: React.FC<ErrorBearProps> = ({ error, customMsg }) => (
+const ErrorBear: React.FC<ErrorBearProps> = ({
+  error,
+  customMsg = reportParseErrorMap[error],
+}) => (
   <div className="error-bear-container">
     <img
       src={reportParseErrorIconMap[error]}
@@ -20,7 +23,7 @@ const ErrorBear: React.FC<ErrorBearProps> = ({ error, customMsg }) => (
       height="48"
       alt="An error occurred:"
     />
-    <p>{customMsg ? customMsg : reportParseErrorMap[error]}</p>
+    <p>{customMsg}</p>
   </div>
 );
 

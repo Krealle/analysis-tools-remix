@@ -1,3 +1,4 @@
+import { useCallback } from "react";
 import useWCLUrlInputStore from "../zustand/WCLUrlInputStore";
 import useFightBoxesStore from "../zustand/fightBoxesStore";
 
@@ -5,25 +6,25 @@ const SelectFightButtons = () => {
   const fightReport = useWCLUrlInputStore((state) => state.fightReport);
   const { setSelectedIds } = useFightBoxesStore();
 
-  const handleSelectFights = (selectKills?: boolean) => {
-    if (fightReport && fightReport.fights) {
-      const allFightIds = fightReport.fights
-        .filter((fight) => {
-          return fight.difficulty !== null;
-        })
-        .filter((fight) => {
-          if (selectKills === undefined) {
-            return fight.difficulty !== null;
-          } else {
-            return fight.difficulty !== null && selectKills
-              ? fight.kill
-              : !fight.kill;
-          }
-        })
-        .map((fight) => fight.id);
-      setSelectedIds(allFightIds);
-    }
-  };
+  const handleSelectFights = useCallback(
+    (selectKills?: boolean) => {
+      if (fightReport && fightReport.fights) {
+        const allFightIds = fightReport.fights
+          .filter((fight) => {
+            if (fight.difficulty === null) {
+              return false;
+            }
+            if (selectKills === undefined) {
+              return true;
+            }
+            return selectKills ? fight.kill : !fight.kill;
+          })
+          .map((fight) => fight.id);
+        setSelectedIds(allFightIds);
+      }
+    },
+    [fightReport, setSelectedIds]
+  );
 
   return (
     <div className="flex gap">

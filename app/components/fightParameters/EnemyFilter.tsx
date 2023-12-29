@@ -23,6 +23,7 @@ const EnemyFilter: React.FC = () => {
           </div>
           <div className="flex enemies">
             {enemies.map((enemy) => {
+              const isSelected = enemyBlacklist.has(enemy.id);
               return (
                 <ButtonCheckbox
                   key={enemy.id}
@@ -31,10 +32,10 @@ const EnemyFilter: React.FC = () => {
                   onClick={() =>
                     modifyEnemyBlacklist({
                       value: enemy.id,
-                      add: !enemyBlacklist.includes(enemy.id),
+                      add: !isSelected,
                     })
                   }
-                  selected={enemyBlacklist.includes(enemy.id)}
+                  selected={isSelected}
                 />
               );
             })}

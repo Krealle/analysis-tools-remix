@@ -68,7 +68,7 @@ const EventNormalizer = () => {
   }, [abilityFilters]);
 
   const attemptNormalize = async () => {
-    if (selectedFights.length === 0) {
+    if (selectedFights.size === 0) {
       alert("No fight selected!");
       return;
     }
@@ -84,10 +84,12 @@ const EventNormalizer = () => {
     setIsFetching(true);
     setNormalizeStatus(FetchStatus.FETCHING);
 
-    const fightsToFetch = selectedFights.filter(
-      (id) => !fetchedFightDataSets.map((f) => f.fight.id).includes(id)
+    const fightsToFetch = new Set(
+      Array.from(selectedFights).filter(
+        (id) => !fetchedFightDataSets.some((f) => f.fight.id === id)
+      )
     );
-    setAmountOfFightsToFetch(fightsToFetch.length);
+    setAmountOfFightsToFetch(fightsToFetch.size);
 
     const fightDataGenerator = fetchFightData(WCLReport, fightsToFetch);
 
@@ -133,7 +135,7 @@ const EventNormalizer = () => {
 
       const fightsToRender = fights.filter(
         (fight) =>
-          selectedFights.includes(fight.fightId) &&
+          selectedFights.has(fight.fightId) &&
           fight.reportCode === WCLReport.code
       );
 

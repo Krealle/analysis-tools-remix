@@ -5,14 +5,14 @@ import useFightParametersStore, {
   Weights,
 } from "../../zustand/fightParametersStore";
 
+const weightsRange: number[] = Array.from(
+  { length: 1001 },
+  (_, index) => index / 1000
+);
+
 const WeightsSettings: React.FC = () => {
   const { weights, setWeights } = useFightParametersStore();
   const isFetching = useStatusStore((state) => state.isFetching);
-
-  const weightsRange: number[] = Array.from(
-    { length: 1001 },
-    (_, index) => index / 1000
-  );
 
   const content = (
     <div className="flex">

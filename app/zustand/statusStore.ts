@@ -9,7 +9,7 @@ type StatusStore = {
 
 const useStatusStore = create<StatusStore>((set) => ({
   isFetching: false,
-  hasAuth: false /* hasValidWCLAuthentication() */,
+  hasAuth: false,
   setIsFetching: (payload) => set({ isFetching: payload }),
   setHasAuth: (payload) => set({ hasAuth: payload }),
 }));

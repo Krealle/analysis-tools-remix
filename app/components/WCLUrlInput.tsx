@@ -1,4 +1,4 @@
-import { ChangeEvent, FormEvent, useState } from "react";
+import { ChangeEvent, FormEvent, useCallback, useState } from "react";
 import "../styles/WCLUrlInput.css";
 import { ReportParseError, parseWCLUrl } from "../wcl/util/parseWCLUrl";
 import useWCLUrlInputStore from "../zustand/WCLUrlInputStore";
@@ -10,50 +10,49 @@ import WCLAuthorization from "./WCLAuthorization";
 
 const WCLUrlInput = () => {
   const [url, setUrl] = useState<string>("");
-  const [errorBear, setErrorBear] = useState<ReportParseError | undefined>();
+  const [errorBear, setErrorBear] = useState<ReportParseError | null>();
 
   const WCLReport = useWCLUrlInputStore();
   const status = useStatusStore();
   const { setSelectedIds } = useFightBoxesStore();
 
-  const handleSubmit = async (event: FormEvent) => {
-    event.preventDefault();
+  const handleSubmit = useCallback(
+    async (event: FormEvent) => {
+      event.preventDefault();
 
-    const { reportCode, error } = parseWCLUrl(url);
-    if (!reportCode || error) {
-      if (error) {
+      const { reportCode, error } = parseWCLUrl(url);
+      if (!reportCode || error) {
         setErrorBear(error);
-      }
-      return;
-    }
-
-    setErrorBear(undefined);
-    status.setIsFetching(true);
-
-    try {
-      const newFightReport = await getFights({ reportID: reportCode });
-
-      if (
-        !newFightReport?.fights ||
-        !newFightReport?.fights.length ||
-        !newFightReport
-      ) {
-        setErrorBear(ReportParseError.EMPTY_REPORT);
-        WCLReport.setFightReport(undefined);
         return;
       }
 
-      if (newFightReport.code !== WCLReport.fightReport?.code) {
-        setSelectedIds([]);
-      }
+      setErrorBear(null);
+      status.setIsFetching(true);
 
-      WCLReport.setFightReport(newFightReport);
-    } catch (error) {
-      setErrorBear(ReportParseError.NETWORK_ERROR);
-    } finally {
-      status.setIsFetching(false);
-    }
-  };
+      try {
+        const newFightReport = await getFights({ reportID: reportCode });
+
+        if (!newFightReport?.fights?.length) {
+          throw new Error(ReportParseError.EMPTY_REPORT);
+        }
+
+        if (newFightReport.code !== WCLReport.fightReport?.code) {
+          setSelectedIds([]);
+        }
+
+        WCLReport.setFightReport(newFightReport);
+      } catch (error) {
+        setErrorBear(
+          (error as ReportParseError) === ReportParseError.EMPTY_REPORT
+            ? ReportParseError.EMPTY_REPORT
+            : ReportParseError.NETWORK_ERROR
+        );
+      } finally {
+        status.setIsFetching(false);
+      }
+    },
+    [url, WCLReport, status, setSelectedIds]
+  );
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     setUrl(event.target.value);

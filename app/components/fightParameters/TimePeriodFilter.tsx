@@ -9,6 +9,16 @@ const TimePeriodFilter: React.FC = () => {
     addTimeSkipInterval,
   } = useFightParametersStore();
 
+  const handleInputChange =
+    (index: number, entry: "start" | "end") =>
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      changeTimeSkipInterval({
+        index: index,
+        entry: entry,
+        value: e.target.value,
+      });
+    };
+
   return (
     <div className="time-intervals-container">
       <p>Time intervals to skip</p>
@@ -20,25 +30,13 @@ const TimePeriodFilter: React.FC = () => {
           <input
             placeholder="0:45"
             value={interval.start}
-            onChange={(e) =>
-              changeTimeSkipInterval({
-                index: index,
-                entry: "start",
-                value: e.target.value,
-              })
-            }
+            onChange={handleInputChange(index, "start")}
           />{" "}
           -{" "}
           <input
             placeholder="1:05"
             value={interval.end}
-            onChange={(e) =>
-              changeTimeSkipInterval({
-                index: index,
-                entry: "end",
-                value: e.target.value,
-              })
-            }
+            onChange={handleInputChange(index, "end")}
           />
         </div>
       ))}

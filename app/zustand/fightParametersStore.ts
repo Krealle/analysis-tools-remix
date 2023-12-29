@@ -27,7 +27,7 @@ type FightParametersStore = {
   timeSkipIntervals: TimeSkipIntervals[];
   parameterError: string | undefined;
   showOptions: boolean;
-  enemyBlacklist: number[];
+  enemyBlacklist: Set<number>;
   abilityFilters: AbilityFilters<string>;
   weights: Weights;
   intervalEbonMightWeight: number;
@@ -60,7 +60,7 @@ const useFightParametersStore = create<FightParametersStore>((set) => ({
   parameterError: undefined,
   parameterErrorMsg: "",
   showOptions: false,
-  enemyBlacklist: [],
+  enemyBlacklist: new Set<number>(),
   abilityFilters: {
     noEMScaling: ABILITY_NO_EM_SCALING.toString(),
     noShiftingScaling: ABILITY_NO_SHIFTING_SCALING.toString(),
@@ -108,11 +108,15 @@ const useFightParametersStore = create<FightParametersStore>((set) => ({
 
   /** Filters */
   modifyEnemyBlacklist: (payload) =>
-    set((state) => ({
-      enemyBlacklist: payload.add
-        ? [...state.enemyBlacklist, payload.value]
-        : state.enemyBlacklist.filter((item) => item !== payload.value),
-    })),
+    set((state) => {
+      const newEnemyBlacklist = new Set(state.enemyBlacklist);
+      if (payload.add) {
+        newEnemyBlacklist.add(payload.value);
+      } else {
+        newEnemyBlacklist.delete(payload.value);
+      }
+      return { enemyBlacklist: newEnemyBlacklist };
+    }),
   setAbilityFilter: (payload) =>
     set((state) => ({
       abilityFilters: {

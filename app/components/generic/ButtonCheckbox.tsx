@@ -17,22 +17,26 @@ const ButtonCheckbox: React.FC<ButtonCheckboxProps> = ({
   flavorText,
   title,
   id,
-  disabled,
+  disabled = false,
   content,
 }) => {
+  const handleClick = () => {
+    if (!disabled) {
+      onClick();
+    }
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter" && !disabled) {
+      onClick();
+    }
+  };
+
   return (
     <div
       className={`buttonCheckbox flex ${selected ? "selected" : ""}`}
-      onClick={() => {
-        if (!disabled) {
-          onClick();
-        }
-      }}
-      onKeyDown={(e) => {
-        if (e.key === "Enter" && !disabled) {
-          onClick();
-        }
-      }}
+      onClick={handleClick}
+      onKeyDown={handleKeyDown}
       role="button"
       tabIndex={0}
       id={id}

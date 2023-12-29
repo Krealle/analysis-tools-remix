@@ -51,6 +51,7 @@ query getReport($reportID: String!) {
         keystoneTime
         fightPercentage
         lastPhase
+        lastPhaseIsIntermission
         difficulty
         kill
         friendlyPlayers

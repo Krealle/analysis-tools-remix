@@ -5,6 +5,39 @@ import { EncounterImages } from "../util/enemyTables";
 import useWCLUrlInputStore from "../zustand/WCLUrlInputStore";
 import useStatusStore from "../zustand/statusStore";
 import useFightBoxesStore from "../zustand/fightBoxesStore";
+import { ReportFight } from "../wcl/gql/types";
+import { useCallback, useMemo } from "react";
+
+const getFightPercentageColor = (fight: ReportFight) => {
+  if (fight.kill) return "kill";
+  if (!fight.fightPercentage) return "";
+
+  switch (true) {
+    case fight.fightPercentage > 70:
+      return "common";
+    case fight.fightPercentage > 50:
+      return "uncommon";
+    case fight.fightPercentage > 30:
+      return "rare";
+    case fight.fightPercentage > 10:
+      return "epic";
+    case fight.fightPercentage > 1:
+      return "legendary";
+    default:
+      return "unfort";
+  }
+};
+
+const getFightPhase = (fight: ReportFight) => {
+  switch (true) {
+    case (fight.lastPhase ?? 0) > 0:
+      return `${fight.lastPhaseIsIntermission ? "I" : "P"}${fight.lastPhase}`;
+    case !!fight.keystoneLevel:
+      return `M ${fight.keystoneLevel}`;
+    default:
+      return "";
+  }
+};
 
 const FightBoxes = () => {
   const { selectedIds, removeId, addId, setSelectedIds } = useFightBoxesStore();
@@ -12,48 +45,46 @@ const FightBoxes = () => {
   const isFetching = useStatusStore((state) => state.isFetching);
   const report = useWCLUrlInputStore((state) => state.fightReport);
 
-  const handleDivClick = (id: number) => {
-    const isSelected = selectedIds.includes(id);
-    if (isSelected) {
-      removeId(id);
-    } else {
-      addId(id);
-    }
-  };
+  const handleDivClick = useCallback(
+    (id: number) => {
+      const isSelected = selectedIds.has(id);
+      if (isSelected) {
+        removeId(id);
+      } else {
+        addId(id);
+      }
+    },
+    [selectedIds, removeId, addId]
+  );
 
-  const handleSelectFights = (ids: number[]) => {
-    setSelectedIds(ids);
-  };
+  const handleSelectFights = useCallback(
+    (ids: number[]) => setSelectedIds(ids),
+    [setSelectedIds]
+  );
+
+  const fightsByName = useMemo(() => {
+    return (report?.fights || []).reduce((acc, fight) => {
+      if (fight.difficulty) {
+        const groupName = fight.name ?? "Unknown";
+        acc[groupName] = acc[groupName] || [];
+        acc[groupName]?.push(fight);
+      }
+      return acc;
+    }, {} as Record<string, ReportFight[]>);
+  }, [report]);
 
   if (!report?.fights) {
     return;
   }
 
-  // Group fights by name
-  const fightsByName = report.fights.reduce((acc, fight) => {
-    if (fight.difficulty) {
-      const groupName = fight.name ?? "Unknown";
-      acc[groupName] = acc[groupName] || [];
-      acc[groupName].push(fight);
-    }
-    return acc;
-  }, {} as Record<string, typeof report.fights>);
-
   return (
     <div>
       {Object.entries(fightsByName).map(([groupName, fights]) => {
         const normalizedGroupName = toCamelCase(groupName);
-        /* const imageUrl = `https://assets.rpglogs.com/img/warcraft/bosses/${EncounterIds[normalizedGroupName]}-tile.jpg`; */
-        const fightIds = fights.flatMap((fight) => fight.id);
+        const fightIds = fights!.flatMap((fight) => fight.id);
 
         return (
-          <div
-            key={groupName}
-            className="flex column fightContainer"
-            /* style={{
-              backgroundImage: `url(${imageUrl})`,
-            }} */
-          >
+          <div key={groupName} className="flex column fightContainer">
             <div className="flex fightsName">
               <img src={EncounterImages[normalizedGroupName]} alt="" />
               {groupName}
@@ -65,22 +96,8 @@ const FightBoxes = () => {
               </button>
             </div>
             <div className="flex fights">
-              {fights.map((fight) => {
-                const fightPercentageColor = fight.kill
-                  ? "kill"
-                  : !fight.fightPercentage
-                  ? ""
-                  : fight.fightPercentage > 70
-                  ? "common"
-                  : fight.fightPercentage > 50
-                  ? "uncommon"
-                  : fight.fightPercentage > 30
-                  ? "rare"
-                  : fight.fightPercentage > 10
-                  ? "epic"
-                  : fight.fightPercentage > 1
-                  ? "legendary"
-                  : "unfort";
+              {fights!.map((fight) => {
+                const fightPercentageColor = getFightPercentageColor(fight);
 
                 const content = (
                   <>
@@ -90,13 +107,7 @@ const FightBoxes = () => {
                       >
                         {fight.kill ? "KILL" : `${fight.fightPercentage}%`}
                       </span>
-                      <span className="phase">
-                        {fight.lastPhase ?? 0 > 0
-                          ? `P${fight.lastPhase}`
-                          : fight.keystoneLevel
-                          ? `M ${fight.keystoneLevel}`
-                          : ""}
-                      </span>
+                      <span className="phase">{getFightPhase(fight)}</span>
                     </div>
                     <div className="flex column">
                       <span className={fight.kill ? "kill" : "wipe"}>
@@ -118,7 +129,7 @@ const FightBoxes = () => {
                   <ButtonCheckbox
                     key={fight.id}
                     onClick={() => handleDivClick(fight.id)}
-                    selected={selectedIds.includes(fight.id)}
+                    selected={selectedIds.has(fight.id)}
                     content={content}
                     id={"fightButton"}
                     disabled={isFetching}

@@ -3,24 +3,26 @@ import "../../styles/fightParameterStyling.css";
 import useStatusStore from "../../zustand/statusStore";
 import useFightParametersStore from "../../zustand/fightParametersStore";
 import TimePeriodFilter from "./TimePeriodFilter";
+import { ChangeEvent } from "react";
+
+const intervals = Array.from({ length: 60 }, (_, index) => index + 1);
+const weights = Array.from({ length: 101 }, (_, index) => index / 100);
 
 const IntervalSettings: React.FC = () => {
   const {
     intervalTimer,
-    intervalEbonMightWeight: ebonMightWeight,
+    intervalEbonMightWeight,
     setIntervalTimer,
-    setIntervalEbonMightWeight: setEbonMightWeight,
+    setIntervalEbonMightWeight,
   } = useFightParametersStore();
   const isFetching = useStatusStore((state) => state.isFetching);
 
-  const intervals: number[] = Array.from(
-    { length: 60 },
-    (_, index) => index + 1
-  );
-  const weights: number[] = Array.from(
-    { length: 101 },
-    (_, index) => index / 100
-  );
+  const handleIntervalChange = (event: ChangeEvent<HTMLSelectElement>) => {
+    setIntervalTimer(parseInt(event.target.value, 10));
+  };
+  const handleWeightChange = (event: ChangeEvent<HTMLSelectElement>) => {
+    setIntervalEbonMightWeight(parseFloat(event.target.value));
+  };
 
   const content = (
     <div className="flex">
@@ -30,7 +32,7 @@ const IntervalSettings: React.FC = () => {
         </div>
         <div className="flex abilities">
           <select
-            onChange={(e) => setIntervalTimer(parseInt(e.target.value, 10))}
+            onChange={(e) => handleIntervalChange(e)}
             value={intervalTimer}
           >
             {intervals.map((number) => (
@@ -47,8 +49,8 @@ const IntervalSettings: React.FC = () => {
         </div>
         <div className="flex abilities">
           <select
-            onChange={(e) => setEbonMightWeight(parseInt(e.target.value, 10))}
-            value={ebonMightWeight}
+            onChange={(e) => handleWeightChange(e)}
+            value={intervalEbonMightWeight}
           >
             {weights.map((number) => (
               <option key={number} value={number}>
