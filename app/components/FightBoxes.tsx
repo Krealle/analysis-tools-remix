@@ -8,7 +8,17 @@ import useFightBoxesStore from "../zustand/fightBoxesStore";
 import { ReportFight } from "../wcl/gql/types";
 import { useCallback, useMemo } from "react";
 
-const getFightPercentageColor = (fight: ReportFight) => {
+type FightPercentageColor =
+  | "kill"
+  | ""
+  | "common"
+  | "uncommon"
+  | "rare"
+  | "epic"
+  | "legendary"
+  | "unfort";
+
+const getFightPercentageColor = (fight: ReportFight): FightPercentageColor => {
   if (fight.kill) return "kill";
   if (!fight.fightPercentage) return "";
 
@@ -28,7 +38,7 @@ const getFightPercentageColor = (fight: ReportFight) => {
   }
 };
 
-const getFightPhase = (fight: ReportFight) => {
+const getFightPhase = (fight: ReportFight): string => {
   switch (true) {
     case (fight.lastPhase ?? 0) > 0:
       return `${fight.lastPhaseIsIntermission ? "I" : "P"}${fight.lastPhase}`;
@@ -39,7 +49,7 @@ const getFightPhase = (fight: ReportFight) => {
   }
 };
 
-const FightBoxes = () => {
+const FightBoxes = (): JSX.Element | undefined => {
   const { selectedIds, removeId, addId, setSelectedIds } = useFightBoxesStore();
 
   const isFetching = useStatusStore((state) => state.isFetching);

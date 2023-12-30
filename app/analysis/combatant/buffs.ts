@@ -110,7 +110,7 @@ export function generateBuffHistories(
   return buffHistory;
 }
 
-function isSameBuff(a: Buff | AnyBuffEvent, b: AnyBuffEvent | Buff) {
+function isSameBuff(a: Buff | AnyBuffEvent, b: AnyBuffEvent | Buff): boolean {
   return (
     a.sourceID === b.sourceID &&
     a.targetID === b.targetID &&
@@ -119,7 +119,7 @@ function isSameBuff(a: Buff | AnyBuffEvent, b: AnyBuffEvent | Buff) {
   );
 }
 
-export function getBuffHistory(playerId: number, buffHistory: Buff[]) {
+export function getBuffHistory(playerId: number, buffHistory: Buff[]): Buff[] {
   const buffs = buffHistory.filter((buff) => buff.targetID === playerId);
   return buffs;
 }

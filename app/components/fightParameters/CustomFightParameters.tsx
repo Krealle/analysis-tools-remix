@@ -10,12 +10,12 @@ import WeightsSettings from "./WeightsSettings";
 /** In my eyes this is black magic but all
  * it does is check if blacklist format is correct:
  * eg. "23,25,25" / "24, 255, 23478" */
-const isNumberListValid = (str: string) => {
+const isNumberListValid = (str: string): boolean => {
   const parts = str.split(",");
   return parts.every((part) => /^\s*\d{1,10}\s*$/.test(part));
 };
 
-const CustomFightParameters = () => {
+const CustomFightParameters: React.FC = () => {
   const { abilityFilters, timeSkipIntervals, setParameterError } =
     useFightParametersStore();
 

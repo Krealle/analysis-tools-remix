@@ -26,7 +26,12 @@ export const reportParseErrorIconMap: Record<ReportParseError, string> = {
   NETWORK_ERROR: "/static/bear/dead-48.png",
 };
 
-export const parseWCLUrl = (maybeURL: string) => {
+export const parseWCLUrl = (
+  maybeURL: string
+): {
+  reportCode: string | null;
+  error: ReportParseError | null;
+} => {
   if (isValidReportId(maybeURL)) {
     return {
       reportCode: maybeURL,

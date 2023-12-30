@@ -8,7 +8,7 @@ import { getFights } from "../wcl/util/queryWCL";
 import useFightBoxesStore from "../zustand/fightBoxesStore";
 import WCLAuthorization from "./WCLAuthorization";
 
-const WCLUrlInput = () => {
+const WCLUrlInput: React.FC = () => {
   const [url, setUrl] = useState<string>("");
   const [errorBear, setErrorBear] = useState<ReportParseError | null>();
 
@@ -54,7 +54,7 @@ const WCLUrlInput = () => {
     [url, WCLReport, status, setSelectedIds]
   );
 
-  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (event: ChangeEvent<HTMLInputElement>): void => {
     setUrl(event.target.value);
   };
 

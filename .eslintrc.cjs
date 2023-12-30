@@ -23,6 +23,10 @@ module.exports = {
   // Base config
   extends: ["eslint:recommended", "plugin:node/recommended"],
 
+  rules: {
+    eqeqeq: ["error", "always"],
+  },
+
   overrides: [
     // React
     {
@@ -65,7 +69,9 @@ module.exports = {
       rules: {
         "@typescript-eslint/no-unused-vars": "warn",
         "@typescript-eslint/no-explicit-any": "warn",
+        "@typescript-eslint/explicit-module-boundary-types": "warn",
         "node/no-missing-import": "off",
+        "@typescript-eslint/explicit-function-return-type": "warn",
       },
       extends: [
         "plugin:@typescript-eslint/recommended",

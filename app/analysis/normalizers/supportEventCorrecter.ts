@@ -182,7 +182,7 @@ function getSupportDamage(
   event: NormalizedDamageEvent,
   supEvent: NormalizedDamageEvent,
   weights: Weights
-) {
+): number {
   let attributedAmount = supEvent.normalizedAmount;
 
   if (attributedAmount === 0 && event.normalizedAmount !== 0) {

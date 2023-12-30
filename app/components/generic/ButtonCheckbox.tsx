@@ -20,13 +20,13 @@ const ButtonCheckbox: React.FC<ButtonCheckboxProps> = ({
   disabled = false,
   content,
 }) => {
-  const handleClick = () => {
+  const handleClick = (): void => {
     if (!disabled) {
       onClick();
     }
   };
 
-  const handleKeyDown = (e: React.KeyboardEvent) => {
+  const handleKeyDown = (e: React.KeyboardEvent): void => {
     if (e.key === "Enter" && !disabled) {
       onClick();
     }

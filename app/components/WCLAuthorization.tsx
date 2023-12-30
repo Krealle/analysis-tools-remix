@@ -3,7 +3,7 @@ import { useState } from "react";
 const WCLAuthorization: React.FC = () => {
   const [authorizationUrl, setAuthorizationUrl] = useState<string | null>(null);
 
-  const handleAuthorization = async () => {
+  const handleAuthorization = async (): Promise<string | undefined> => {
     const response = await fetch("/api/userAuth?init");
 
     /** Dev token set */

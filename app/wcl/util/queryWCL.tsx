@@ -1,4 +1,9 @@
-import { RootReport, WCLReport } from "../gql/types";
+import {
+  PlayerDetails,
+  RootReport,
+  SummaryTable,
+  WCLReport,
+} from "../gql/types";
 import { AnyEvent, EventType } from "../events/types";
 import { QueryTypes } from "../gql/queries";
 
@@ -53,7 +58,9 @@ export async function fetchReportData(
   throw new Error("GraphQL request error");
 }
 
-export async function getSummaryTable(variables: Variables) {
+export async function getSummaryTable(
+  variables: Variables
+): Promise<SummaryTable> {
   const response = await fetchReportData("getSummaryTableQuery", variables);
   if (!response.table) {
     throw new Error("No summary table found");
@@ -62,7 +69,7 @@ export async function getSummaryTable(variables: Variables) {
   return response.table.data;
 }
 
-export async function getFights(variables: Variables) {
+export async function getFights(variables: Variables): Promise<WCLReport> {
   try {
     const response = await fetchReportData("getFightsQuery", variables);
     return response;
@@ -71,7 +78,9 @@ export async function getFights(variables: Variables) {
   }
 }
 
-export async function getPlayerDetails(variables: Variables) {
+export async function getPlayerDetails(
+  variables: Variables
+): Promise<PlayerDetails | undefined> {
   const response = await fetchReportData("getPlayerDetailsQuery", variables);
   if (!response.playerDetails) {
     return;
@@ -84,8 +93,8 @@ export async function getEvents<T extends AnyEvent>(
   variables: EventVariables,
   eventType?: EventType,
   previousEvents?: T[],
-  recurse?: boolean
-) {
+  recurse: boolean = false
+): Promise<T[]> {
   /** Xeph should fix so I don't need to do this.
    * Rare edge case where you hit your limit and only get parsed some of the events on the endTime timestamp.
    * If nextPageTimestamp then is equal to endTime, WCL will throw a hissy fit. */
@@ -122,5 +131,5 @@ export async function getEvents<T extends AnyEvent>(
     );
   }
 
-  return allEvents.sort((a, b) => a.timestamp - b.timestamp) as T[];
+  return allEvents as T[];
 }

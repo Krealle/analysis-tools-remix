@@ -2,7 +2,7 @@ import { useCallback } from "react";
 import useWCLUrlInputStore from "../zustand/WCLUrlInputStore";
 import useFightBoxesStore from "../zustand/fightBoxesStore";
 
-const SelectFightButtons = () => {
+const SelectFightButtons: React.FC = () => {
   const fightReport = useWCLUrlInputStore((state) => state.fightReport);
   const { setSelectedIds } = useFightBoxesStore();
 

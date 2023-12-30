@@ -66,7 +66,7 @@ export function getMRTNote(
   return note;
 }
 
-function getDefaultTargets(avgTopPumpersData: TotInterval[]) {
+function getDefaultTargets(avgTopPumpersData: TotInterval[]): Set<number> {
   const idSum = new Map<number, number>();
 
   for (const interval of avgTopPumpersData) {

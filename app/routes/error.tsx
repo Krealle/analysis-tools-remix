@@ -1,6 +1,6 @@
 import { useLocation } from "react-router-dom";
 
-export default function ErrorPage() {
+export default function ErrorPage(): JSX.Element {
   const location = useLocation();
   const message = new URLSearchParams(location.search).get("message");
 

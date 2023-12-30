@@ -17,10 +17,12 @@ const IntervalSettings: React.FC = () => {
   } = useFightParametersStore();
   const isFetching = useStatusStore((state) => state.isFetching);
 
-  const handleIntervalChange = (event: ChangeEvent<HTMLSelectElement>) => {
+  const handleIntervalChange = (
+    event: ChangeEvent<HTMLSelectElement>
+  ): void => {
     setIntervalTimer(parseInt(event.target.value, 10));
   };
-  const handleWeightChange = (event: ChangeEvent<HTMLSelectElement>) => {
+  const handleWeightChange = (event: ChangeEvent<HTMLSelectElement>): void => {
     setIntervalEbonMightWeight(parseFloat(event.target.value));
   };
 

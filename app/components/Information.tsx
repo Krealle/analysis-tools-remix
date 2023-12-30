@@ -1,5 +1,5 @@
 import "../styles/Info.css";
-const Information = () => {
+const Information: React.FC = () => {
   return (
     <div className="info-box">
       <p>

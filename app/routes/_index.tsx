@@ -40,7 +40,7 @@ export const loader = async ({
   return json({ hasAccessToken: hasValidToken ? true : false });
 };
 
-export default function Index() {
+export default function Index(): JSX.Element {
   const fightReport = useWCLUrlInputStore((state) => state.fightReport);
   const { hasAccessToken } = useLoaderData<typeof loader>();
   const { setHasAuth } = useStatusStore();

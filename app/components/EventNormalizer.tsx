@@ -23,7 +23,7 @@ const fights: Fight[] = [];
 const fetchedFightDataSets: FightDataSet[] = [];
 const enemyTracker = new Map<number, number>();
 
-const EventNormalizer = () => {
+const EventNormalizer: React.FC = () => {
   const [wclTableContent, setWclTableContent] = useState<JSX.Element | null>(
     null
   );
@@ -67,7 +67,7 @@ const EventNormalizer = () => {
     fights.splice(0, fights.length);
   }, [abilityFilters]);
 
-  const attemptNormalize = async () => {
+  const attemptNormalize = async (): Promise<void> => {
     if (selectedFights.size === 0) {
       alert("No fight selected!");
       return;
