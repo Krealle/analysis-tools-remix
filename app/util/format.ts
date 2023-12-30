@@ -57,6 +57,10 @@ export function toCamelCase(input: string): string {
     .join("");
 }
 
+export function splitCamelCase(input: string): string {
+  return input.replace(/([A-Z])/g, " $1").trim();
+}
+
 export function formatUnixTime(unixTimestamp: number): string {
   const dt = DateTime.fromMillis(unixTimestamp).setZone("Europe/Paris");
   return dt.toFormat("HH:mm");

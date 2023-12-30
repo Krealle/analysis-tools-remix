@@ -1,4 +1,4 @@
-import { formatNumber } from "../../util/format";
+import { formatNumber, splitCamelCase } from "../../util/format";
 import { AttributionHook } from "../../wcl/events/types";
 import { Combatant } from "../combatant/combatants";
 import "../../styles/styling.css";
@@ -140,9 +140,7 @@ const tableRenderer = (
     >
       <td className="name">
         <span className={player.combatant.class}>{player.combatant.name} </span>
-        <span className="spec">
-          ({player.combatant.spec.replace(/(?<=[a-z])(?=[A-Z])/g, " ")})
-        </span>
+        <span className="spec">({splitCamelCase(player.combatant.spec)})</span>
       </td>
       <td>{formatNumber(player.wclAmount)}</td>
       <td>{formatNumber(player.normalizedAmount)}</td>

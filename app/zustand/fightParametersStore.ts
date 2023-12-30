@@ -11,8 +11,8 @@ import {
 } from "../util/constants";
 
 export type AbilityFilters<T> = {
-  noEMScaling: T;
-  noShiftingScaling: T;
+  noEbonMightScaling: T;
+  noShiftingSandsScaling: T;
   noScaling: T;
   blacklist: T;
 };
@@ -62,8 +62,8 @@ const useFightParametersStore = create<FightParametersStore>((set) => ({
   showOptions: false,
   enemyBlacklist: new Set<number>(),
   abilityFilters: {
-    noEMScaling: ABILITY_NO_EM_SCALING.toString(),
-    noShiftingScaling: ABILITY_NO_SHIFTING_SCALING.toString(),
+    noEbonMightScaling: ABILITY_NO_EM_SCALING.toString(),
+    noShiftingSandsScaling: ABILITY_NO_SHIFTING_SCALING.toString(),
     noScaling: ABILITY_NO_SCALING.toString(),
     blacklist: ABILITY_BLACKLIST.toString(),
   },

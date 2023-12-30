@@ -4,6 +4,7 @@ import useFightParametersStore, {
 import useStatusStore from "../../zustand/statusStore";
 import PopupContent from "../generic/PopupContent";
 import "../../styles/fightParameterStyling.css";
+import { splitCamelCase, toCamelCase } from "../../util/format";
 
 const AbilityFilterSettings: React.FC = () => {
   const { abilityFilters, setAbilityFilter } = useFightParametersStore();
@@ -15,7 +16,7 @@ const AbilityFilterSettings: React.FC = () => {
         return (
           <div className="flex container" key={ability}>
             <div className="flex title">
-              <big>{ability}</big>
+              <big>{splitCamelCase(toCamelCase(ability))}</big>
             </div>
             <div className="flex abilities">
               <textarea

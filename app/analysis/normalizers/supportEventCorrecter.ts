@@ -163,13 +163,13 @@ function getRelevantPlayerBuffs(
     );
   }
 
-  if (abilityFilters.noEMScaling.includes(event.abilityGameID)) {
+  if (abilityFilters.noEbonMightScaling.includes(event.abilityGameID)) {
     playerBuffs = playerBuffs.filter(
       (buff) => buff.abilityGameID !== EBON_MIGHT
     );
   }
 
-  if (abilityFilters.noShiftingScaling.includes(event.abilityGameID)) {
+  if (abilityFilters.noShiftingSandsScaling.includes(event.abilityGameID)) {
     playerBuffs = playerBuffs.filter(
       (buff) => buff.abilityGameID !== SHIFTING_SANDS
     );

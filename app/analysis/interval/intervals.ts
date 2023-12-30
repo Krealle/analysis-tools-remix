@@ -106,7 +106,7 @@ export function getAverageIntervals(
         (entry) => entry.id === event.source.id
       );
 
-      const multiplier = abilityFilters.noEMScaling.includes(
+      const multiplier = abilityFilters.noEbonMightScaling.includes(
         event.abilityGameID
       )
         ? ebonWeight
