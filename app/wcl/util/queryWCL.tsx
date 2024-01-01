@@ -133,5 +133,5 @@ export async function getEvents<T extends AnyEvent>(
     );
   }
 
-  return allEvents as T[];
+  return allEvents;
 }
