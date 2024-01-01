@@ -13,8 +13,12 @@ export const loader: LoaderFunction = async ({ request }) => {
   const variables = url.searchParams.get("variables");
   const session = await getSession(request.headers.get("Cookie"));
 
-  if (!requestType) return json({ error: `Missing request type` });
-  if (!variables) return json({ error: "Missing variables" });
+  if (!requestType) {
+    return json({ error: `Missing request type` });
+  }
+  if (!variables) {
+    return json({ error: "Missing variables" });
+  }
   if (!(requestType in Queries)) {
     return json({ error: `Invalid request type` });
   }
@@ -56,6 +60,6 @@ export const loader: LoaderFunction = async ({ request }) => {
 
     return { data };
   } catch (error) {
-    return json({ error: `Failed query ${error}` });
+    return json({ error: `Failed query ${(error as Error).toString()}` });
   }
 };

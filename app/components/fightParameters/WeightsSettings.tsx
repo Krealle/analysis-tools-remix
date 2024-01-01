@@ -46,7 +46,7 @@ const WeightsSettings: React.FC = () => {
   );
 
   return (
-    <PopupContent content={content} name={"Weights"} disabled={isFetching} />
+    <PopupContent content={content} name="Weights" disabled={isFetching} />
   );
 };
 

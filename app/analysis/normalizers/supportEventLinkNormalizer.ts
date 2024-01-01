@@ -66,7 +66,7 @@ export function supportEventLinkNormalizer(
       if (!event.subtractsFromSupportedActor) {
         eventRecord[eventKey] = idx;
         normEvents.push(normalizedEvent);
-        idx++;
+        idx += 1;
       } else {
         const supportedEventIndex = eventRecord[eventKey];
 

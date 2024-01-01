@@ -95,7 +95,7 @@ export function getAverageIntervals(
 
         intervalTimer = event.timestamp;
         interval = [];
-        currentInterval++;
+        currentInterval += 1;
         if (overlapsWithTimeSkip) {
           continue;
         }
@@ -147,14 +147,14 @@ export function averageOutIntervals(
           intervalRecord[id] = { totalDamage: damage, count: 1 };
         } else {
           intervalRecord[id].totalDamage += damage;
-          intervalRecord[id].count++;
+          intervalRecord[id].count += 1;
         }
       }
     }
 
     const intervalSet: IntervalEntry[] = Object.entries(intervalRecord).map(
       ([id, intervalData]) => ({
-        id: +id,
+        id: Number(id),
         damage: intervalData.totalDamage / intervalData.count,
       })
     );

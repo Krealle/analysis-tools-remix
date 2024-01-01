@@ -41,7 +41,9 @@ export async function fetchReportData(
         requestType: requestType,
         variables: JSON.stringify(variables),
       });
-      const response = await fetch(`api/graphqlClient?${queryParams}`);
+      const response = await fetch(
+        "api/graphqlClient?" + queryParams.toString()
+      );
       const data = await response.json();
       const rootReport = data.data as RootReport;
 
@@ -50,7 +52,7 @@ export async function fetchReportData(
       return report;
     } catch (error) {
       console.error("GraphQL request error:", error);
-      attempts++;
+      attempts += 1;
     }
   }
 

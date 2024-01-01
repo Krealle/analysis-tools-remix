@@ -75,10 +75,10 @@ const tableRenderer = (
         const stolenAmount = event.supportEvents.reduce((acc, supportEvent) => {
           if (supportEvent.hookType === AttributionHook.FABRICATED_HOOK) {
             acc += supportEvent.event.normalizedAmount;
-            fabricatedEvents++;
+            fabricatedEvents += 1;
           } else if (supportEvent.hookType === AttributionHook.EMPTY_HOOK) {
             acc += supportEvent.event.normalizedAmount;
-            emptyEvents++;
+            emptyEvents += 1;
           }
 
           return acc;

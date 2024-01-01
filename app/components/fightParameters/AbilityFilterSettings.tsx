@@ -39,7 +39,7 @@ const AbilityFilterSettings: React.FC = () => {
   return (
     <PopupContent
       content={content}
-      name={"Ability Filter"}
+      name="Ability Filter"
       disabled={isFetching}
     />
   );

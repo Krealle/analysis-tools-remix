@@ -18,7 +18,7 @@ const FightButtons: React.FC<FightButtonProps> = ({
     <div className="flex gap">
       <button
         onClick={() => handleButtonClick(false)}
-        disabled={isFetching || !!parameterError}
+        disabled={isFetching || Boolean(parameterError)}
       >
         <b>Get DPS</b>
       </button>

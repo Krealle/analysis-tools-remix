@@ -7,6 +7,7 @@ import {
   commitSession,
   getSession,
 } from "./sessions";
+import { isString } from "../util/typeChecks";
 
 export const loader: LoaderFunction = async ({ request }) => {
   const { searchParams } = new URL(request.url);
@@ -38,8 +39,8 @@ export const loader: LoaderFunction = async ({ request }) => {
     return redirect("/error?message=No code received from WCL");
   }
 
-  const sessionState = session.get("state");
-  if (sessionState !== receivedState && !isDev) {
+  const sessionState: unknown = session.get("state");
+  if ((sessionState !== receivedState || !isString(sessionState)) && !isDev) {
     console.error("Invalid state received");
     return redirect("/error?message=Invalid state received from WCL");
   }

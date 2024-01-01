@@ -45,11 +45,7 @@ const EnemyFilter: React.FC = () => {
     }
   );
   return (
-    <PopupContent
-      content={content}
-      name={"Enemy Filter"}
-      disabled={isFetching}
-    />
+    <PopupContent content={content} name="Enemy Filter" disabled={isFetching} />
   );
 };
 

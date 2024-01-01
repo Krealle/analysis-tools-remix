@@ -42,7 +42,7 @@ const getFightPhase = (fight: ReportFight): string => {
   switch (true) {
     case (fight.lastPhase ?? 0) > 0:
       return `${fight.lastPhaseIsIntermission ? "I" : "P"}${fight.lastPhase}`;
-    case !!fight.keystoneLevel:
+    case Boolean(fight.keystoneLevel):
       return `M ${fight.keystoneLevel}`;
     default:
       return "";
@@ -91,7 +91,7 @@ const FightBoxes = (): JSX.Element | undefined => {
     <div>
       {Object.entries(fightsByName).map(([groupName, fights]) => {
         const normalizedGroupName = toCamelCase(groupName);
-        const fightIds = fights!.flatMap((fight) => fight.id);
+        const fightIds = fights.flatMap((fight) => fight.id);
 
         return (
           <div key={groupName} className="flex column fightContainer">
@@ -106,7 +106,7 @@ const FightBoxes = (): JSX.Element | undefined => {
               </button>
             </div>
             <div className="flex fights">
-              {fights!.map((fight) => {
+              {fights.map((fight) => {
                 const fightPercentageColor = getFightPercentageColor(fight);
 
                 const content = (
@@ -141,7 +141,7 @@ const FightBoxes = (): JSX.Element | undefined => {
                     onClick={() => handleDivClick(fight.id)}
                     selected={selectedIds.has(fight.id)}
                     content={content}
-                    id={"fightButton"}
+                    id="fightButton"
                     disabled={isFetching}
                   />
                 );

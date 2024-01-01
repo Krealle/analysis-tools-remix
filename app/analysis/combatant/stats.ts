@@ -1,7 +1,7 @@
 import { AnyBuffEvent, EventType } from "../../wcl/events/types";
 import { PlayerDetails } from "../../wcl/gql/types";
 import { BUFF_GIVES_STATS } from "./buffsWithStats";
-import { BaseStats, Combatant } from "./combatants";
+import { BaseStats } from "./combatants";
 
 export type BuffStats = {
   MainStat: number;

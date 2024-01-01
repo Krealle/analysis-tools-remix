@@ -96,7 +96,7 @@ const EventNormalizer: React.FC = () => {
     try {
       let fightNumber = 0;
       for await (const fightData of fightDataGenerator) {
-        fightNumber++;
+        fightNumber += 1;
         await new Promise((resolve) => {
           setProgress(fightNumber);
           requestAnimationFrame(() => {

@@ -24,7 +24,7 @@ export function generateBuffHistories(
 
   const buffHistory: Buff[] = [];
 
-  for (let index = 0; events.length > index; index++) {
+  for (let index = 0; events.length > index; index += 1) {
     const event = events[index];
 
     if (
@@ -35,7 +35,7 @@ export function generateBuffHistories(
       let endTime = fightEnd;
       const buffEvents: AnyBuffEvent[] = [event];
 
-      for (let j = index + 1; events.length > j; j++) {
+      for (let j = index + 1; events.length > j; j += 1) {
         const nextEvent = events[j];
 
         if (

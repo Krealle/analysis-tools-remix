@@ -34,7 +34,7 @@ export const loader = async ({
 
   const hasValidToken: boolean =
     accessSession &&
-    !!accessSession.accessToken &&
+    Boolean(accessSession.accessToken) &&
     accessSession.expirationTime > Math.floor(Date.now() / 1000);
 
   return json({ hasAccessToken: hasValidToken ? true : false });

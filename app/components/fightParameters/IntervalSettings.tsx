@@ -69,7 +69,7 @@ const IntervalSettings: React.FC = () => {
   return (
     <PopupContent
       content={content}
-      name={"Interval Settings"}
+      name="Interval Settings"
       disabled={isFetching}
     />
   );
