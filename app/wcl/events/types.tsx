@@ -2,6 +2,7 @@ import { Buff } from "../../analysis/combatant/buffs";
 import { Pet } from "../../analysis/combatant/combatants";
 
 export type BaseEvent<T extends Record<string, unknown>> = T & {
+  type?: EventType;
   timestamp: number;
   sourceID: number;
   targetID: number;
@@ -15,7 +16,7 @@ export type BaseEvent<T extends Record<string, unknown>> = T & {
 
 type EncounterStartEvent = Omit<
   BaseEvent<{
-    type: "encounterstart";
+    type: EventType.EncounterStartEvent;
     encounterID: number;
     name: string;
     difficulty: number;
@@ -32,7 +33,7 @@ type EncounterStartEvent = Omit<
 
 type CombatantInfoEvent = Omit<
   BaseEvent<{
-    type: "combatantinfo";
+    type: EventType.CombatantInfoEvent;
     gear: [];
     auras: {
       source: number;
@@ -86,29 +87,29 @@ type CombatantInfoEvent = Omit<
 >;
 
 export type ApplyDebuffEvent = BaseEvent<{
-  type: "applydebuff";
+  type: EventType.ApplyDebuffEvent;
 }>;
 
 export type ApplyDebuffStackEvent = BaseEvent<{
-  type: "applydebuffstack";
+  type: EventType.ApplyDebuffStackEvent;
   stack: number;
 }>;
 
 export type ApplyBuffEvent = BaseEvent<{
-  type: "applybuff";
+  type: EventType.ApplyBuffEvent;
 }>;
 
 export type RemoveBuffEvent = BaseEvent<{
-  type: "removebuff";
+  type: EventType.RemoveBuffEvent;
 }>;
 
 export type CastEvent = BaseEvent<{
-  type: "cast";
+  type: EventType.CastEvent;
 }>;
 
 export type DungeonEncounterEnd = {
   timestamp: number;
-  type: "dungeonencounterend";
+  type: EventType.DungeonEncounterEnd;
   kill: boolean;
   encounterID: number;
   size: number;
@@ -136,24 +137,24 @@ export type DungeonEnd = {
   rating: number;
   size: number;
   timestamp: number;
-  type: "dungeonend";
+  type: EventType.DungeonEnd;
 };
 
 export type BeginCastEvent = BaseEvent<{
-  type: "begincast";
+  type: EventType.BeginCastEvent;
 }>;
 
 export type RemoveDebuffEvent = BaseEvent<{
-  type: "removedebuff";
+  type: EventType.RemoveDebuffEvent;
 }>;
 
 type SummonEvent = BaseEvent<{
-  type: "summon";
+  type: EventType.SummonEvent;
 }>;
 
 export type PhaseStartEvent = Omit<
   BaseEvent<{
-    type: "phasestart";
+    type: EventType.PhaseStartEvent;
     encounterID: number;
     name: string;
     difficulty: number;
@@ -168,7 +169,7 @@ export type PhaseStartEvent = Omit<
 
 export type HealEvent = BaseEvent<{
   type: "heal";
-  hitType: number;
+  hitType: HitType;
   amount: number;
   tick?: boolean;
   overheal?: number;
@@ -176,7 +177,7 @@ export type HealEvent = BaseEvent<{
 }>;
 
 type ResourceChangeEvent = BaseEvent<{
-  type: "resourcechange";
+  type: EventType.ResourceChangeEvent;
   resourceChange: number;
   resourceChangeType: number;
   otherResourceChange: number;
@@ -184,39 +185,39 @@ type ResourceChangeEvent = BaseEvent<{
 }>;
 
 export type ApplyBuffStackEvent = BaseEvent<{
-  type: "applybuffstack";
+  type: EventType.ApplyBuffStackEvent;
   stack: number;
 }>;
 
 export type RemoveBuffStackEvent = BaseEvent<{
-  type: "removebuffstack";
+  type: EventType.RemoveBuffStackEvent;
   stack: number;
 }>;
 
 export type InterruptEvent = BaseEvent<{
-  type: "interrupt";
+  type: EventType.InterruptEvent;
   extraAbilityGameID: number;
 }>;
 
 export type AbsorbEvent = BaseEvent<{
-  type: "absorbed";
+  type: EventType.AbsorbEvent;
   attackerID: number;
   amount: number;
   extraAbilityGameID: number;
 }>;
 
 export type RefreshDebuffEvent = BaseEvent<{
-  type: "refreshdebuff";
+  type: EventType.RefreshDebuffEvent;
 }>;
 
 type DispelEvent = BaseEvent<{
-  type: "dispel";
+  type: EventType.DispelEvent;
   extraAbilityGameID: number;
   isBuff: boolean;
 }>;
 
 export type DeathEvent = BaseEvent<{
-  type: "death";
+  type: EventType.DeathEvent;
   // only present if NPC kills player
   killerID?: number;
   killerInstance?: number;
@@ -225,12 +226,12 @@ export type DeathEvent = BaseEvent<{
 
 export type DamageEvent = BaseEvent<{
   timestamp: number;
-  type: "damage";
+  type: EventType.DamageEvent;
   sourceID: number;
   targetID: number;
   abilityGameID: number;
   fight: number;
-  hitType: number;
+  hitType: HitType;
   amount: number;
   unmitigatedAmount?: number;
   supportID?: number;
@@ -371,6 +372,8 @@ export enum EventType {
   DungeonEnd = "dungeonend",
 }
 
+/** This list in incomplete - will add values as they becomes needed
+ * For now we only really care about crits */
 export enum HitType {
   Crit = 2,
 }
