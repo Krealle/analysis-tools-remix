@@ -117,7 +117,9 @@ const EventNormalizer: React.FC = () => {
       setHasAuth(false);
     } finally {
       const fightsToHandle = fetchedFightDataSets.filter(
-        (id) => !fights.map((f) => f.fightId).includes(id.fight.id)
+        (id) =>
+          !fights.map((f) => f.fightId).includes(id.fight.id) &&
+          id.fight.reportCode === WCLReport.code
       );
 
       const formattedAbilityFilters = Object.fromEntries(
