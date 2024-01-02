@@ -9,7 +9,7 @@ const CACHE = new Map<string, unknown>();
 
 export const loader: LoaderFunction = async ({ request }) => {
   const url = new URL(request.url);
-  const requestType = url.searchParams.get("requestType");
+  const requestType = url.searchParams.get("requestType") as keyof QueryTypes;
   const variables = url.searchParams.get("variables");
   const session = await getSession(request.headers.get("Cookie"));
 
@@ -26,8 +26,8 @@ export const loader: LoaderFunction = async ({ request }) => {
   const cacheKey = `${requestType}-${variables}`;
   const cachedData = CACHE.get(cacheKey);
   /** Make sure we allow for fetching new fights */
-  if (cachedData && requestType !== "getFightsQuery") {
-    return { data: cachedData };
+  if (cachedData && requestType !== "getWCLReportQuery") {
+    return cachedData;
   }
 
   const parsedVariables = JSON.parse(variables) as Variables;
