@@ -1,5 +1,9 @@
 import { AnyEvent } from "../../wcl/events/types";
-import { ReportFight, SummaryTable, WCLReport } from "../../wcl/gql/types";
+import {
+  ReportFight,
+  SummaryTable,
+  WCLReport,
+} from "../../wcl/gql/reportTypes";
 import { getFilter } from "../../wcl/util/filters";
 import {
   EventVariables,
@@ -23,7 +27,7 @@ export async function* fetchFightData(
   WCLReport: WCLReport,
   fightsToFetch: Set<number>
 ): AsyncIterable<FightDataSet> {
-  const fightsToGenerate = WCLReport.fights!.filter((fight) =>
+  const fightsToGenerate = WCLReport.fights.filter((fight) =>
     fightsToFetch.has(fight.id)
   );
 

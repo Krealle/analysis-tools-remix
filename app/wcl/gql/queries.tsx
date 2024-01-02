@@ -1,37 +1,7 @@
 export type QueryTypes = typeof Queries;
 
 export const Queries = {
-  getReportQuery: `
-query getReport($reportID: String!) {
-  reportData {
-    report(code: $reportID) {
-      title
-      startTime
-      endTime
-      region {
-        slug
-      }
-      fights(translate: true) {
-        id
-        startTime
-        endTime
-        keystoneLevel
-        keystoneAffixes
-        keystoneBonus
-        keystoneTime
-        rating
-        averageItemLevel
-        friendlyPlayers
-        gameZone {
-          id
-        }
-      }
-    }
-  }
-}
-`,
-
-  getFightsQuery: `
+  getWCLReportQuery: `
 query getReport($reportID: String!) {
   reportData {
     report(code: $reportID) {

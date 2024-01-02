@@ -4,7 +4,7 @@ import { ReportParseError, parseWCLUrl } from "../wcl/util/parseWCLUrl";
 import useWCLUrlInputStore from "../zustand/WCLUrlInputStore";
 import ErrorBear from "./generic/ErrorBear";
 import useStatusStore from "../zustand/statusStore";
-import { getFights } from "../wcl/util/queryWCL";
+import { getWCLReport } from "../wcl/util/queryWCL";
 import useFightBoxesStore from "../zustand/fightBoxesStore";
 import WCLAuthorization from "./WCLAuthorization";
 
@@ -30,7 +30,7 @@ const WCLUrlInput: React.FC = () => {
       status.setIsFetching(true);
 
       try {
-        const newFightReport = await getFights({ reportID: reportCode });
+        const newFightReport = await getWCLReport({ reportID: reportCode });
 
         if (!newFightReport?.fights?.length) {
           throw new Error(ReportParseError.EMPTY_REPORT);

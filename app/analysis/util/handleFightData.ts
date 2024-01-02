@@ -15,12 +15,12 @@ import { eventLinkNormalizer } from "../normalizers/eventLinkNormalizer";
 import { correctSupportEvents } from "../normalizers/supportEventCorrecter";
 import { supportEventLinkNormalizer } from "../normalizers/supportEventLinkNormalizer";
 import { FightDataSet } from "./fetchFightData";
-import { WCLReport } from "../../wcl/gql/types";
 import { AbilityFilters, Weights } from "../../zustand/fightParametersStore";
+import { WCLReport } from "../../wcl/gql/reportTypes";
 
 export type Fight = {
   fightId: number;
-  difficulty?: number;
+  difficulty?: number | null;
   reportCode: string;
   startTime: number;
   endTime: number;
@@ -39,6 +39,7 @@ export function handleFightData(
   weights: Weights
 ): Fight[] {
   const newFights: Fight[] = [];
+  console.log("Handling fight data", WCLReport, FightDataSets);
 
   for (const fightDataSet of FightDataSets) {
     const buffEvents: AnyBuffEvent[] = [];
@@ -69,6 +70,7 @@ export function handleFightData(
           break;
       }
     }
+    console.log("sorted events");
 
     if (unexpectedEvents.length > 0) {
       console.error("Unexpected events!", unexpectedEvents);
@@ -79,19 +81,23 @@ export function handleFightData(
       fightDataSet.fight.startTime,
       fightDataSet.fight.endTime
     );
+    console.log("generated buff histories", buffHistories);
 
     const combatants: Combatants = generateCombatants(
       buffHistories,
       fightDataSet.summaryTable.playerDetails,
-      WCLReport.masterData?.actors
+      WCLReport.masterData.actors
     );
+    console.log("generated combatants", combatants);
 
     const linkedEvents = eventLinkNormalizer(eventsToLink);
+    console.log("linked events", linkedEvents);
 
     const linkedSupportEvent = supportEventLinkNormalizer(
       linkedEvents,
       combatants
     );
+    console.log("linked support events", linkedSupportEvent);
 
     const correctedEvents = correctSupportEvents(
       linkedSupportEvent,
@@ -99,6 +105,7 @@ export function handleFightData(
       abilityFilters,
       weights
     );
+    console.log("corrected events", correctedEvents);
 
     newFights.push({
       fightId: fightDataSet.fight.id,

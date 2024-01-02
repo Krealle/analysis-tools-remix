@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { WCLReport } from "../wcl/gql/types";
+import { WCLReport } from "../wcl/gql/reportTypes";
 
 type WCLUrlInputStore = {
   fightReport: WCLReport | undefined;

@@ -58,7 +58,7 @@ export const loader: LoaderFunction = async ({ request }) => {
     );
     CACHE.set(cacheKey, data);
 
-    return { data };
+    return data;
   } catch (error) {
     return json({ error: `Failed query ${(error as Error).toString()}` });
   }
