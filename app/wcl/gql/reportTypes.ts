@@ -335,7 +335,7 @@ export const DeathEventTableSchema = z.object({
     name: z.string(),
     guid: z.number(),
     type: z.number(),
-    abilityIcon: z.string(),
+    abilityIcon: z.string().optional(),
   }),
 });
 
