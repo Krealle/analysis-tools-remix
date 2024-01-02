@@ -1,3 +1,11 @@
+import { createRootReportResponseSchema } from "../utilTypes";
+import {
+  GetSummaryTableQuerySchema,
+  GetPlayerDetailsQuerySchema,
+  GetEventsQuerySchema,
+  GetWCLReportQuerySchema,
+} from "./queryTypes";
+
 export type QueryTypes = typeof Queries;
 
 export const Queries = {
@@ -88,4 +96,23 @@ query getReport($reportID: String!, $fightIDs: [Int]!) {
       }
     }
   }`,
+} as const;
+
+export const ReportQueries = {
+  summaryTable: {
+    requestType: "getSummaryTableQuery",
+    schema: createRootReportResponseSchema(GetSummaryTableQuerySchema),
+  },
+  playerDetails: {
+    requestType: "getPlayerDetailsQuery",
+    schema: createRootReportResponseSchema(GetPlayerDetailsQuerySchema),
+  },
+  events: {
+    requestType: "getEventsQuery",
+    schema: createRootReportResponseSchema(GetEventsQuerySchema),
+  },
+  WCLReport: {
+    requestType: "getWCLReportQuery",
+    schema: createRootReportResponseSchema(GetWCLReportQuerySchema),
+  },
 } as const;

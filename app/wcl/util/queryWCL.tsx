@@ -1,14 +1,14 @@
 import { AnyEvent, EventType } from "../events/types";
+import { ReportQueries } from "../types/graphql/queries";
 import {
   AnyReport,
   WCLReport,
-  ReportQueries,
   SummaryTableResponse,
   PlayerDetailsResponse,
-  PlayerDetails,
   EventsResponse,
-  SummaryTable,
-} from "../gql/reportTypes";
+} from "../types/graphql/queryTypes";
+import { SummaryTable } from "../types/report/summaryTable";
+import { PlayerDetails } from "../types/report/playerDetails";
 import { z } from "zod";
 /* import { getMockData } from "../__test__/getMockData"; */
 
@@ -77,7 +77,6 @@ export async function fetchReportData<T extends AnyReport>(
           console.log(err.path);
         });
       }
-      console.error("GraphQL request error:", error);
       attempts += 1;
     }
   }
@@ -154,7 +153,7 @@ export async function getEvents<T extends AnyEvent>(
 
   //console.log("Event response:", response);
 
-  const { data = [], nextPageTimestamp = null } = response?.events ?? {};
+  const { data = [], nextPageTimestamp = null } = response.events ?? {};
 
   const allEvents: T[] = [...(previousEvents ?? []), ...(data as T[])];
 

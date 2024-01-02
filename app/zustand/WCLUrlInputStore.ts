@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { WCLReport } from "../wcl/gql/reportTypes";
+import { WCLReport } from "../wcl/types/graphql/queryTypes";
 
 type WCLUrlInputStore = {
   fightReport: WCLReport | undefined;

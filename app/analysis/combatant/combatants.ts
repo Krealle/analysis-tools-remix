@@ -1,4 +1,8 @@
-import { Actor, CombatantInfo, PlayerDetails } from "../../wcl/gql/reportTypes";
+import {
+  CombatantInfo,
+  PlayerDetails,
+} from "../../wcl/types/report/playerDetails";
+import { Actor } from "../../wcl/types/report/masterData";
 import { Buff, getBuffHistory } from "./buffs";
 
 export type BaseStats = {

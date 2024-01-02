@@ -7,7 +7,6 @@ import {
   DeathEvent,
   EventType,
   NormalizedDamageEvent,
-  PhaseStartEvent,
 } from "../../wcl/events/types";
 import { Buff, generateBuffHistories } from "../combatant/buffs";
 import { Combatants, generateCombatants } from "../combatant/combatants";
@@ -16,7 +15,7 @@ import { correctSupportEvents } from "../normalizers/supportEventCorrecter";
 import { supportEventLinkNormalizer } from "../normalizers/supportEventLinkNormalizer";
 import { FightDataSet } from "./fetchFightData";
 import { AbilityFilters, Weights } from "../../zustand/fightParametersStore";
-import { WCLReport } from "../../wcl/gql/reportTypes";
+import { WCLReport } from "../../wcl/types/graphql/queryTypes";
 
 export type Fight = {
   fightId: number;
@@ -29,7 +28,6 @@ export type Fight = {
   deathEvents: DeathEvent[];
   buffHistory: Buff[];
   combatants: Combatants;
-  phaseHistory?: PhaseStartEvent[];
 };
 
 export function handleFightData(
@@ -70,7 +68,7 @@ export function handleFightData(
           break;
       }
     }
-    console.log("sorted events");
+    //console.log("sorted events");
 
     if (unexpectedEvents.length > 0) {
       console.error("Unexpected events!", unexpectedEvents);
@@ -81,23 +79,23 @@ export function handleFightData(
       fightDataSet.fight.startTime,
       fightDataSet.fight.endTime
     );
-    console.log("generated buff histories", buffHistories);
+    //console.log("generated buff histories", buffHistories);
 
     const combatants: Combatants = generateCombatants(
       buffHistories,
       fightDataSet.summaryTable.playerDetails,
       WCLReport.masterData.actors
     );
-    console.log("generated combatants", combatants);
+    //console.log("generated combatants", combatants);
 
     const linkedEvents = eventLinkNormalizer(eventsToLink);
-    console.log("linked events", linkedEvents);
+    //console.log("linked events", linkedEvents);
 
     const linkedSupportEvent = supportEventLinkNormalizer(
       linkedEvents,
       combatants
     );
-    console.log("linked support events", linkedSupportEvent);
+    //console.log("linked support events", linkedSupportEvent);
 
     const correctedEvents = correctSupportEvents(
       linkedSupportEvent,
@@ -105,7 +103,7 @@ export function handleFightData(
       abilityFilters,
       weights
     );
-    console.log("corrected events", correctedEvents);
+    //console.log("corrected events", correctedEvents);
 
     newFights.push({
       fightId: fightDataSet.fight.id,

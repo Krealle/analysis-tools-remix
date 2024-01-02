@@ -5,8 +5,8 @@ import { EncounterImages } from "../util/enemyTables";
 import useWCLUrlInputStore from "../zustand/WCLUrlInputStore";
 import useStatusStore from "../zustand/statusStore";
 import useFightBoxesStore from "../zustand/fightBoxesStore";
-import { ReportFight } from "../wcl/gql/types";
 import { useCallback, useMemo } from "react";
+import { ReportFight } from "../wcl/types/report/report";
 
 type FightPercentageColor =
   | "kill"

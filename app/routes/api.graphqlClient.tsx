@@ -1,6 +1,6 @@
 import { LoaderFunction, json } from "@remix-run/node";
 import { GraphQLClient } from "graphql-request";
-import { Queries, QueryTypes } from "../wcl/gql/queries";
+import { Queries, QueryTypes } from "../wcl/types/graphql/queries";
 import { Variables } from "../wcl/util/queryWCL";
 import { AccessSession, getSession } from "./sessions";
 
