@@ -1,5 +1,5 @@
 import { AnyBuffEvent, EventType } from "../../wcl/events/types";
-import { PlayerDetails } from "../../wcl/_gql/types";
+import { PlayerDetails } from "../../wcl/types/report/playerDetails";
 import { BUFF_GIVES_STATS } from "./buffsWithStats";
 import { BaseStats } from "./combatants";
 
@@ -103,7 +103,7 @@ export function getBuffs(
 function getBaseStats(players: PlayerDetails, timestamp: number): BaseStats[] {
   const baselineStats: BaseStats[] = Object.keys(players).flatMap((key) => {
     return players[key as keyof PlayerDetails].map((player) => {
-      if (!player.combatantInfo) {
+      if (!player.combatantInfo || Array.isArray(player.combatantInfo)) {
         return {
           timestamp: timestamp,
           playerId: player.id,
