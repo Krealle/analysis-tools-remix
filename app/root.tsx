@@ -12,6 +12,10 @@ import {
 import "./styles/fonts.css";
 import "./styles/App.css";
 import "./styles/classColors.css";
+// eslint-disable-next-line node/no-missing-import
+import { SpeedInsights } from "@vercel/speed-insights/remix";
+// eslint-disable-next-line node/no-missing-import
+import { Analytics } from "@vercel/analytics/react";
 
 export const links: LinksFunction = () => [
   ...(cssBundleHref ? [{ rel: "stylesheet", href: cssBundleHref }] : []),
@@ -29,6 +33,8 @@ export default function App() {
         <link rel="icon" type="image/svg+xml" href="/static/bear/uwu-256.png" />
       </head>
       <body>
+        <SpeedInsights />
+        <Analytics />
         <div id="root">
           <Outlet />
           <ScrollRestoration />

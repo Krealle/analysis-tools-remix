@@ -41,6 +41,9 @@ module.exports = {
       resolvePaths: ["node_modules/@types"],
       tryExtensions: [".js", ".json", ".node", ".ts", ".d.ts", ".tsx"],
     },
+    "import/parsers": {
+      "@typescript-eslint/parser": [".ts", ".tsx"],
+    },
     "import/internal-regex": "^~/",
     "import/resolver": {
       node: {
