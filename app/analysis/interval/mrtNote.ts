@@ -21,6 +21,9 @@ export function getMRTNote(
   note += "\n";
 
   avgTopPumpersData.forEach((interval, index) => {
+    if (interval.phaseChange) {
+      return;
+    }
     const dataSet: IntervalSet = interval.intervalEntries[0];
     const top2: Set<number> = new Set(
       dataSet.slice(0, 2).map((entry) => entry.id)
