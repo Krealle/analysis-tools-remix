@@ -86,7 +86,10 @@ const EventNormalizer: React.FC = () => {
 
     const fightsToFetch = new Set(
       Array.from(selectedFights).filter(
-        (id) => !fetchedFightDataSets.some((f) => f.fight.id === id)
+        (id) =>
+          !fetchedFightDataSets.some(
+            (f) => f.fight.id === id && f.fight.reportCode === WCLReport.code
+          )
       )
     );
     setAmountOfFightsToFetch(fightsToFetch.size);
