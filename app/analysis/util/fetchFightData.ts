@@ -2,7 +2,7 @@ import { AnyEvent } from "../../wcl/events/types";
 import { WCLReport } from "../../wcl/types/graphql/queryTypes";
 import { ReportFight } from "../../wcl/types/report/report";
 import { SummaryTable } from "../../wcl/types/report/summaryTable";
-import { getFilter } from "../../wcl/util/filters";
+import { getFilter, getPhaseEventsFilter } from "../../wcl/util/filters";
 import {
   EventVariables,
   getEvents,
@@ -13,6 +13,7 @@ export type FightDataSet = {
   fight: ReportFight & { reportCode: string };
   summaryTable: SummaryTable;
   events: AnyEvent[];
+  phaseEvents: AnyEvent[];
 };
 
 /**
@@ -42,10 +43,15 @@ export async function* fetchFightData(
     variables.filterExpression = getFilter();
     const events = await getEvents(variables);
 
+    /** Split from events to reduce complexity */
+    variables.filterExpression = getPhaseEventsFilter();
+    const phaseEvents = await getEvents(variables);
+
     return {
       fight: { ...fight, reportCode: WCLReport.code },
       summaryTable: summaryTable,
       events: events,
+      phaseEvents: phaseEvents,
     };
   });
 

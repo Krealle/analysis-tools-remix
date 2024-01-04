@@ -168,6 +168,10 @@ const EventNormalizer: React.FC = () => {
         }
       }
 
+      // If all fights are the same we can use phases for Intervals
+      const isSameBoss = fightsToRender.every(
+        (fight, i, arr) => i === 0 || fight.bossName === arr[i - 1].bossName
+      );
       const intervals = getAverageIntervals(
         fightsToRender,
         selectedFights,
@@ -178,7 +182,8 @@ const EventNormalizer: React.FC = () => {
         intervalEbonMightWeight,
         intervalTimer,
         enemyBlacklist,
-        Number(deathCountFilter)
+        Number(deathCountFilter),
+        isSameBoss
       );
 
       const combinedCombatants: Combatants = new Map<number, Combatant>();
@@ -193,7 +198,11 @@ const EventNormalizer: React.FC = () => {
         });
       });
 
-      const intervalContent = intervalRenderer(intervals, combinedCombatants);
+      const intervalContent = intervalRenderer(
+        intervals,
+        combinedCombatants,
+        fightsToRender.length
+      );
 
       setWclTableContent(wclTableContent);
       setIntervalsContent(intervalContent);

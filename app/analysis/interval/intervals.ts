@@ -18,7 +18,8 @@ export function getAverageIntervals(
   ebonWeight: number,
   intervalDuration: number,
   enemyBlacklist: Set<number>,
-  deathCutOff: number
+  deathCutOff: number,
+  usePhases: boolean = true
 ): TotInterval[] {
   const sortedIntervals: TotInterval[] = [];
 
@@ -32,9 +33,9 @@ export function getAverageIntervals(
     }
     let currentInterval = 1;
 
-    const intervalDur = intervalDuration * 1000;
+    const intervalDur = intervalDuration * 1_000;
     let intervalTimer = fight.startTime;
-    let interval: IntervalSet = [];
+    const interval: IntervalSet = [];
     let latestTimestamp = 0;
 
     const deathCutOffTime =
@@ -42,7 +43,11 @@ export function getAverageIntervals(
         ? fight.deathEvents[deathCutOff - 1].timestamp
         : undefined;
 
+    let nextPhase = fight.phaseEvents.shift();
+    let currentPhase = 1;
+
     for (const event of fight.normalizedDamageEvents) {
+      // Events to ignore
       if (
         event.source.spec === "Augmentation" ||
         event.normalizedAmount === 0 ||
@@ -54,10 +59,12 @@ export function getAverageIntervals(
         continue;
       }
 
+      // Death Cutoff
       if (deathCutOffTime && event.timestamp >= deathCutOffTime) {
         break;
       }
 
+      // Time Skip check
       const overlapsWithTimeSkip = timeSkipIntervals.some((skipInterval) => {
         return (
           event.timestamp >= skipInterval.start + fight.startTime &&
@@ -65,46 +72,98 @@ export function getAverageIntervals(
         );
       });
 
+      // Phase check
+      const isPhaseChange = nextPhase
+        ? event.timestamp >= nextPhase.timestamp && usePhases
+        : false;
+
       if (
         event.timestamp > intervalTimer + intervalDur ||
-        overlapsWithTimeSkip
+        overlapsWithTimeSkip ||
+        isPhaseChange
       ) {
-        if (interval.length === 0 && overlapsWithTimeSkip) {
-          intervalTimer = event.timestamp;
-          continue;
+        if (interval.length) {
+          const sortedInterval = interval.splice(0, interval.length);
+          sortedInterval.sort((a, b) => b.damage - a.damage);
+
+          const existingEntry = sortedIntervals.find(
+            (entry) =>
+              entry.currentInterval === currentInterval &&
+              entry.currentPhase === currentPhase
+          );
+
+          // Use timestamp from last event if possible
+          const endTimestamp =
+            (latestTimestamp > 0 ? latestTimestamp : event.timestamp) -
+            fight.startTime;
+
+          if (existingEntry) {
+            // Update end timestamp if needed
+            if (endTimestamp > existingEntry.end) {
+              existingEntry.end = endTimestamp;
+            }
+
+            existingEntry.intervalEntries.push(sortedInterval);
+          } else {
+            const startTimestamp = intervalTimer - fight.startTime;
+
+            const newInterval = {
+              currentInterval,
+              intervalEntries: [sortedInterval],
+              start: startTimestamp,
+              end: endTimestamp,
+              currentPhase: currentPhase,
+              phaseChange: isPhaseChange
+                ? {
+                    phaseName: nextPhase!.name,
+                  }
+                : undefined,
+            };
+
+            const earliestPhaseChange = usePhases
+              ? sortedIntervals.findIndex(
+                  (entry) =>
+                    entry.phaseChange && entry.currentPhase === currentPhase
+                )
+              : -1;
+
+            /**
+             * So because the timings for when you enter a new phase isn't static
+             * we might have phase changed in interval 5, but now we are in interval 6
+             * we need to move the phase change to interval 6.
+             */
+            if (
+              earliestPhaseChange !== -1 &&
+              earliestPhaseChange < currentInterval - 1
+            ) {
+              if (!isPhaseChange) {
+                newInterval.phaseChange =
+                  sortedIntervals[earliestPhaseChange].phaseChange;
+              }
+
+              sortedIntervals[earliestPhaseChange].phaseChange = undefined;
+
+              sortedIntervals.splice(earliestPhaseChange + 1, 0, newInterval);
+            } else {
+              sortedIntervals.push(newInterval);
+            }
+          }
+
+          currentInterval += 1;
         }
-        const sortedInterval = interval.slice();
-        sortedInterval.sort((a, b) => b.damage - a.damage);
 
-        const existingEntry = sortedIntervals.find(
-          (entry) => entry.currentInterval === currentInterval
-        );
-
-        const endTimestamp =
-          latestTimestamp > 0 ? latestTimestamp : event.timestamp;
-        if (existingEntry) {
-          existingEntry.intervalEntries.push(sortedInterval);
-        } else {
-          sortedIntervals.push({
-            currentInterval,
-            intervalEntries: [sortedInterval],
-            start: intervalTimer - fight.startTime,
-            end: endTimestamp - fight.startTime,
-          });
+        if (isPhaseChange) {
+          nextPhase = fight.phaseEvents.shift();
+          currentPhase += 1;
+          currentInterval = 1;
         }
 
         intervalTimer = event.timestamp;
-        interval = [];
-        currentInterval += 1;
         if (overlapsWithTimeSkip) {
           continue;
         }
       }
       latestTimestamp = event.timestamp;
-
-      const intervalEntry = interval.find(
-        (entry) => entry.id === event.source.id
-      );
 
       const multiplier = abilityFilters.noEbonMightScaling.includes(
         event.abilityGameID
@@ -113,6 +172,10 @@ export function getAverageIntervals(
         : 0;
 
       const amount = event.normalizedAmount * (1 - multiplier);
+
+      const intervalEntry = interval.find(
+        (entry) => entry.id === event.source.id
+      );
 
       if (intervalEntry) {
         intervalEntry.damage += amount;
@@ -124,6 +187,7 @@ export function getAverageIntervals(
       }
     }
   }
+  console.log(sortedIntervals);
   const averageIntervals = averageOutIntervals(sortedIntervals);
 
   return averageIntervals;
@@ -166,6 +230,8 @@ export function averageOutIntervals(
       intervalEntries: [sortedIntervalSet],
       start: entry.start,
       end: entry.end,
+      currentPhase: entry.currentPhase,
+      phaseChange: entry.phaseChange,
     });
   }
 
@@ -178,5 +244,7 @@ export function getTop4Pumpers(topPumpersData: TotInterval[]): TotInterval[] {
     intervalEntries: [interval.intervalEntries[0].slice(0, 4)],
     start: interval.start,
     end: interval.end,
+    currentPhase: interval.currentPhase,
+    phaseChange: interval.phaseChange,
   }));
 }

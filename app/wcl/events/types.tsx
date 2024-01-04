@@ -155,10 +155,10 @@ type SummonEvent = BaseEvent<{
 export type PhaseStartEvent = Omit<
   BaseEvent<{
     type: EventType.PhaseStartEvent;
-    encounterID: number;
     name: string;
-    difficulty: number;
-    size: number;
+    encounterID?: number;
+    difficulty?: number;
+    size?: number;
   }>,
   | "sourceID"
   | "targetID"

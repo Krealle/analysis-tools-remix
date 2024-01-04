@@ -7,7 +7,8 @@ import { TotInterval } from "../../util/types";
 
 const intervalRenderer = (
   intervals: TotInterval[],
-  combatants: Combatants
+  combatants: Combatants,
+  amountOfFights: number
 ): JSX.Element => {
   if (intervals.length === 0) {
     return <>No data found</>;
@@ -25,6 +26,7 @@ const intervalRenderer = (
     </tr>
   );
 
+  let phaseCutoff = 0;
   for (const interval of top4Pumpers) {
     const formattedEntriesTable: JSX.Element[][] = interval.intervalEntries.map(
       (entries) =>
@@ -41,11 +43,25 @@ const intervalRenderer = (
     tableRows.push(
       <tr key={interval.currentInterval}>
         <td>
-          {formatDuration(interval.start)} - {formatDuration(interval.end)}
+          {formatDuration(Math.abs(interval.start - phaseCutoff))} -{" "}
+          {formatDuration(Math.abs(interval.end - phaseCutoff))}
         </td>
         {formattedEntriesTable}
       </tr>
     );
+
+    if (interval.phaseChange) {
+      if (amountOfFights > 1) {
+        phaseCutoff = interval.end;
+      }
+      tableRows.push(
+        <tr key={interval.phaseChange.phaseName}>
+          <td colSpan={5}>
+            <b>{interval.phaseChange.phaseName}</b>
+          </td>
+        </tr>
+      );
+    }
   }
 
   const mrtNote = getMRTNote(intervals, combatants);
@@ -64,6 +80,14 @@ const intervalRenderer = (
               {tableRows}
             </tbody>
           </table>
+          {amountOfFights > 1 && (
+            <em>
+              <small>
+                * In multi-fight analysis, phase timers are relative due to
+                varying push timings in individual pulls
+              </small>
+            </em>
+          )}
         </div>
         <div>
           <h3>MRT note</h3>

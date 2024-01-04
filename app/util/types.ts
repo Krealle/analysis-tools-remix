@@ -33,6 +33,10 @@ export type TotInterval = {
   start: number;
   end: number;
   intervalEntries: IntervalSet[];
+  currentPhase: number;
+  phaseChange?: {
+    phaseName: string;
+  };
 };
 
 export type IntervalSet = IntervalEntry[];

@@ -7,6 +7,7 @@ import {
   DeathEvent,
   EventType,
   NormalizedDamageEvent,
+  PhaseStartEvent,
 } from "../../wcl/events/types";
 import { Buff, generateBuffHistories } from "../combatant/buffs";
 import { Combatants, generateCombatants } from "../combatant/combatants";
@@ -16,9 +17,11 @@ import { supportEventLinkNormalizer } from "../normalizers/supportEventLinkNorma
 import { FightDataSet } from "./fetchFightData";
 import { AbilityFilters, Weights } from "../../zustand/fightParametersStore";
 import { WCLReport } from "../../wcl/types/graphql/queryTypes";
+import { generatePhaseEvents } from "./generatePhaseEvents";
 
 export type Fight = {
   fightId: number;
+  bossName: string;
   difficulty?: number | null;
   reportCode: string;
   startTime: number;
@@ -27,6 +30,7 @@ export type Fight = {
   normalizedDamageEvents: NormalizedDamageEvent[];
   deathEvents: DeathEvent[];
   buffHistory: Buff[];
+  phaseEvents: PhaseStartEvent[];
   combatants: Combatants;
 };
 
@@ -98,8 +102,13 @@ export function handleFightData(
       weights
     );
 
+    const phaseEvents: PhaseStartEvent[] = generatePhaseEvents(
+      fightDataSet.phaseEvents
+    );
+
     newFights.push({
       fightId: fightDataSet.fight.id,
+      bossName: fightDataSet.fight.name ?? "Unknown Boss",
       difficulty: fightDataSet.fight.difficulty,
       reportCode: WCLReport.code,
       startTime: fightDataSet.fight.startTime,
@@ -108,6 +117,7 @@ export function handleFightData(
       events: fightDataSet.events,
       deathEvents: deathEvents,
       buffHistory: buffHistories,
+      phaseEvents: phaseEvents,
       combatants: combatants,
     });
   }
