@@ -117,28 +117,45 @@ export const EncounterNames: Record<string, string> = {
   FyrakkTheBlazing: "Fyrakk the Blazing",
 };
 
-// prettier-ignore
 export const EncounterImages: Record<string, string> = {
   /** Aberrus */
-  "Kazzara": "https://wow.zamimg.com/images/wow/journal/ui-ej-boss-kazzara-the-hellforged.png",
-  "AssaultOfTheZaqali": "https://wow.zamimg.com/images/wow/journal/ui-ej-boss-assault-of-the-zaqali.png",
-  "RashokTheElder": "https://wow.zamimg.com/images/wow/journal/ui-ej-boss-rashok-the-elder.png",
-  "TheAmalgamationChamber": "https://wow.zamimg.com/images/wow/journal/ui-ej-boss-the-amalgamation-chamber.png",
-  "TheForgottenExperiments": "https://wow.zamimg.com/images/wow/journal/ui-ej-boss-the-forgotten-experiments.png",
-  "TheVigilantStewardZskarn": "https://wow.zamimg.com/images/wow/journal/ui-ej-boss-the-vigilant-steward-zskarn.png",
-  "Magmorax": "https://wow.zamimg.com/images/wow/journal/ui-ej-boss-magmorax.png",
-  "EchoOfNeltharion": "https://wow.zamimg.com/images/wow/journal/ui-ej-boss-echo-of-neltharion.png",
-  "ScalecommanderSarkareth": "https://wow.zamimg.com/images/wow/journal/ui-ej-boss-scalecommander-sarkareth.png",
-  "Gnarlroot": "https://wow.zamimg.com/images/wow/journal/ui-ej-boss-gnarlroot.png",
-  "IgiraTheCruel": "https://wow.zamimg.com/images/wow/journal/ui-ej-boss-igira-the-cruel.png",
-  "Volcoross": "https://wow.zamimg.com/images/wow/journal/ui-ej-boss-volcoross.png",
-  "CouncilOfDreams": "https://wow.zamimg.com/images/wow/journal/ui-ej-boss-council-of-dreams.png",
-  "LarodarKeeperOfTheFlame": "https://wow.zamimg.com/images/wow/journal/ui-ej-boss-larodar-keeper-of-the-flame.png",
-  "NymueWeaverOfTheCycle": "https://wow.zamimg.com/images/wow/journal/ui-ej-boss-nymue-weaver-of-the-cycle.png",
-  "Smolderon": "https://wow.zamimg.com/images/wow/journal/ui-ej-boss-smolderon.png",
-  "TindralSageswiftSeerOfTheFlame": "https://wow.zamimg.com/images/wow/journal/ui-ej-boss-tindral-sageswift-seer-of-flame.png",
-  "FyrakkTheBlazing": "https://wow.zamimg.com/images/wow/journal/ui-ej-boss-fyrakk-the-burning.png",
-}
+  Kazzara:
+    "https://wow.zamimg.com/images/wow/journal/ui-ej-boss-kazzara-the-hellforged.png",
+  AssaultOfTheZaqali:
+    "https://wow.zamimg.com/images/wow/journal/ui-ej-boss-assault-of-the-zaqali.png",
+  RashokTheElder:
+    "https://wow.zamimg.com/images/wow/journal/ui-ej-boss-rashok-the-elder.png",
+  TheAmalgamationChamber:
+    "https://wow.zamimg.com/images/wow/journal/ui-ej-boss-the-amalgamation-chamber.png",
+  TheForgottenExperiments:
+    "https://wow.zamimg.com/images/wow/journal/ui-ej-boss-the-forgotten-experiments.png",
+  TheVigilantStewardZskarn:
+    "https://wow.zamimg.com/images/wow/journal/ui-ej-boss-the-vigilant-steward-zskarn.png",
+  Magmorax: "https://wow.zamimg.com/images/wow/journal/ui-ej-boss-magmorax.png",
+  EchoOfNeltharion:
+    "https://wow.zamimg.com/images/wow/journal/ui-ej-boss-echo-of-neltharion.png",
+  ScalecommanderSarkareth:
+    "https://wow.zamimg.com/images/wow/journal/ui-ej-boss-scalecommander-sarkareth.png",
+  /** Amirdrassil */
+  Gnarlroot:
+    "https://wow.zamimg.com/images/wow/journal/ui-ej-boss-gnarlroot.png",
+  IgiraTheCruel:
+    "https://wow.zamimg.com/images/wow/journal/ui-ej-boss-igira-the-cruel.png",
+  Volcoross:
+    "https://wow.zamimg.com/images/wow/journal/ui-ej-boss-volcoross.png",
+  CouncilOfDreams:
+    "https://wow.zamimg.com/images/wow/journal/ui-ej-boss-council-of-dreams.png",
+  LarodarKeeperOfTheFlame:
+    "https://wow.zamimg.com/images/wow/journal/ui-ej-boss-larodar-keeper-of-the-flame.png",
+  NymueWeaverOfTheCycle:
+    "https://wow.zamimg.com/images/wow/journal/ui-ej-boss-nymue-weaver-of-the-cycle.png",
+  Smolderon:
+    "https://wow.zamimg.com/images/wow/journal/ui-ej-boss-smolderon.png",
+  TindralSageswiftSeerOfTheFlame:
+    "https://wow.zamimg.com/images/wow/journal/ui-ej-boss-tindral-sageswift-seer-of-flame.png",
+  FyrakkTheBlazing:
+    "https://wow.zamimg.com/images/wow/journal/ui-ej-boss-fyrakk-the-burning.png",
+};
 
 export const EncounterIds: Record<string, string> = {
   /** Amirdrassil */
@@ -151,4 +168,33 @@ export const EncounterIds: Record<string, string> = {
   Smolderon: "2824",
   TindralSageswiftSeerOfTheFlame: "2786",
   FyrakkTheBlazing: "2677",
+};
+
+export const EncountersWithTruePhases: Set<string> = new Set([
+  /** Amirdrassil */
+  "LarodarKeeperOfTheFlame",
+  "TindralSageswiftSeerOfTheFlame",
+  "FyrakkTheBlazing",
+]);
+
+export const EncounterPhaseNames: Record<string, Record<string, string>> = {
+  /** Amirdrassil */
+  LarodarKeeperOfTheFlame: {
+    P1: "The Cycle of Flame",
+    I1: "Unreborn Again",
+    P2: "Avatar of Ash",
+  },
+  TindralSageswiftSeerOfTheFlame: {
+    P1: "Moonkin of the Flame",
+    I1: "Burning Pursuit",
+    P2: "Tree of the Flame",
+    I2: "Path of Flame",
+    P3: "Seer of the Flame",
+  },
+  FyrakkTheBlazing: {
+    P1: "The Dream Render",
+    I1: "Amirdrassil in Peril",
+    P2: "Children of the Stars",
+    P3: "Shadowflame Incarnate",
+  },
 };

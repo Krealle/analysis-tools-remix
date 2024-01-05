@@ -1,1 +1,49 @@
-.fights{flex-wrap:wrap}.fightsName{font-weight:bold;font-size:x-large}#fightButton{justify-content:space-evenly}.wipe{color:#e45f5a}.kill{color:#80e666}.unfort{color:#e268a8}.legendary{color:#d7822d}.epic{color:#a335ee}.rare{color:#0070ff}.uncommon{color:#51a347}.common{color:#afafaf}.fightContainer{margin:10px}.fightSelectAll{padding:0.3em;font-size:0.7em;margin-left:10px}
+.fights {
+  flex-wrap: wrap; }
+
+.fightsName {
+  font-weight: bold;
+  font-size: x-large; }
+
+.phaseDivider {
+  font-weight: bold;
+  font-size: large; }
+
+#fightButton {
+  justify-content: space-evenly; }
+
+.wipe {
+  color: #e45f5a; }
+
+.kill {
+  color: #80e666; }
+
+.unfort {
+  color: #e268a8; }
+
+.legendary {
+  color: #d7822d; }
+
+.epic {
+  color: #a335ee; }
+
+.rare {
+  color: #0070ff; }
+
+.uncommon {
+  color: #51a347; }
+
+.common {
+  color: #afafaf; }
+
+.fightContainer {
+  margin: 10px;
+  /* position: relative;
+  background-size: cover;
+  background-position-y: -90px;
+  background-repeat: no-repeat; */ }
+
+.fightSelectAll {
+  padding: 0.3em;
+  font-size: 0.7em;
+  margin-left: 10px; }

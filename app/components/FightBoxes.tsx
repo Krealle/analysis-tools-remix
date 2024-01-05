@@ -1,7 +1,11 @@
 import { formatDuration, formatUnixTime, toCamelCase } from "../util/format";
 import ButtonCheckbox from "./generic/ButtonCheckbox";
 import "../styles/FightBoxes.css";
-import { EncounterImages } from "../util/enemyTables";
+import {
+  EncounterImages,
+  EncounterPhaseNames,
+  EncountersWithTruePhases,
+} from "../util/enemyTables";
 import useWCLUrlInputStore from "../zustand/WCLUrlInputStore";
 import useStatusStore from "../zustand/statusStore";
 import useFightBoxesStore from "../zustand/fightBoxesStore";
@@ -72,15 +76,63 @@ const FightBoxes = (): JSX.Element | undefined => {
     [setSelectedIds]
   );
 
+  type PhaseMap = Map<string, ReportFight[]>;
+
+  /** Sort fights by Encounter and phases if relevant
+   * Only change it when report updates */
   const fightsByName = useMemo(() => {
     return (report?.fights || []).reduce((acc, fight) => {
-      if (fight.difficulty) {
-        const groupName = fight.name ?? "Unknown";
-        acc[groupName] = acc[groupName] || [];
-        acc[groupName]?.push(fight);
+      if (!fight.difficulty) return acc;
+
+      const groupName = fight.name ?? "Unknown";
+      let groupFights = acc.get(groupName) || new Map<string, ReportFight[]>();
+
+      const normalizedGroupName = toCamelCase(groupName);
+      const usePhases = EncountersWithTruePhases.has(normalizedGroupName);
+
+      const phase = fight.lastPhase ?? 0;
+      const phaseType = fight.lastPhaseIsIntermission ? "I" : "P";
+      const phaseName = usePhases ? `${phaseType}${phase}` : "All Phases";
+
+      const phaseFights = groupFights.get(phaseName) || [];
+      phaseFights.push(fight);
+
+      // Sort so we have earlier phases first
+      if (!groupFights.has(phaseName) && groupFights.size > 0 && usePhases) {
+        const entries = Array.from(groupFights.entries());
+        entries.push([phaseName, phaseFights]);
+        entries.sort(([a], [b]) => {
+          const [phaseTypeA, phaseNumberA] = a.split("");
+          const [phaseTypeB, phaseNumberB] = b.split("");
+
+          let aValue = 0;
+          let bValue = 0;
+
+          if (parseInt(phaseNumberA) > parseInt(phaseNumberB)) {
+            aValue += 1;
+          } else if (parseInt(phaseNumberA) < parseInt(phaseNumberB)) {
+            bValue += 1;
+          }
+
+          if (phaseTypeA === "I") {
+            aValue += 0.5;
+          }
+          if (phaseTypeB === "I") {
+            bValue += 0.5;
+          }
+
+          return aValue - bValue;
+        });
+
+        groupFights = new Map(entries);
+      } else {
+        groupFights.set(phaseName, phaseFights);
       }
+
+      acc.set(groupName, groupFights);
+
       return acc;
-    }, {} as Record<string, ReportFight[]>);
+    }, new Map<string, PhaseMap>());
   }, [report]);
 
   if (!report?.fights) {
@@ -89,9 +141,11 @@ const FightBoxes = (): JSX.Element | undefined => {
 
   return (
     <div>
-      {Object.entries(fightsByName).map(([groupName, fights]) => {
+      {Array.from(fightsByName).map(([groupName, phases]) => {
         const normalizedGroupName = toCamelCase(groupName);
-        const fightIds = fights.flatMap((fight) => fight.id);
+        const fightIds = Array.from(phases).flatMap(([, fights]) =>
+          fights.map((fight) => fight.id)
+        );
 
         return (
           <div key={groupName} className="flex column fightContainer">
@@ -105,48 +159,82 @@ const FightBoxes = (): JSX.Element | undefined => {
                 Select All
               </button>
             </div>
-            <div className="flex fights">
-              {fights.map((fight) => {
-                const fightPercentageColor = getFightPercentageColor(fight);
 
-                const content = (
-                  <>
-                    <div className="flex column">
-                      <span
-                        className={`fightPercentage ${fightPercentageColor}`}
+            {Array.from(phases).map(([phaseName, fights]) => {
+              const phaseIds = fights.map((fight) => fight.id);
+              const formattedPhaseName =
+                EncounterPhaseNames[normalizedGroupName]?.[phaseName] ??
+                "Unknown Phase Name";
+
+              return (
+                <>
+                  {/** If the encounter uses phases make sure we divide them up */}
+                  {phases.size > 1 && (
+                    <div className="phaseDivider" key={formattedPhaseName}>
+                      {phaseName}:{"     "}
+                      {formattedPhaseName}
+                      <button
+                        className="fightSelectAll"
+                        onClick={() => handleSelectFights(phaseIds)}
                       >
-                        {fight.kill ? "KILL" : `${fight.fightPercentage}%`}
-                      </span>
-                      <span className="phase">{getFightPhase(fight)}</span>
+                        Select Phase
+                      </button>
                     </div>
-                    <div className="flex column">
-                      <span className={fight.kill ? "kill" : "wipe"}>
-                        {`${fight.id} - (${
-                          fight.keystoneTime
-                            ? formatDuration(fight.keystoneTime)
-                            : formatDuration(fight.endTime - fight.startTime)
-                        })`}
-                        {}
-                      </span>
-                      <span>
-                        {formatUnixTime(fight.startTime + report.startTime)}
-                      </span>
-                    </div>
-                  </>
-                );
+                  )}
 
-                return (
-                  <ButtonCheckbox
-                    key={fight.id}
-                    onClick={() => handleDivClick(fight.id)}
-                    selected={selectedIds.has(fight.id)}
-                    content={content}
-                    id="fightButton"
-                    disabled={isFetching}
-                  />
-                );
-              })}
-            </div>
+                  <div className="flex fights" key={phaseName}>
+                    {Array.from(fights).map((fight) => {
+                      const fightPercentageColor =
+                        getFightPercentageColor(fight);
+
+                      const content = (
+                        <>
+                          <div className="flex column">
+                            <span
+                              className={`fightPercentage ${fightPercentageColor}`}
+                            >
+                              {fight.kill
+                                ? "KILL"
+                                : `${fight.fightPercentage}%`}
+                            </span>
+                            <span className="phase">
+                              {getFightPhase(fight)}
+                            </span>
+                          </div>
+                          <div className="flex column">
+                            <span className={fight.kill ? "kill" : "wipe"}>
+                              {`${fight.id} - (${
+                                fight.keystoneTime
+                                  ? formatDuration(fight.keystoneTime)
+                                  : formatDuration(
+                                      fight.endTime - fight.startTime
+                                    )
+                              })`}
+                            </span>
+                            <span>
+                              {formatUnixTime(
+                                fight.startTime + report.startTime
+                              )}
+                            </span>
+                          </div>
+                        </>
+                      );
+
+                      return (
+                        <ButtonCheckbox
+                          key={fight.id}
+                          onClick={() => handleDivClick(fight.id)}
+                          selected={selectedIds.has(fight.id)}
+                          content={content}
+                          id="fightButton"
+                          disabled={isFetching}
+                        />
+                      );
+                    })}
+                  </div>
+                </>
+              );
+            })}
           </div>
         );
       })}
