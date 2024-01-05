@@ -53,7 +53,7 @@ const getFightPhase = (fight: ReportFight): string => {
   }
 };
 
-const FightBoxes = (): JSX.Element | undefined => {
+const FightBoxes = (): JSX.Element => {
   const { selectedIds, removeId, addId, setSelectedIds } = useFightBoxesStore();
 
   const isFetching = useStatusStore((state) => state.isFetching);
@@ -144,10 +144,10 @@ const FightBoxes = (): JSX.Element | undefined => {
   }, [report]);
 
   if (!report?.fights) {
-    return;
+    return <></>;
   }
 
-  return (
+  const fightBoxesElement: JSX.Element = (
     <div>
       {Array.from(fightsByName).map(([groupName, phases]) => {
         const normalizedGroupName = toCamelCase(groupName);
@@ -248,6 +248,8 @@ const FightBoxes = (): JSX.Element | undefined => {
       })}
     </div>
   );
+
+  return fightBoxesElement;
 };
 
 export default FightBoxes;
