@@ -11,7 +11,6 @@ export function generatePhaseEvents(events: AnyEvent[]): PhaseStartEvent[] {
     if (event.type === EventType.CastEvent) {
       // Fyrakk Intermission 1 - Incarnate
       if (event.abilityGameID === 412761 && !fyrakkIntermission1) {
-        console.log(event);
         phaseStartEvents.push({
           type: EventType.PhaseStartEvent,
           timestamp: event.timestamp,

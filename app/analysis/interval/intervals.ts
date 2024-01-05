@@ -187,7 +187,6 @@ export function getAverageIntervals(
       }
     }
   }
-  console.log(sortedIntervals);
   const averageIntervals = averageOutIntervals(sortedIntervals);
 
   return averageIntervals;
