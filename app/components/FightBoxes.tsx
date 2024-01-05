@@ -9,7 +9,7 @@ import {
 import useWCLUrlInputStore from "../zustand/WCLUrlInputStore";
 import useStatusStore from "../zustand/statusStore";
 import useFightBoxesStore from "../zustand/fightBoxesStore";
-import { useCallback, useMemo } from "react";
+import React, { useCallback, useMemo } from "react";
 import { ReportFight } from "../wcl/types/report/report";
 
 type FightPercentageColor =
@@ -149,7 +149,7 @@ const FightBoxes = (): JSX.Element => {
 
   const fightBoxesElement: JSX.Element = (
     <div>
-      {Array.from(fightsByName).map(([groupName, phases]) => {
+      {Array.from(fightsByName).map(([groupName, phases], groupIndex) => {
         const normalizedGroupName = toCamelCase(groupName);
         const fightIds = Array.from(phases).flatMap(([, fights]) =>
           fights.map((fight) => fight.id)
@@ -168,14 +168,14 @@ const FightBoxes = (): JSX.Element => {
               </button>
             </div>
 
-            {Array.from(phases).map(([phaseName, fights]) => {
+            {Array.from(phases).map(([phaseName, fights], phaseIndex) => {
               const phaseIds = fights.map((fight) => fight.id);
               const formattedPhaseName =
                 EncounterPhaseNames[normalizedGroupName]?.[phaseName] ??
                 "Unknown Phase Name";
 
               return (
-                <>
+                <React.Fragment key={`${groupIndex}-${phaseIndex}`}>
                   {/** If the encounter uses phases make sure we divide them up */}
                   {phases.size > 1 && (
                     <div className="phaseDivider" key={formattedPhaseName}>
@@ -240,7 +240,7 @@ const FightBoxes = (): JSX.Element => {
                       );
                     })}
                   </div>
-                </>
+                </React.Fragment>
               );
             })}
           </div>
