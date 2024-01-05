@@ -100,7 +100,13 @@ export function getAverageIntervals(
           if (existingEntry) {
             // Update end timestamp if needed
             if (endTimestamp > existingEntry.end) {
-              existingEntry.end = endTimestamp;
+              // Make sure we don't go over the interval duration
+              // Creates all sort of issues if we do
+              const newEndTimestamp =
+                endTimestamp - existingEntry.start > intervalDur
+                  ? existingEntry.start + intervalDur
+                  : endTimestamp;
+              existingEntry.end = newEndTimestamp;
             }
 
             existingEntry.intervalEntries.push(sortedInterval);

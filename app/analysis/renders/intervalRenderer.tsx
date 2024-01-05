@@ -27,7 +27,7 @@ const intervalRenderer = (
   );
 
   let phaseCutoff = 0;
-  for (const interval of top4Pumpers) {
+  top4Pumpers.forEach((interval, idx) => {
     const formattedEntriesTable: JSX.Element[][] = interval.intervalEntries.map(
       (entries) =>
         entries.map((player) => (
@@ -52,7 +52,7 @@ const intervalRenderer = (
 
     if (interval.phaseChange) {
       if (amountOfFights > 1) {
-        phaseCutoff = interval.end;
+        phaseCutoff = top4Pumpers[idx + 1]?.start ?? 0;
       }
       tableRows.push(
         <tr key={interval.phaseChange.phaseName}>
@@ -62,7 +62,7 @@ const intervalRenderer = (
         </tr>
       );
     }
-  }
+  });
 
   const mrtNote = getMRTNote(intervals, combatants);
   const noteTextbox = (
