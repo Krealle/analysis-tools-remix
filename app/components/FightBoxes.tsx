@@ -76,16 +76,28 @@ const FightBoxes = (): JSX.Element | undefined => {
     [setSelectedIds]
   );
 
-  type PhaseMap = Map<string, ReportFight[]>;
+  type IndexedReportFight = ReportFight & { index: number };
+  type PhaseMap = Map<string, IndexedReportFight[]>;
 
   /** Sort fights by Encounter and phases if relevant
    * Only change it when report updates */
   const fightsByName = useMemo(() => {
+    // Create our over fightIndex to mimic WCL fight index for each encounter
+    let fightIndex = 1;
+    let lastEncounterName = "";
+
     return (report?.fights || []).reduce((acc, fight) => {
       if (!fight.difficulty) return acc;
 
       const groupName = fight.name ?? "Unknown";
-      let groupFights = acc.get(groupName) || new Map<string, ReportFight[]>();
+
+      if (lastEncounterName !== groupName) {
+        lastEncounterName = groupName;
+        fightIndex = 1;
+      }
+
+      let groupFights =
+        acc.get(groupName) || new Map<string, IndexedReportFight[]>();
 
       const normalizedGroupName = toCamelCase(groupName);
       const usePhases = EncountersWithTruePhases.has(normalizedGroupName);
@@ -95,7 +107,7 @@ const FightBoxes = (): JSX.Element | undefined => {
       const phaseName = usePhases ? `${phaseType}${phase}` : "All Phases";
 
       const phaseFights = groupFights.get(phaseName) || [];
-      phaseFights.push(fight);
+      phaseFights.push({ ...fight, index: fightIndex });
 
       // Sort so we have earlier phases first
       if (!groupFights.has(phaseName) && groupFights.size > 0 && usePhases) {
@@ -131,6 +143,7 @@ const FightBoxes = (): JSX.Element | undefined => {
 
       acc.set(groupName, groupFights);
 
+      fightIndex += 1;
       return acc;
     }, new Map<string, PhaseMap>());
   }, [report]);
@@ -203,7 +216,7 @@ const FightBoxes = (): JSX.Element | undefined => {
                           </div>
                           <div className="flex column">
                             <span className={fight.kill ? "kill" : "wipe"}>
-                              {`${fight.id} - (${
+                              {`${fight.index} - (${
                                 fight.keystoneTime
                                   ? formatDuration(fight.keystoneTime)
                                   : formatDuration(
