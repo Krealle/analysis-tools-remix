@@ -5,7 +5,7 @@ import { Variables } from "../wcl/util/queryWCL";
 import { AccessSession, getSession } from "./sessions";
 
 /** Cache for storing reports, to not have to re-fetch data after a refresh */
-const CACHE = new Map<string, unknown>();
+/* const CACHE = new Map<string, unknown>(); */
 
 export const loader: LoaderFunction = async ({ request }) => {
   const url = new URL(request.url);
@@ -23,12 +23,12 @@ export const loader: LoaderFunction = async ({ request }) => {
     return json({ error: `Invalid request type` });
   }
 
-  const cacheKey = `${requestType}-${variables}`;
-  const cachedData = CACHE.get(cacheKey);
+  /* const cacheKey = `${requestType}-${variables}`;
+  const cachedData = CACHE.get(cacheKey); */
   /** Make sure we allow for fetching new fights */
-  if (cachedData && requestType !== "getWCLReportQuery") {
+  /* if (cachedData && requestType !== "getWCLReportQuery") {
     return cachedData;
-  }
+  } */
 
   const parsedVariables = JSON.parse(variables) as Variables;
 
@@ -56,7 +56,7 @@ export const loader: LoaderFunction = async ({ request }) => {
       Queries[requestType as keyof QueryTypes],
       parsedVariables
     );
-    CACHE.set(cacheKey, data);
+    /* CACHE.set(cacheKey, data); */
 
     return data;
   } catch (error) {
