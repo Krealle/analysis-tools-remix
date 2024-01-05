@@ -83,18 +83,13 @@ const FightBoxes = (): JSX.Element | undefined => {
    * Only change it when report updates */
   const fightsByName = useMemo(() => {
     // Create our over fightIndex to mimic WCL fight index for each encounter
-    let fightIndex = 1;
-    let lastEncounterName = "";
+    const fightIndexMap = new Map<string, number>();
 
     return (report?.fights || []).reduce((acc, fight) => {
       if (!fight.difficulty) return acc;
 
       const groupName = fight.name ?? "Unknown";
-
-      if (lastEncounterName !== groupName) {
-        lastEncounterName = groupName;
-        fightIndex = 1;
-      }
+      const fightIndex = fightIndexMap.get(groupName) ?? 1;
 
       let groupFights =
         acc.get(groupName) || new Map<string, IndexedReportFight[]>();
@@ -108,6 +103,7 @@ const FightBoxes = (): JSX.Element | undefined => {
 
       const phaseFights = groupFights.get(phaseName) || [];
       phaseFights.push({ ...fight, index: fightIndex });
+      fightIndexMap.set(groupName, fightIndex + 1);
 
       // Sort so we have earlier phases first
       if (!groupFights.has(phaseName) && groupFights.size > 0 && usePhases) {
@@ -143,7 +139,6 @@ const FightBoxes = (): JSX.Element | undefined => {
 
       acc.set(groupName, groupFights);
 
-      fightIndex += 1;
       return acc;
     }, new Map<string, PhaseMap>());
   }, [report]);
