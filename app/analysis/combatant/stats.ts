@@ -1,4 +1,5 @@
-import { AnyBuffEvent, EventType } from "../../wcl/events/types";
+import { EventType } from "../../wcl/types/events/eventEnums";
+import { AnyBuffEvent } from "../../wcl/types/events/eventTypes";
 import { PlayerDetails } from "../../wcl/types/report/playerDetails";
 import { BUFF_GIVES_STATS } from "./buffsWithStats";
 import { BaseStats } from "./combatants";

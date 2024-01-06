@@ -1,4 +1,5 @@
-import { AnyEvent, EventType, PhaseStartEvent } from "../../wcl/events/types";
+import { EventType } from "../../wcl/types/events/eventEnums";
+import { AnyEvent, PhaseStartEvent } from "../../wcl/types/events/eventTypes";
 
 export function generatePhaseEvents(events: AnyEvent[]): PhaseStartEvent[] {
   const phaseStartEvents: PhaseStartEvent[] = [];

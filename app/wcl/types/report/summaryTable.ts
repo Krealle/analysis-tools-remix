@@ -1,78 +1,73 @@
-import { z } from "zod";
-import { PlayerDetailsSchema } from "./playerDetails";
+import { Static, Type } from "@sinclair/typebox";
+import { PlayerDetails } from "./playerDetails";
 
-export const SpecSchema = z.object({
-  spec: z.string(),
-  count: z.number().optional(),
+export const Spec = Type.Object({
+  spec: Type.String(),
+  count: Type.Optional(Type.Number()),
 });
-export type Spec = z.infer<typeof SpecSchema>;
 
-export const CompositionTableSchema = z.object({
-  name: z.string(),
-  id: z.number(),
-  guid: z.number(),
-  type: z.string(),
-  specs: z.array(SpecSchema),
+export const CompositionTable = Type.Object({
+  name: Type.String(),
+  id: Type.Number(),
+  guid: Type.Number(),
+  type: Type.String(),
+  specs: Type.Array(Spec),
 });
-export type CompositionTable = z.infer<typeof CompositionTableSchema>;
 
-export const DamageDoneTableSchema = z.object({
-  name: z.string(),
-  id: z.number(),
-  guid: z.number(),
-  type: z.string(),
-  icon: z.string(),
-  total: z.number(),
+export const DamageDoneTable = Type.Object({
+  name: Type.String(),
+  id: Type.Number(),
+  guid: Type.Number(),
+  type: Type.String(),
+  icon: Type.String(),
+  total: Type.Number(),
 });
-export type DamageDoneTable = z.infer<typeof DamageDoneTableSchema>;
 
-export const HealingDoneTableSchema = z.object({
-  name: z.string(),
-  id: z.number(),
-  guid: z.number(),
-  type: z.string(),
-  icon: z.string(),
-  total: z.number(),
+export const HealingDoneTable = Type.Object({
+  name: Type.String(),
+  id: Type.Number(),
+  guid: Type.Number(),
+  type: Type.String(),
+  icon: Type.String(),
+  total: Type.Number(),
 });
-export type HealingDoneTable = z.infer<typeof HealingDoneTableSchema>;
 
-export const DamageTakenTakenSchema = z.object({
-  name: z.string(),
-  guid: z.number(),
-  type: z.number(),
-  abilityIcon: z.string(),
-  total: z.number(),
-  composite: z.boolean().optional(),
+export const DamageTakenTaken = Type.Object({
+  name: Type.String(),
+  guid: Type.Number(),
+  type: Type.Number(),
+  abilityIcon: Type.String(),
+  total: Type.Number(),
+  composite: Type.Optional(Type.Boolean()),
 });
-export type DamageTakenTable = z.infer<typeof DamageTakenTakenSchema>;
 
-export const DeathEventTableSchema = z.object({
-  name: z.string(),
-  id: z.number(),
-  guid: z.number(),
-  type: z.string(),
-  icon: z.string(),
-  deathTime: z.number(),
-  ability: z
-    .object({
-      name: z.string(),
-      guid: z.number(),
-      type: z.number(),
-      abilityIcon: z.string(),
+export const DeathEventTable = Type.Object({
+  name: Type.String(),
+  id: Type.Number(),
+  guid: Type.Number(),
+  type: Type.String(),
+  icon: Type.String(),
+  deathTime: Type.Number(),
+  ability: Type.Optional(
+    Type.Object({
+      name: Type.String(),
+      guid: Type.Number(),
+      type: Type.Number(),
+      abilityIcon: Type.String(),
     })
-    .optional(),
+  ),
 });
 
-export const SummaryTableSchema = z.object({
-  totalTime: z.number(),
-  itemLevel: z.number(),
-  composition: z.array(CompositionTableSchema),
-  damageDone: z.array(DamageDoneTableSchema),
-  healingDone: z.array(HealingDoneTableSchema),
-  damageTaken: z.array(DamageTakenTakenSchema),
-  deathEvents: z.array(DeathEventTableSchema),
-  playerDetails: PlayerDetailsSchema,
-  logVersion: z.number(),
-  gameVersion: z.number(),
+export const SummaryTable = Type.Object({
+  totalTime: Type.Number(),
+  itemLevel: Type.Number(),
+  composition: Type.Array(CompositionTable),
+  damageDone: Type.Array(DamageDoneTable),
+  healingDone: Type.Array(HealingDoneTable),
+  damageTaken: Type.Array(DamageTakenTaken),
+  deathEvents: Type.Array(DeathEventTable),
+  playerDetails: PlayerDetails,
+  logVersion: Type.Number(),
+  gameVersion: Type.Number(),
 });
-export type SummaryTable = z.infer<typeof SummaryTableSchema>;
+export type SummaryTable = Static<typeof SummaryTable>;

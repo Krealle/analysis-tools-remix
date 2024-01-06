@@ -1,12 +1,11 @@
+import { EventType } from "../../wcl/types/events/eventEnums";
 import {
   AnyDebuffEvent,
   ApplyDebuffEvent,
   CastEvent,
   DamageEvent,
-  EventType,
   RefreshDebuffEvent,
-  RemoveDebuffEvent,
-} from "../../wcl/events/types";
+} from "../../wcl/types/events/eventTypes";
 
 /**
  * The goal of this normalizer is to link dot ticks up with their application
@@ -79,14 +78,7 @@ export function eventLinkNormalizer(
   return linkedEvents;
 }
 
-function getKey(
-  event:
-    | DamageEvent
-    | ApplyDebuffEvent
-    | RefreshDebuffEvent
-    | RemoveDebuffEvent
-    | CastEvent
-): string {
+function getKey(event: DamageEvent | AnyDebuffEvent | CastEvent): string {
   let key = `${event.targetID}_${event.abilityGameID}`;
   if (event.targetInstance) key += `_${event.targetInstance}`;
 

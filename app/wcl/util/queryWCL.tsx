@@ -1,15 +1,15 @@
-import { AnyEvent, EventType } from "../events/types";
 import { ReportQueries } from "../types/graphql/queries";
+import { EventType } from "../types/events/eventEnums";
 import {
   AnyReport,
-  WCLReport,
-  SummaryTableResponse,
-  PlayerDetailsResponse,
   EventsResponse,
+  SummaryTableResponse,
+  WCLReport,
+  validateData,
 } from "../types/graphql/queryTypes";
+import { GraphQLError } from "graphql";
+import { AnyEvent } from "../types/events/eventTypes";
 import { SummaryTable } from "../types/report/summaryTable";
-import { PlayerDetails } from "../types/report/playerDetails";
-import { z } from "zod";
 /* import { getMockData } from "../__test__/getMockData"; */
 
 export type Variables = {
@@ -56,7 +56,7 @@ export async function fetchReportData<T extends AnyReport>(
 
   while (attempts < MAX_RETRIES) {
     try {
-      const { requestType, schema } = ReportQueries[type];
+      const { requestType, responseType } = ReportQueries[type];
 
       const queryParams = new URLSearchParams({
         requestType: requestType,
@@ -67,17 +67,32 @@ export async function fetchReportData<T extends AnyReport>(
       );
 
       const data: unknown = await response.json();
-      const rootReport = schema.parse(data);
+      const maybeRootReport = validateData<T>(data, responseType);
 
-      return rootReport.reportData.report as T;
-    } catch (error) {
-      if (error instanceof z.ZodError) {
-        error.errors.forEach((err) => {
-          console.log(err.message);
-          console.log(err.path);
-        });
+      if (!maybeRootReport.data) {
+        console.log("fuck");
+        if (!maybeRootReport.errors) {
+          throw new Error(
+            `Validation failed! ${JSON.stringify(maybeRootReport.errors)}`
+          );
+        }
+        throw new Error("Validation failed! No data or errors found.");
       }
+
+      return maybeRootReport.data.reportData.report;
+    } catch (error) {
+      if (error instanceof Error) {
+        console.log(error.message);
+      }
+      if (error instanceof GraphQLError) {
+        console.log(error.message);
+      }
+
       attempts += 1;
+
+      if (attempts >= MAX_RETRIES) {
+        throw error;
+      }
     }
   }
 
@@ -103,17 +118,6 @@ export async function getWCLReport(variables: Variables): Promise<WCLReport> {
   } catch (error) {
     throw new Error("Failed to get fights");
   }
-}
-
-export async function getPlayerDetails(
-  variables: Variables
-): Promise<PlayerDetails> {
-  const response = await fetchReportData<PlayerDetailsResponse>(
-    "playerDetails",
-    variables
-  );
-
-  return response.playerDetails.data.playerDetails;
 }
 
 export async function getEvents<T extends AnyEvent>(

@@ -4,7 +4,7 @@ import {
   PRESCIENCE,
   SHIFTING_SANDS,
 } from "../../util/constants";
-import { EventType } from "../events/types";
+import { EventType } from "../types/events/eventEnums";
 
 export function getFilter(): string {
   const filter = `(${getBuffFilter()}) 

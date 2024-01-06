@@ -1,17 +1,20 @@
-import { AnyBuffEvent, EventType } from "../../wcl/events/types";
 import { Combatant } from "./combatants";
+import { EventType } from "../../wcl/types/events/eventEnums";
+import { AnyBuffEvent } from "../../wcl/types/events/eventTypes";
+import { Static, Type } from "@sinclair/typebox";
 
-export type Buff = {
-  abilityGameID: number;
-  buffStacks: number;
-  start: number;
-  end: number;
-  sourceID: number;
-  sourceInstance?: number;
-  targetID: number;
-  targetInstance?: number;
-  events: AnyBuffEvent[];
-};
+export const Buff = Type.Object({
+  abilityGameID: Type.Number(),
+  buffStacks: Type.Number(),
+  start: Type.Number(),
+  end: Type.Number(),
+  sourceID: Type.Number(),
+  sourceInstance: Type.Optional(Type.Number()),
+  targetID: Type.Number(),
+  targetInstance: Type.Optional(Type.Number()),
+  events: Type.Array(AnyBuffEvent),
+});
+export type Buff = Static<typeof Buff>;
 
 export function generateBuffHistories(
   events: AnyBuffEvent[],

@@ -4,15 +4,14 @@ import {
   PRESCIENCE,
   SHIFTING_SANDS,
 } from "../../util/constants";
-import {
-  AttributionHook,
-  EventType,
-  HitType,
-  NormalizedDamageEvent,
-} from "../../wcl/events/types";
 import { Buff } from "../combatant/buffs";
 import { Combatants } from "../combatant/combatants";
 import { AbilityFilters, Weights } from "../../zustand/fightParametersStore";
+import {
+  AttributionHook,
+  NormalizedDamageEvent,
+} from "../../wcl/types/events/customEventTypes";
+import { EventType, HitType } from "../../wcl/types/events/eventEnums";
 
 export function correctSupportEvents(
   events: NormalizedDamageEvent[],

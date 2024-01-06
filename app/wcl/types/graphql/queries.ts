@@ -1,9 +1,7 @@
-import { createRootReportResponseSchema } from "../utilTypes";
 import {
-  GetSummaryTableQuerySchema,
-  GetPlayerDetailsQuerySchema,
-  GetEventsQuerySchema,
-  GetWCLReportQuerySchema,
+  GetEventsQuery,
+  GetSummaryTableQuery,
+  GetWCLReportQuery,
 } from "./queryTypes";
 
 export type QueryTypes = typeof Queries;
@@ -53,66 +51,55 @@ query getReport($reportID: String!) {
 }
 `,
 
-  getPlayerDetailsQuery: `
-query getReport($reportID: String!, $fightIDs: [Int]!) {
+  getEventsQuery: `
+query getEvents(
+  $reportID: String!
+  $startTime: Float!
+  $endTime: Float!
+  $limit: Int
+  $filterExpression: String
+) {
   reportData {
     report(code: $reportID) {
-      playerDetails(fightIDs: $fightIDs)
+      events(
+        startTime: $startTime
+        endTime: $endTime
+        limit: $limit
+        filterExpression: $filterExpression
+      ) {
+        data
+        nextPageTimestamp
+      }
     }
   }
 }
 `,
 
-  getEventsQuery: `
-  query getEvents(
-    $reportID: String!
-    $startTime: Float!
-    $endTime: Float!
-    $limit: Int
-    $filterExpression: String
-  ) {
-    reportData {
-      report(code: $reportID) {
-        events(
-          startTime: $startTime
-          endTime: $endTime
-          limit: $limit
-          filterExpression: $filterExpression
-        ) {
-          data
-          nextPageTimestamp
-        }
-      }
+  getSummaryTableQuery: ` 
+query getTable(
+  $reportID: String!
+  $fightIDs: [Int]!
+) {
+  reportData {
+    report(code: $reportID) {
+      table(dataType: Summary, fightIDs: $fightIDs)
     }
-  }`,
-
-  getSummaryTableQuery: ` query getTable(
-    $reportID: String!
-    $fightIDs: [Int]!
-  ) {
-    reportData {
-      report(code: $reportID) {
-        table(dataType: Summary, fightIDs: $fightIDs)
-      }
-    }
-  }`,
+  }
+}
+`,
 } as const;
 
 export const ReportQueries = {
   summaryTable: {
     requestType: "getSummaryTableQuery",
-    schema: createRootReportResponseSchema(GetSummaryTableQuerySchema),
-  },
-  playerDetails: {
-    requestType: "getPlayerDetailsQuery",
-    schema: createRootReportResponseSchema(GetPlayerDetailsQuerySchema),
+    responseType: GetSummaryTableQuery,
   },
   events: {
     requestType: "getEventsQuery",
-    schema: createRootReportResponseSchema(GetEventsQuerySchema),
+    responseType: GetEventsQuery,
   },
   WCLReport: {
     requestType: "getWCLReportQuery",
-    schema: createRootReportResponseSchema(GetWCLReportQuerySchema),
+    responseType: GetWCLReportQuery,
   },
 } as const;

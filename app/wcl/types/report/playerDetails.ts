@@ -1,145 +1,128 @@
-import { z } from "zod";
+import { Static, Type } from "@sinclair/typebox";
 
-export const StatSchema = z.object({
-  min: z.number(),
-  max: z.number(),
+export const Stat = Type.Object({
+  min: Type.Number(),
+  max: Type.Number(),
 });
-export type Stat = z.infer<typeof StatSchema>;
 
-export const StatsSchema = z.object({
-  Speed: StatSchema.optional(),
-  Dodge: StatSchema.optional(),
-  Mastery: StatSchema,
-  Stamina: StatSchema.optional(),
-  Haste: StatSchema,
-  Leech: StatSchema.optional(),
-  Armor: StatSchema.optional(),
-  Agility: StatSchema.optional(),
-  Crit: StatSchema,
-  "Item Level": StatSchema.optional(),
-  Parry: StatSchema.optional(),
-  Avoidance: StatSchema.optional(),
-  Versatility: StatSchema,
-  Intellect: StatSchema.optional(),
-  Strength: StatSchema.optional(),
+export const Stats = Type.Object({
+  Speed: Type.Optional(Stat),
+  Dodge: Type.Optional(Stat),
+  Mastery: Stat,
+  Stamina: Type.Optional(Stat),
+  Haste: Stat,
+  Leech: Type.Optional(Stat),
+  Armor: Type.Optional(Stat),
+  Agility: Type.Optional(Stat),
+  Crit: Stat,
+  "Item Level": Type.Optional(Stat),
+  Parry: Type.Optional(Stat),
+  Avoidance: Type.Optional(Stat),
+  Versatility: Stat,
+  Intellect: Type.Optional(Stat),
+  Strength: Type.Optional(Stat),
 });
-export type Stats = z.infer<typeof StatsSchema>;
 
-export const TalentSchema = z.object({
-  name: z.string(),
-  guid: z.number(),
-  type: z.number(),
-  abilityIcon: z.string(),
+export const Talent = Type.Object({
+  name: Type.String(),
+  guid: Type.Number(),
+  type: Type.Number(),
+  abilityIcon: Type.String(),
 });
-export type Talent = z.infer<typeof TalentSchema>;
 
-export const CustomPowerSetSchema = z.object({
-  name: z.string(),
-  guid: z.number(),
-  type: z.number(),
-  abilityIcon: z.string(),
-  total: z.number(),
+export const CustomPowerSet = Type.Object({
+  name: Type.String(),
+  guid: Type.Number(),
+  type: Type.Number(),
+  abilityIcon: Type.String(),
+  total: Type.Number(),
 });
-export type CustomPowerSet = z.infer<typeof CustomPowerSetSchema>;
+type CustomPowerSet = Static<typeof CustomPowerSet>;
 
-export const ItemQualitySchema = z.union([
-  z.literal(1),
-  z.literal(2),
-  z.literal(3),
-  z.literal(4),
-  z.literal(5),
+export const ItemQuality = Type.Union([
+  Type.Literal(1),
+  Type.Literal(2),
+  Type.Literal(3),
+  Type.Literal(4),
+  Type.Literal(5),
 ]);
-export enum ItemQuality {
-  POOR = 1,
-  COMMON = 2,
-  RARE = 3,
-  SUPERIOR = 4,
-  LEGENDARY = 5,
-}
 
-export const GemSchema = z.object({
-  id: z.number(),
-  itemLevel: z.number(),
-  icon: z.string(),
+export const Gem = Type.Object({
+  id: Type.Number(),
+  itemLevel: Type.Number(),
+  icon: Type.String(),
 });
-export type Gem = z.infer<typeof GemSchema>;
 
-export const ItemSchema = z.object({
-  id: z.number(),
-  slot: z.number(),
-  quality: ItemQualitySchema.optional(),
-  icon: z.string(),
-  name: z.string().nullable().optional(),
-  itemLevel: z.number(),
-  bonusIDs: z.array(z.number()).nullable().optional(),
-  gems: z.array(GemSchema).nullable().optional(),
-  permanentEnchant: z.number().nullable().optional(),
-  permanentEnchantName: z.string().nullable().optional(),
-  onUseEnchant: z.number().nullable().optional(),
-  onUseEnchantName: z.string().nullable().optional(),
-  effectID: z.number().nullable().optional(),
-  effectIcon: z.string().nullable().optional(),
-  effectName: z.string().nullable().optional(),
-  temporaryEnchant: z.number().nullable().optional(),
-  temporaryEnchantName: z.string().nullable().optional(),
+export const Item = Type.Object({
+  id: Type.Number(),
+  slot: Type.Number(),
+  quality: Type.Optional(ItemQuality),
+  icon: Type.String(),
+  name: Type.Optional(Type.Union([Type.String(), Type.Null()])),
+  itemLevel: Type.Number(),
+  bonusIDs: Type.Optional(Type.Union([Type.Array(Type.Number()), Type.Null()])),
+  gems: Type.Optional(Type.Union([Type.Array(Gem), Type.Null()])),
+  permanentEnchant: Type.Optional(Type.Union([Type.Number(), Type.Null()])),
+  permanentEnchantName: Type.Optional(Type.Union([Type.String(), Type.Null()])),
+  onUseEnchant: Type.Optional(Type.Union([Type.Number(), Type.Null()])),
+  onUseEnchantName: Type.Optional(Type.Union([Type.String(), Type.Null()])),
+  effectID: Type.Optional(Type.Union([Type.Number(), Type.Null()])),
+  effectIcon: Type.Optional(Type.Union([Type.String(), Type.Null()])),
+  effectName: Type.Optional(Type.Union([Type.String(), Type.Null()])),
+  temporaryEnchant: Type.Optional(Type.Union([Type.Number(), Type.Null()])),
+  temporaryEnchantName: Type.Optional(Type.Union([Type.String(), Type.Null()])),
 });
-export type Item = z.infer<typeof ItemSchema>;
+type Item = Static<typeof Item>;
 
-export const SecondaryCustomPowerSetSchema = z.object({
-  name: z.string(),
-  guid: z.number(),
-  type: z.number(),
-  abilityIcon: z.string(),
-  total: z.number(),
+export const SecondaryCustomPowerSet = Type.Object({
+  name: Type.String(),
+  guid: Type.Number(),
+  type: Type.Number(),
+  abilityIcon: Type.String(),
+  total: Type.Number(),
 });
-export type SecondaryCustomPowerSet = z.infer<
-  typeof SecondaryCustomPowerSetSchema
->;
 
-export const CombatantInfoSchema = z.object({
-  stats: StatsSchema,
-  talents: z.array(TalentSchema),
-  gear: z.array(ItemSchema),
-  customPowerSet: z.array(CustomPowerSetSchema).optional(),
-  secondaryCustomPowerSet: z.array(SecondaryCustomPowerSetSchema).optional(),
-  tertiaryCustomPowerSet: z.array(z.unknown()).optional(),
-  specIDs: z.array(z.number()),
-  factionID: z.number(),
-  covenantID: z.number().nullable().optional(),
-  soulbindID: z.number().nullable().optional(),
+export const CombatantInfo = Type.Object({
+  stats: Stats,
+  talents: Type.Array(Talent),
+  gear: Type.Array(Item),
+  customPowerSet: Type.Optional(Type.Array(CustomPowerSet)),
+  secondaryCustomPowerSet: Type.Optional(Type.Array(SecondaryCustomPowerSet)),
+  tertiaryCustomPowerSet: Type.Optional(Type.Array(Type.Unknown())),
+  specIDs: Type.Array(Type.Number()),
+  factionID: Type.Number(),
+  covenantID: Type.Optional(Type.Union([Type.Number(), Type.Null()])),
+  soulbindID: Type.Optional(Type.Union([Type.Number(), Type.Null()])),
 });
-export type CombatantInfo = z.infer<typeof CombatantInfoSchema>;
 
-export const PlayerSchema = z.object({
-  name: z.string(),
-  id: z.number(),
-  guid: z.number(),
-  type: z.string(),
-  server: z.string().optional(),
-  icon: z.string(),
-  specs: z.array(z.string()),
-  minItemLevel: z.number(),
-  maxItemLevel: z.number(),
-  potionUse: z.number(),
-  healthstoneUse: z.number(),
+export const Player = Type.Object({
+  name: Type.String(),
+  id: Type.Number(),
+  guid: Type.Number(),
+  type: Type.String(),
+  server: Type.Optional(Type.String()),
+  icon: Type.String(),
+  specs: Type.Array(Type.String()),
+  minItemLevel: Type.Number(),
+  maxItemLevel: Type.Number(),
+  potionUse: Type.Number(),
+  healthstoneUse: Type.Number(),
   /**
    * in report K9Mfcb2CtjZ7pX6q fight 45, combatantInfo is an empty array
    * for a single player
    */
-  combatantInfo: CombatantInfoSchema.or(z.array(z.never())),
+  combatantInfo: Type.Union([CombatantInfo, Type.Array(Type.Never())]),
 });
-export type Player = z.infer<typeof PlayerSchema>;
 
-export const PlayerDetailsSchema = z.object({
-  healers: z.array(PlayerSchema),
-  tanks: z.array(PlayerSchema),
-  dps: z.array(PlayerSchema),
+export const PlayerDetails = Type.Object({
+  healers: Type.Array(Player),
+  tanks: Type.Array(Player),
+  dps: Type.Array(Player),
 });
-export type PlayerDetails = z.infer<typeof PlayerDetailsSchema>;
+export type PlayerDetails = Static<typeof PlayerDetails>;
 
-export const PlayerDetailsRootSchema = z.object({
-  data: z.object({
-    playerDetails: PlayerDetailsSchema,
+export const PlayerDetailsRoot = Type.Object({
+  data: Type.Object({
+    playerDetails: PlayerDetails,
   }),
 });
-export type PlayerDetailsRoot = z.infer<typeof PlayerDetailsRootSchema>;

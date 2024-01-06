@@ -1,41 +1,45 @@
+import { Static, Type } from "@sinclair/typebox";
+import { Buff, getBuffHistory } from "./buffs";
 import {
   CombatantInfo,
   PlayerDetails,
 } from "../../wcl/types/report/playerDetails";
 import { Actor } from "../../wcl/types/report/masterData";
-import { Buff, getBuffHistory } from "./buffs";
 
-export type BaseStats = {
-  timestamp: number;
-  playerId: number;
-  MainStat: number;
-  Mastery: number;
-  Haste: number;
-  Crit: number;
-  Versatility: number;
-};
+export const BaseStats = Type.Object({
+  timestamp: Type.Number(),
+  playerId: Type.Number(),
+  MainStat: Type.Number(),
+  Mastery: Type.Number(),
+  Haste: Type.Number(),
+  Crit: Type.Number(),
+  Versatility: Type.Number(),
+});
+export type BaseStats = Static<typeof BaseStats>;
 
-export type Combatant = {
-  id: number;
-  name: string;
-  pets: Pet[];
-  buffHistory: Buff[];
-  baseStats?: BaseStats;
-  class: string;
-  server?: string;
-  icon: string;
-  spec: string;
-  role: string;
-  combatantInfo: CombatantInfo | never[];
-};
+export const Pet = Type.Object({
+  name: Type.String(),
+  id: Type.Number(),
+  petOwner: Type.Number(),
+});
+export type Pet = Static<typeof Pet>;
+
+export const Combatant = Type.Object({
+  id: Type.Number(),
+  name: Type.String(),
+  pets: Type.Array(Pet),
+  buffHistory: Type.Array(Buff),
+  baseStats: Type.Optional(BaseStats),
+  class: Type.String(),
+  server: Type.Optional(Type.String()),
+  icon: Type.String(),
+  spec: Type.String(),
+  role: Type.String(),
+  combatantInfo: Type.Union([CombatantInfo, Type.Array(Type.Never())]),
+});
+export type Combatant = Static<typeof Combatant>;
 
 export type Combatants = Map<number, Combatant>;
-
-export type Pet = {
-  name: string;
-  id: number;
-  petOwner: number;
-};
 
 export function generateCombatants(
   buffHistories: Buff[],

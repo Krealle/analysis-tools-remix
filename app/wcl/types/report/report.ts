@@ -1,113 +1,124 @@
-import { z } from "zod";
+import { Static, Type } from "@sinclair/typebox";
+import { ReportMasterData } from "./masterData";
+import { PlayerDetailsRoot } from "./playerDetails";
+import { SummaryTable } from "./summaryTable";
+import { BaseEvent } from "../events/eventTypes";
 
-import { ReportMasterDataSchema } from "./masterData";
-import { PlayerDetailsRootSchema } from "./playerDetails";
-import { SummaryTableSchema } from "./summaryTable";
-
-export const UserSchema = z.object({
-  __typename: z.literal("User").nullable(),
+/** The User represents a user on the site. */
+export const User = Type.Object({
+  __typename: Type.Optional(Type.Literal("User")),
   /** The battle tag of the user if they have linked it. */
-  battleTag: z.string().nullable(),
+  battleTag: Type.Optional(Type.String()),
   /** The ID of the user. */
-  id: z.number(),
+  id: Type.Number(),
   /** The name of the user. */
-  name: z.string(),
+  name: Type.String(),
 });
-export type User = z.infer<typeof UserSchema>;
 
-export const ReportEventPaginatorSchema = z.object({
-  // The list of events obtained.
-  data: z.any(),
+export const ReportEventPaginator = Type.Object({
+  /**  The list of events obtained.
+   * The reason we only use BaseEvent, is that for speeding up validation.
+   * We won't to ensure that our data is "clean", but if we were to search using
+   * AnyEvent, it becomes a very complex check and slows the validation down, a lot.
+   * So therefore we only check if they fit the BaseEvent format:
+   * Type + Timestamp - All events need these, so if any events doesn't have these
+   * We can consider them "unclean". */
+  data: Type.Array(BaseEvent),
   // A timestamp to pass in as the start time when fetching the next page of data.
-  nextPageTimestamp: z.number().nullable(),
+  nextPageTimestamp: Type.Optional(Type.Union([Type.Number(), Type.Null()])),
 });
-export type ReportEventPaginator = z.infer<typeof ReportEventPaginatorSchema>;
 
-export const GameZoneSchema = z.object({
-  id: z.number(),
+export const GameZone = Type.Object({
+  id: Type.Number(),
 });
-export type GameZone = z.infer<typeof GameZoneSchema>;
 
-export const ReportFightSchema = z.object({
-  id: z.number(),
-  startTime: z.number(),
-  endTime: z.number(),
-  gameZone: GameZoneSchema,
-  fightPercentage: z.number().optional().nullable(),
-  keystoneLevel: z.number().optional().nullable(),
-  keystoneTime: z.number().optional().nullable(),
-  lastPhase: z.number().optional(),
-  lastPhaseIsIntermission: z.boolean().optional(),
-  name: z.string().optional(),
-  difficulty: z.number().optional().nullable(),
-  kill: z.boolean().optional().nullable(),
-  friendlyPlayers: z.array(z.number()).optional(),
+export const ReportFight = Type.Object({
+  id: Type.Number(),
+  startTime: Type.Number(),
+  endTime: Type.Number(),
+  gameZone: GameZone,
+  fightPercentage: Type.Optional(Type.Union([Type.Number(), Type.Null()])),
+  keystoneLevel: Type.Optional(Type.Union([Type.Number(), Type.Null()])),
+  keystoneTime: Type.Optional(Type.Union([Type.Number(), Type.Null()])),
+  lastPhase: Type.Optional(Type.Number()),
+  lastPhaseIsIntermission: Type.Optional(Type.Boolean()),
+  name: Type.Optional(Type.String()),
+  difficulty: Type.Optional(Type.Union([Type.Number(), Type.Null()])),
+  kill: Type.Optional(Type.Union([Type.Boolean(), Type.Null()])),
+  friendlyPlayers: Type.Optional(Type.Array(Type.Number())),
 });
-export type ReportFight = z.infer<typeof ReportFightSchema>;
+export type ReportFight = Static<typeof ReportFight>;
 
-export const ReportArchiveStatusSchema = z.object({
-  __typename: z.literal("ReportArchiveStatus").nullable(),
+export const ReportArchiveStatus = Type.Object({
+  __typename: Type.Optional(Type.Literal("ReportArchiveStatus")),
   /** The date on which the report was archived (if it has been archived). */
-  archiveDate: z.number().nullable(),
+  archiveDate: Type.Optional(Type.Union([Type.Number(), Type.Null()])),
   /** Whether the current user can access the report. Always true if the report is not archived, and always false if not using user authentication. */
-  isAccessible: z.boolean(),
+  isAccessible: Type.Boolean(),
   /** Whether the report has been archived. */
-  isArchived: z.boolean(),
+  isArchived: Type.Boolean(),
 });
-export type ReportArchiveStatus = z.infer<typeof ReportArchiveStatusSchema>;
 
-export const CharacterSchema = z.object({
-  __typename: z.literal("Character").nullable(),
+export const Character = Type.Object({
+  __typename: Type.Optional(Type.Literal("Character")),
   /** The canonical ID of the character. If a character renames or transfers, then the canonical id can be used to identify the most recent version of the character. */
-  canonicalID: z.number(),
+  canonicalID: Type.Number(),
   /** The class id of the character. */
-  classID: z.number(),
+  classID: Type.Number(),
   /** Encounter rankings information for a character, filterable to specific zones, bosses, metrics, etc. This data is not considered frozen, and it can change without notice. Use at your own risk. */
-  encounterRankings: z.unknown().nullable(), // JSON type, replace with actual schema if available
+  encounterRankings: Type.Optional(Type.Unknown()), // JSON type, replace with actual  if available
 
   /** Cached game data such as gear for the character. This data was fetched from the appropriate source (Blizzard APIs for WoW, Lodestone for FF). This call will only return a cached copy of the data if it exists already. It will not go out to Blizzard or Lodestone to fetch a new copy. */
-  gameData: z.unknown().nullable(), // JSON type, replace with actual schema if available
+  gameData: Type.Optional(Type.Unknown()), // JSON type, replace with actual  if available
 
   /** The guild rank of the character in their primary guild. This is not the user rank on the site, but the rank according to the game data, e.g., a Warcraft guild rank or an FFXIV Free Company rank. */
-  guildRank: z.number(),
+  guildRank: Type.Number(),
   /** All guilds that the character belongs to. */
   //guilds?: Guild[];
   /** Whether or not the character has all its rankings hidden. */
-  hidden: z.boolean(),
+  hidden: Type.Boolean(),
   /** The ID of the character. */
-  id: z.number(),
+  id: Type.Number(),
   /** The level of the character. */
-  level: z.number(),
+  level: Type.Number(),
   /** The name of the character. */
-  name: z.string(),
+  name: Type.String(),
   /** Recent reports for the character. */
   //recentReports?: ReportPagination;
   /** The server that the character belongs to. */
   //server: Server;
   /** Rankings information for a character, filterable to specific zones, bosses, metrics, etc. This data is not considered frozen, and it can change without notice. Use at your own risk. */
-  zoneRankings: z.unknown().nullable(), // JSON type, replace with actual schema if available
+  zoneRankings: Type.Optional(Type.Unknown()), // JSON type, replace with actual  if available
 });
-export type Character = z.infer<typeof CharacterSchema>;
 
-export const WCLReportSchema = z.object({
-  __typename: z.literal("Report").nullable(),
-  archiveStatus: ReportArchiveStatusSchema.nullable(),
-  title: z.string(),
-  code: z.string(),
-  endTime: z.number(),
-  startTime: z.number(),
-  graph: z.any().nullable(), // JSON response
-  masterData: ReportMasterDataSchema.nullable(),
-  events: ReportEventPaginatorSchema.nullable(),
-  fights: z.array(ReportFightSchema),
-  owner: UserSchema.nullable(),
-  playerDetails: PlayerDetailsRootSchema,
-  rankedCharacters: z.array(CharacterSchema).nullable(),
-  rankings: z.any().nullable(), // JSON response
-  revision: z.number().nullable(),
-  segments: z.number().nullable(),
-  table: z.object({ data: SummaryTableSchema }),
-  visibility: z.string().nullable(),
-  exportedSegments: z.number().nullable(),
-  zone: GameZoneSchema.nullable(),
+export const BaseWCLReport = Type.Object({
+  __typename: Type.Optional(Type.Literal("Report")),
+  archiveStatus: Type.Optional(ReportArchiveStatus),
+  title: Type.String(),
+  code: Type.String(),
+  endTime: Type.Number(),
+  startTime: Type.Number(),
+  graph: Type.Optional(Type.Unknown()), // JSON response
+  masterData: Type.Optional(ReportMasterData),
+  events: ReportEventPaginator,
+  fights: Type.Array(ReportFight),
+  owner: Type.Optional(User),
+  playerDetails: PlayerDetailsRoot,
+  rankedCharacters: Type.Optional(Type.Array(Character)),
+  rankings: Type.Optional(Type.Unknown()), // JSON response
+  revision: Type.Optional(Type.Union([Type.Number(), Type.Null()])),
+  segments: Type.Optional(Type.Number()),
+  table: Type.Object({ data: SummaryTable }),
+  visibility: Type.Optional(Type.String()),
+  exportedSegments: Type.Optional(Type.Number()),
+  zone: Type.Optional(GameZone),
+});
+export type BaseWCLReport = Static<typeof BaseWCLReport>;
+
+export const ReportData = Type.Object({
+  report: BaseWCLReport,
+});
+
+export const RootReport = Type.Object({
+  reportData: ReportData,
 });

@@ -1,9 +1,9 @@
 import { SNAPSHOTTED_DOTS } from "../../util/constants";
 import {
   AttributionHook,
-  DamageEvent,
   NormalizedDamageEvent,
-} from "../../wcl/events/types";
+} from "../../wcl/types/events/customEventTypes";
+import { DamageEvent } from "../../wcl/types/events/eventTypes";
 import { getBuffs } from "../combatant/buffs";
 import { Combatants, Pet } from "../combatant/combatants";
 
@@ -70,12 +70,16 @@ export function supportEventLinkNormalizer(
       } else {
         const supportedEventIndex = eventRecord[eventKey];
 
-        if (isNaN(supportedEventIndex) && isDev) {
-          console.warn("Support Event without Parent found");
-          console.log(event);
-          console.log(normEvents[idx - 1]);
-          console.log(eventRecord);
-          console.log(eventKey);
+        if (isNaN(supportedEventIndex)) {
+          if (isDev) {
+            console.warn("Support Event without Parent found");
+            console.log("Sup event", event);
+            console.log("Last event", normEvents[idx - 1]);
+            console.log("Event record", { ...eventRecord });
+            console.log("Norm Events", [...normEvents]);
+            console.log(eventKey);
+          }
+          return normEvents;
         } else {
           const delay =
             event.timestamp - normEvents[supportedEventIndex].timestamp;

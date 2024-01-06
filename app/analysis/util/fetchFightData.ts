@@ -1,5 +1,5 @@
-import { AnyEvent } from "../../wcl/events/types";
 import { WCLReport } from "../../wcl/types/graphql/queryTypes";
+import { AnyEvent } from "../../wcl/types/events/eventTypes";
 import { ReportFight } from "../../wcl/types/report/report";
 import { SummaryTable } from "../../wcl/types/report/summaryTable";
 import { getFilter, getPhaseEventsFilter } from "../../wcl/util/filters";

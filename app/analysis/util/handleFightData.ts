@@ -1,14 +1,3 @@
-import {
-  AnyBuffEvent,
-  AnyDebuffEvent,
-  AnyEvent,
-  CastEvent,
-  DamageEvent,
-  DeathEvent,
-  EventType,
-  NormalizedDamageEvent,
-  PhaseStartEvent,
-} from "../../wcl/events/types";
 import { Buff, generateBuffHistories } from "../combatant/buffs";
 import { Combatants, generateCombatants } from "../combatant/combatants";
 import { eventLinkNormalizer } from "../normalizers/eventLinkNormalizer";
@@ -16,8 +5,19 @@ import { correctSupportEvents } from "../normalizers/supportEventCorrecter";
 import { supportEventLinkNormalizer } from "../normalizers/supportEventLinkNormalizer";
 import { FightDataSet } from "./fetchFightData";
 import { AbilityFilters, Weights } from "../../zustand/fightParametersStore";
-import { WCLReport } from "../../wcl/types/graphql/queryTypes";
 import { generatePhaseEvents } from "./generatePhaseEvents";
+import { WCLReport } from "../../wcl/types/graphql/queryTypes";
+import { NormalizedDamageEvent } from "../../wcl/types/events/customEventTypes";
+import { EventType } from "../../wcl/types/events/eventEnums";
+import {
+  AnyBuffEvent,
+  AnyDebuffEvent,
+  AnyEvent,
+  CastEvent,
+  DamageEvent,
+  DeathEvent,
+  PhaseStartEvent,
+} from "../../wcl/types/events/eventTypes";
 
 export type Fight = {
   fightId: number;

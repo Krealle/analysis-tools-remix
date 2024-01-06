@@ -1,9 +1,9 @@
 import { formatNumber, splitCamelCase } from "../../util/format";
-import { AttributionHook } from "../../wcl/events/types";
 import { Combatant } from "../combatant/combatants";
 import "../../styles/styling.css";
 import { Fight } from "../util/handleFightData";
 import { EnemyTracker } from "../../util/types";
+import { AttributionHook } from "../../wcl/types/events/customEventTypes";
 
 const tableRenderer = (
   fights: Fight[],

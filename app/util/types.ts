@@ -2,7 +2,7 @@ import {
   ApplyBuffEvent,
   DamageEvent,
   RemoveBuffEvent,
-} from "../wcl/events/types";
+} from "../wcl/types/events/eventTypes";
 
 export type FightTracker = {
   fightId: number;
