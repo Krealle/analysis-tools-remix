@@ -233,7 +233,7 @@ const EventNormalizer: React.FC = () => {
             {curr}
           </div>
         );
-      }, <p key={0}>The following fights could not be fetched due to these errors:</p>);
+      }, <p key="parseError">The following fights could not be fetched due to these errors:</p>);
 
       console.log(errContent);
       setParseError(errContent);
