@@ -5,9 +5,9 @@ import {
   EventsResponse,
   SummaryTableResponse,
   WCLReport,
-  isGraphQLError,
   validateData,
 } from "../types/graphql/queryTypes";
+import { isGraphQLError } from "../../util/typeChecks";
 import { AnyEvent } from "../types/events/eventTypes";
 import { SummaryTable } from "../types/report/summaryTable";
 import { ReportParseError } from "./parseWCLUrl";
