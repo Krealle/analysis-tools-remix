@@ -73,3 +73,16 @@ export function validateData<T extends AnyReport>(
 
   return { data: data as RootReportResponse<T> };
 }
+
+export function isGraphQLError(
+  data: unknown
+): data is typeof GraphQLErrorResponse {
+  const ajv = new Ajv();
+  const validate = ajv.compile(GraphQLErrorResponse);
+
+  return validate(data);
+}
+
+const GraphQLErrorResponse = Type.Object({
+  error: Type.Any(),
+});

@@ -5,11 +5,12 @@ import {
   EventsResponse,
   SummaryTableResponse,
   WCLReport,
+  isGraphQLError,
   validateData,
 } from "../types/graphql/queryTypes";
-import { GraphQLError } from "graphql";
 import { AnyEvent } from "../types/events/eventTypes";
 import { SummaryTable } from "../types/report/summaryTable";
+import { ReportParseError } from "./parseWCLUrl";
 /* import { getMockData } from "../__test__/getMockData"; */
 
 export type Variables = {
@@ -70,23 +71,24 @@ export async function fetchReportData<T extends AnyReport>(
       const maybeRootReport = validateData<T>(data, responseType);
 
       if (!maybeRootReport.data) {
-        console.log("fuck");
-        if (!maybeRootReport.errors) {
-          throw new Error(
-            `Validation failed! ${JSON.stringify(maybeRootReport.errors)}`
-          );
+        if (isGraphQLError(data)) {
+          if (data.error === "Missing authorization") {
+            throw new Error(ReportParseError.MISSING_AUTHORIZATION);
+          }
+          throw new Error(ReportParseError.UNKNOWN_GRAPHQL_ERROR);
         }
-        throw new Error("Validation failed! No data or errors found.");
+
+        if (maybeRootReport.errors) {
+          throw new Error(ReportParseError.BAD_RESPONSE);
+        }
+        throw new Error(ReportParseError.UNKNOWN_ERROR);
       }
 
       return maybeRootReport.data.reportData.report;
     } catch (error) {
-      if (error instanceof Error) {
-        console.log(error.message);
-      }
-      if (error instanceof GraphQLError) {
-        console.log(error.message);
-      }
+      /* if (error instanceof Error) {
+        console.log(error);
+      } */
 
       attempts += 1;
 
@@ -97,18 +99,25 @@ export async function fetchReportData<T extends AnyReport>(
   }
 
   // If all retries fail, throw an error
-  throw new Error("GraphQL request error");
+  throw new Error(ReportParseError.UNKNOWN_ERROR);
 }
 
 export async function getSummaryTable(
   variables: Variables
 ): Promise<SummaryTable> {
-  const response = await fetchReportData<SummaryTableResponse>(
-    "summaryTable",
-    variables
-  );
+  try {
+    const response = await fetchReportData<SummaryTableResponse>(
+      "summaryTable",
+      variables
+    );
 
-  return response.table.data;
+    return response.table.data;
+  } catch (error) {
+    if (error instanceof Error) {
+      throw error;
+    }
+    throw new Error(ReportParseError.UNKNOWN_ERROR);
+  }
 }
 
 export async function getWCLReport(variables: Variables): Promise<WCLReport> {
@@ -116,7 +125,10 @@ export async function getWCLReport(variables: Variables): Promise<WCLReport> {
     const response = await fetchReportData<WCLReport>("WCLReport", variables);
     return response;
   } catch (error) {
-    throw new Error("Failed to get fights");
+    if (error instanceof Error) {
+      throw error;
+    }
+    throw new Error(ReportParseError.UNKNOWN_ERROR);
   }
 }
 
@@ -153,22 +165,29 @@ export async function getEvents<T extends AnyEvent>(
     //console.log("filter for fetching Events:", variables.filterExpression);
   }
 
-  const response = await fetchReportData<EventsResponse>("events", variables);
+  try {
+    const response = await fetchReportData<EventsResponse>("events", variables);
 
-  //console.log("Event response:", response);
+    //console.log("Event response:", response);
 
-  const { data = [], nextPageTimestamp = null } = response.events ?? {};
+    const { data = [], nextPageTimestamp = null } = response.events ?? {};
 
-  const allEvents: T[] = [...(previousEvents ?? []), ...(data as T[])];
+    const allEvents: T[] = [...(previousEvents ?? []), ...(data as T[])];
 
-  if (nextPageTimestamp) {
-    return getEvents(
-      { ...variables, startTime: nextPageTimestamp },
-      eventType,
-      allEvents,
-      true
-    );
+    if (nextPageTimestamp) {
+      return getEvents(
+        { ...variables, startTime: nextPageTimestamp },
+        eventType,
+        allEvents,
+        true
+      );
+    }
+
+    return allEvents;
+  } catch (error) {
+    if (error instanceof Error) {
+      throw error;
+    }
+    throw new Error(ReportParseError.UNKNOWN_ERROR);
   }
-
-  return allEvents;
 }

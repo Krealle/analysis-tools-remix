@@ -5,6 +5,10 @@ export enum ReportParseError {
   INVALID_FILTER = "INVALID_FILTER",
   EMPTY_REPORT = "EMPTY_REPORT",
   NETWORK_ERROR = "NETWORK_ERROR",
+  MISSING_AUTHORIZATION = "MISSING_AUTHORIZATION",
+  BAD_RESPONSE = "BAD_RESPONSE",
+  UNKNOWN_ERROR = "UNKNOWN_ERROR",
+  UNKNOWN_GRAPHQL_ERROR = "UNKNOWN_GRAPHQL_ERROR",
 }
 
 export const reportParseErrorMap: Record<ReportParseError, string> = {
@@ -15,6 +19,11 @@ export const reportParseErrorMap: Record<ReportParseError, string> = {
   EMPTY_REPORT: "This report appears to be empty.",
   NETWORK_ERROR:
     "Failed to fetch fights from WCL. You might need to re-authorize.",
+  MISSING_AUTHORIZATION:
+    "Failed to fetch fights from WCL due to: Missing authorization",
+  BAD_RESPONSE: "Bad data response from WCL",
+  UNKNOWN_ERROR: "Unknown error",
+  UNKNOWN_GRAPHQL_ERROR: "Unknown GraphQL error",
 };
 
 export const reportParseErrorIconMap: Record<ReportParseError, string> = {
@@ -24,6 +33,10 @@ export const reportParseErrorIconMap: Record<ReportParseError, string> = {
   INVALID_FILTER: "/static/bear/shrug-48.png",
   EMPTY_REPORT: "/static/bear/lost-48.png",
   NETWORK_ERROR: "/static/bear/dead-48.png",
+  MISSING_AUTHORIZATION: "/static/bear/dead-48.png",
+  BAD_RESPONSE: "/static/bear/dead-48.png",
+  UNKNOWN_ERROR: "/static/bear/dead-48.png",
+  UNKNOWN_GRAPHQL_ERROR: "/static/bear/dead-48.png",
 };
 
 export const parseWCLUrl = (

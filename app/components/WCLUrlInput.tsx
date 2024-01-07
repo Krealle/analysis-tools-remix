@@ -6,7 +6,6 @@ import ErrorBear from "./generic/ErrorBear";
 import useStatusStore from "../zustand/statusStore";
 import { getWCLReport } from "../wcl/util/queryWCL";
 import useFightBoxesStore from "../zustand/fightBoxesStore";
-import WCLAuthorization from "./WCLAuthorization";
 
 const WCLUrlInput: React.FC = () => {
   const [url, setUrl] = useState<string>("");
@@ -42,11 +41,9 @@ const WCLUrlInput: React.FC = () => {
 
         WCLReport.setFightReport(newFightReport);
       } catch (error) {
-        setErrorBear(
-          (error as ReportParseError) === ReportParseError.EMPTY_REPORT
-            ? ReportParseError.EMPTY_REPORT
-            : ReportParseError.NETWORK_ERROR
-        );
+        if (error instanceof Error) {
+          setErrorBear(error.message as ReportParseError);
+        }
       } finally {
         status.setIsFetching(false);
       }
@@ -82,7 +79,6 @@ const WCLUrlInput: React.FC = () => {
         </div>
       </form>
       {errorBear && <ErrorBear error={errorBear} />}
-      {errorBear === ReportParseError.NETWORK_ERROR && <WCLAuthorization />}
     </>
   );
 };

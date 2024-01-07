@@ -8,6 +8,7 @@ import {
   getEvents,
   getSummaryTable,
 } from "../../wcl/util/queryWCL";
+import { ReportParseError } from "../../wcl/util/parseWCLUrl";
 
 export type FightDataSet = {
   fight: ReportFight & { reportCode: string };
@@ -25,34 +26,38 @@ export type FightDataSet = {
 export async function* fetchFightData(
   WCLReport: WCLReport,
   fightsToFetch: Set<number>
-): AsyncIterable<FightDataSet> {
+): AsyncIterable<FightDataSet | { error: ReportParseError; fight: number }> {
   const fightsToGenerate = WCLReport.fights.filter((fight) =>
     fightsToFetch.has(fight.id)
   );
 
   const fetchPromises = fightsToGenerate.map(async (fight) => {
-    const variables: EventVariables = {
-      reportID: WCLReport.code,
-      fightIDs: [fight.id],
-      startTime: fight.startTime,
-      endTime: fight.endTime,
-      limit: 10000,
-    };
-    const summaryTable = await getSummaryTable(variables);
+    try {
+      const variables: EventVariables = {
+        reportID: WCLReport.code,
+        fightIDs: [fight.id],
+        startTime: fight.startTime,
+        endTime: fight.endTime,
+        limit: 10000,
+      };
+      const summaryTable = await getSummaryTable(variables);
 
-    variables.filterExpression = getFilter();
-    const events = await getEvents(variables);
+      variables.filterExpression = getFilter();
+      const events = await getEvents(variables);
 
-    /** Split from events to reduce complexity */
-    variables.filterExpression = getPhaseEventsFilter();
-    const phaseEvents = await getEvents(variables);
+      /** Split from events to reduce complexity */
+      variables.filterExpression = getPhaseEventsFilter();
+      const phaseEvents = await getEvents(variables);
 
-    return {
-      fight: { ...fight, reportCode: WCLReport.code },
-      summaryTable: summaryTable,
-      events: events,
-      phaseEvents: phaseEvents,
-    };
+      return {
+        fight: { ...fight, reportCode: WCLReport.code },
+        summaryTable: summaryTable,
+        events: events,
+        phaseEvents: phaseEvents,
+      };
+    } catch (error) {
+      return { error: error as ReportParseError, fight: fight.id };
+    }
   });
 
   for (const fetchPromise of fetchPromises) {
