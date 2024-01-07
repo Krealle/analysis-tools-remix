@@ -41,7 +41,7 @@ const intervalRenderer = (
     );
 
     tableRows.push(
-      <tr key={interval.currentInterval}>
+      <tr key={`${interval.currentInterval}-${interval.currentPhase}`}>
         <td>
           {formatDuration(Math.abs(interval.start - phaseCutoff))} -{" "}
           {formatDuration(Math.abs(interval.end - phaseCutoff))}
