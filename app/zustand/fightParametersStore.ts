@@ -23,6 +23,14 @@ export type Weights = {
   prescienceWeight: number;
 };
 
+const initTS: TimeSkipIntervals[] = [
+  { start: "0:01", end: "0:03" },
+  { start: "0:36", end: "0:37" },
+  { start: "1:01", end: "1:07" },
+  { start: "1:34", end: "1:39" },
+  { start: "2:04", end: "2:08" },
+];
+
 type FightParametersStore = {
   timeSkipIntervals: TimeSkipIntervals[];
   parameterError: string | undefined;
@@ -56,7 +64,7 @@ type FightParametersStore = {
 };
 
 const useFightParametersStore = create<FightParametersStore>((set) => ({
-  timeSkipIntervals: [],
+  timeSkipIntervals: initTS,
   parameterError: undefined,
   parameterErrorMsg: "",
   showOptions: false,
@@ -68,7 +76,7 @@ const useFightParametersStore = create<FightParametersStore>((set) => ({
     blacklist: ABILITY_BLACKLIST.toString(),
   },
   intervalEbonMightWeight: 0.5,
-  intervalTimer: 30,
+  intervalTimer: 40,
   deathCountFilter: "",
   weights: {
     ebonMightWeight: EBON_MIGHT_CORRECTION_VALUE,
