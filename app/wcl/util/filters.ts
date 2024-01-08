@@ -1,4 +1,12 @@
 import {
+  corruptShieldBuffId,
+  eternalFirestormCastId,
+  flameFallDamageId,
+  greaterFirestormCast,
+  incarnateCastId,
+  incarnateDamageTakenId,
+} from "../../analysis/util/generatePhaseEvents";
+import {
   COMBUSTION_BUFF,
   EBON_MIGHT,
   PRESCIENCE,
@@ -78,25 +86,16 @@ export function getDeathFilter(): string {
   return filter;
 }
 
-/**
- * Fyrakk
-  private final int IncarnateCastId = 412761;
-  private final int CorruptShieldBuffId = 421922;
-  private final int EternalFirestormCastId = 422935;
-
-  incarnate is i1
-  corrupt shield fading as buff is p2
-  then eternal firestorm cast is p3
-  alternatively fades by health but its easier by casts
-  the eternal firestorm is technically not 10000% accurate but
- */
 export function getPhaseEventsFilter(): string {
   const filter = `
   (type = "${EventType.CastEvent}"
-  AND ability.id in (412761, 422935))
+  AND ability.id in (${incarnateCastId}, ${eternalFirestormCastId}, ${greaterFirestormCast}))
   OR 
   (type = "${EventType.RemoveBuffEvent}"
-  AND ability.id = 421922)
+  AND ability.id = ${corruptShieldBuffId})
+  OR 
+  (type = "${EventType.DamageEvent}"
+  AND ability.id in (${incarnateDamageTakenId}, ${flameFallDamageId}))
   `;
 
   return filter;

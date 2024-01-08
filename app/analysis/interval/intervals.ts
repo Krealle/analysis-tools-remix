@@ -45,6 +45,7 @@ export function getAverageIntervals(
 
     let nextPhase = fight.phaseEvents.shift();
     let currentPhase = 1;
+    let isDamageablePhase = true;
 
     for (const event of fight.normalizedDamageEvents) {
       // Events to ignore
@@ -124,6 +125,7 @@ export function getAverageIntervals(
                     phaseName: nextPhase!.name,
                   }
                 : undefined,
+              isDamageable: isDamageablePhase,
             };
 
             const earliestPhaseChange = usePhases
@@ -159,6 +161,7 @@ export function getAverageIntervals(
         }
 
         if (isPhaseChange) {
+          isDamageablePhase = nextPhase!.isDamageable;
           nextPhase = fight.phaseEvents.shift();
           currentPhase += 1;
           currentInterval = 1;
@@ -237,6 +240,7 @@ export function averageOutIntervals(
       end: entry.end,
       currentPhase: entry.currentPhase,
       phaseChange: entry.phaseChange,
+      isDamageable: entry.isDamageable,
     });
   }
 
@@ -251,5 +255,6 @@ export function getTop4Pumpers(topPumpersData: TotInterval[]): TotInterval[] {
     end: interval.end,
     currentPhase: interval.currentPhase,
     phaseChange: interval.phaseChange,
+    isDamageable: interval.isDamageable,
   }));
 }

@@ -60,3 +60,31 @@
     }
   }
 }
+
+.experimental-time-intervals-container {
+  button {
+    padding: 0.2em 0.6em;
+  }
+  .title {
+    font-size: 24px;
+    margin: 10px;
+    font-weight: bold;
+    button {
+      font-size: 0.5em;
+    }
+  }
+  .experimental-time-intervals-content {
+    input {
+      max-width: 5rem;
+      text-align: center;
+      font-size: large;
+    }
+    button {
+      background-color: inherit;
+      padding: 0.2em 0.6em;
+    }
+    label {
+      margin: 3px;
+    }
+  }
+}

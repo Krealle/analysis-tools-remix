@@ -18,6 +18,9 @@ import CustomFightParameters from "./fightParameters/CustomFightParameters";
 import useFightParametersStore, {
   AbilityFilters,
 } from "../zustand/fightParametersStore";
+import { getExperimentalIntervals } from "../analysis/interval/newIntervals";
+import useIntervalParametersStore from "../zustand/intervalParametersStore";
+import experimentalIntervalRenderer from "../analysis/renders/experimentalIntervalRenderer";
 
 const fights: Fight[] = [];
 const fetchedFightDataSets: FightDataSet[] = [];
@@ -30,6 +33,8 @@ const EventNormalizer: React.FC = () => {
   const [intervalsContent, setIntervalsContent] = useState<JSX.Element | null>(
     null
   );
+  const [experimentalIntervalsContent, setExperimentalIntervalsContent] =
+    useState<JSX.Element | null>(null);
   const [normalizeStatus, setNormalizeStatus] = useState<
     FetchStatus | undefined
   >();
@@ -53,6 +58,8 @@ const EventNormalizer: React.FC = () => {
     weights,
   } = useFightParametersStore();
   const { isFetching, setIsFetching } = useStatusStore();
+
+  const { ebonMightWindows } = useIntervalParametersStore();
 
   useEffect(() => {
     enemyTracker.clear();
@@ -132,7 +139,8 @@ const EventNormalizer: React.FC = () => {
       const fightsToHandle = fetchedFightDataSets.filter(
         (id) =>
           !fights.map((f) => f.fightId).includes(id.fight.id) &&
-          id.fight.reportCode === WCLReport.code
+        id.fight.reportCode === WCLReport.code &&
+        selectedFights.has(id.fight.id)
       );
 
       const formattedAbilityFilters = Object.fromEntries(
@@ -181,6 +189,17 @@ const EventNormalizer: React.FC = () => {
       const isSameBoss = fightsToRender.every(
         (fight, i, arr) => i === 0 || fight.bossName === arr[i - 1].bossName
       );
+    const experimentalIntervals = getExperimentalIntervals(
+      fightsToRender,
+      selectedFights,
+      WCLReport.code,
+      enemyTracker,
+      formattedAbilityFilters,
+      enemyBlacklist,
+      Number(deathCountFilter),
+      isSameBoss,
+      ebonMightWindows
+    );
       const intervals = getAverageIntervals(
         fightsToRender,
         selectedFights,
@@ -206,6 +225,12 @@ const EventNormalizer: React.FC = () => {
           }
         });
       });
+
+    const experimentalIntervalContent = experimentalIntervalRenderer(
+      experimentalIntervals,
+      combinedCombatants,
+      fightsToRender.length
+    );
 
       const intervalContent = intervalRenderer(
         intervals,
@@ -235,7 +260,6 @@ const EventNormalizer: React.FC = () => {
         );
       }, <p key="parseError">The following fights could not be fetched due to these errors:</p>);
 
-      console.log(errContent);
       setParseError(errContent);
     } else {
       setParseError(undefined);
@@ -243,6 +267,7 @@ const EventNormalizer: React.FC = () => {
 
       setWclTableContent(wclTableContent);
       setIntervalsContent(intervalContent);
+    setExperimentalIntervalsContent(experimentalIntervalContent);
       setNormalizeStatus(undefined);
       setIsFetching(false);
       setProgress(0);
@@ -280,7 +305,7 @@ const EventNormalizer: React.FC = () => {
       )}
       {!isFetching && (
         <>
-          {wclTableContent} {intervalsContent}
+          {wclTableContent} {experimentalIntervalsContent} {intervalsContent}
         </>
       )}
     </div>

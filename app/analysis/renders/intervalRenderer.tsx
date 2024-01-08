@@ -39,25 +39,42 @@ const intervalRenderer = (
           </td>
         ))
     );
+    if (idx === 0) return;
 
-    tableRows.push(
-      <tr key={`${interval.currentInterval}-${interval.currentPhase}`}>
-        <td>
-          {formatDuration(Math.abs(interval.start - phaseCutoff))} -{" "}
-          {formatDuration(Math.abs(interval.end - phaseCutoff))}
-        </td>
-        {formattedEntriesTable}
-      </tr>
-    );
+    if (interval.isDamageable) {
+      tableRows.push(
+        <tr key={`${interval.currentInterval}-${interval.currentPhase}`}>
+          <td>
+            {formatDuration(Math.abs(interval.start - phaseCutoff))} -{" "}
+            {formatDuration(Math.abs(interval.end - phaseCutoff))}
+          </td>
+          {formattedEntriesTable}
+        </tr>
+      );
+    }
 
     if (interval.phaseChange) {
       if (amountOfFights > 1) {
         phaseCutoff = top4Pumpers[idx + 1]?.start ?? 0;
       }
+
+      let intermissionInfo = "";
+      if (idx < top4Pumpers.length - 1) {
+        const nextInterval = top4Pumpers[idx + 1];
+        if (!nextInterval.isDamageable) {
+          intermissionInfo = ` - ${formatDuration(
+            Math.abs(nextInterval.start - nextInterval.end)
+          )}`;
+        }
+      }
+
       tableRows.push(
         <tr key={interval.phaseChange.phaseName}>
           <td colSpan={5}>
-            <b>{interval.phaseChange.phaseName}</b>
+            <b>
+              {interval.phaseChange.phaseName}
+              {intermissionInfo}
+            </b>
           </td>
         </tr>
       );

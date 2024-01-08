@@ -6,6 +6,7 @@ import IntervalSettings from "./IntervalSettings";
 import DeathFilter from "./DeathFilter";
 import useFightParametersStore from "../../zustand/fightParametersStore";
 import WeightsSettings from "./WeightsSettings";
+import ExperimentalIntervalSettings from "./ExperimentalIntervalSettings";
 
 /** In my eyes this is black magic but all
  * it does is check if blacklist format is correct:
@@ -51,6 +52,7 @@ const CustomFightParameters: React.FC = () => {
         <AbilityFilterSettings />
         <EnemyFilter />
         <IntervalSettings />
+        <ExperimentalIntervalSettings />
         <DeathFilter />
       </div>
     </div>

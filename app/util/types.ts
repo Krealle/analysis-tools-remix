@@ -37,6 +37,7 @@ export type TotInterval = {
   phaseChange?: {
     phaseName: string;
   };
+  isDamageable: boolean;
 };
 
 export type IntervalSet = IntervalEntry[];

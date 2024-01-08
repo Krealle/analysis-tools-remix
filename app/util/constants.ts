@@ -238,7 +238,6 @@ export const mrtColorMap: Map<string, string> = new Map([
   ["Evoker", "|cff33937f"],
 ]);
 
-export const MELEE_HIT = 1;
 export const EBON_MIGHT = 395152;
 export const SHIFTING_SANDS = 413984;
 export const PRESCIENCE = 410089;

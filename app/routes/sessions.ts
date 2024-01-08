@@ -5,8 +5,8 @@ export type AccessSession = {
   expirationTime: number;
 };
 
-/** 24 Hours */
-export const SESSION_DEFAULT_MAX_AGE = 60 * 60 * 24;
+/** 30 Days */
+export const SESSION_DEFAULT_MAX_AGE = 60 * 60 * 24 * 30;
 
 const { getSession, commitSession, destroySession } =
   createCookieSessionStorage({

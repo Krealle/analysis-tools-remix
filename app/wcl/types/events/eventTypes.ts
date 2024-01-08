@@ -228,6 +228,7 @@ const PhaseStartEvent = Type.Intersect([
   Type.Object({
     type: Type.Literal(EventType.PhaseStartEvent),
     name: Type.String(),
+    isDamageable: Type.Boolean(),
     encounterID: Type.Optional(Type.Number()),
     difficulty: Type.Optional(Type.Number()),
     size: Type.Optional(Type.Number()),
@@ -340,9 +341,11 @@ const DamageEvent = Type.Intersect([
     tick: Type.Optional(Type.Boolean()),
     absorbed: Type.Optional(Type.Number()),
     overkill: Type.Optional(Type.Number()),
+    // Fake property
     parentDotEvent: Type.Optional(
       Type.Union([ApplyDebuffEvent, RefreshDebuffEvent])
     ),
+    // Fake property
     castEvent: Type.Optional(CastEvent),
   }),
 ]);
