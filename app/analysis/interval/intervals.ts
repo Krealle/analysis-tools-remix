@@ -43,7 +43,8 @@ export function getAverageIntervals(
         ? fight.deathEvents[deathCutOff - 1].timestamp
         : undefined;
 
-    let nextPhase = fight.phaseEvents.shift();
+    const phaseEvents = [...fight.phaseEvents];
+    let nextPhase = phaseEvents.shift();
     let currentPhase = 1;
     let isDamageablePhase = true;
 
@@ -162,7 +163,7 @@ export function getAverageIntervals(
 
         if (isPhaseChange) {
           isDamageablePhase = nextPhase!.isDamageable;
-          nextPhase = fight.phaseEvents.shift();
+          nextPhase = phaseEvents.shift();
           currentPhase += 1;
           currentInterval = 1;
         }
