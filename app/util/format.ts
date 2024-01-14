@@ -46,6 +46,11 @@ export function formatTime(time: string): number | undefined {
   }
 
   const [minutes, seconds] = time.split(":").map(Number);
+
+  if (minutes < 0 || seconds < 0) {
+    return;
+  }
+
   return minutes * 60 * 1000 + seconds * 1000;
 }
 

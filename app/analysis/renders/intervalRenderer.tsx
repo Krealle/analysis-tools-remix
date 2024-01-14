@@ -39,7 +39,6 @@ const intervalRenderer = (
           </td>
         ))
     );
-    if (idx === 0) return;
 
     if (interval.isDamageable) {
       tableRows.push(

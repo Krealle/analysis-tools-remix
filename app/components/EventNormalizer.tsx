@@ -177,7 +177,7 @@ const EventNormalizer: React.FC = () => {
       for (const interval of timeSkipIntervals) {
         const formattedStartTime = formatTime(interval.start);
         const formattedEndTime = formatTime(interval.end);
-        if (formattedStartTime && formattedEndTime) {
+      if (formattedStartTime !== undefined && formattedEndTime !== undefined) {
           formattedTimeSkipIntervals.push({
             start: formattedStartTime,
             end: formattedEndTime,

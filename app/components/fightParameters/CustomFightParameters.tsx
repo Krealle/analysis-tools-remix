@@ -25,8 +25,8 @@ const CustomFightParameters: React.FC = () => {
       const formattedStartTime = formatTime(interval.start);
       const formattedEndTime = formatTime(interval.end);
       if (
-        !formattedStartTime ||
-        !formattedEndTime ||
+        formattedStartTime === undefined ||
+        formattedEndTime === undefined ||
         formattedStartTime > formattedEndTime
       ) {
         setParameterError("Invalid time interval");
