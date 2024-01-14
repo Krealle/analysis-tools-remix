@@ -52,6 +52,7 @@ export const AmirdrassilEnemies: EnemyMap = {
   FyrakkTheBlazing: [
     createEnemy(204931, "Fyrakk", EnemyType.Boss),
     createEnemy(207796, "Burning Colossus", EnemyType.Add),
+    createEnemy(214012, "Dark Colossus", EnemyType.Add),
     createEnemy(214608, "Screaming Soul", EnemyType.Add),
   ],
 };
