@@ -5,6 +5,7 @@ import useStatusStore from "../../zustand/statusStore";
 import PopupContent from "../generic/PopupContent";
 import "../../styles/fightParameterStyling.css";
 import { splitCamelCase, toCamelCase } from "../../util/format";
+import OptionBox from "./generic/OptionBox";
 
 const AbilityFilterSettings: React.FC = () => {
   const { abilityFilters, setAbilityFilter } = useFightParametersStore();
@@ -14,23 +15,18 @@ const AbilityFilterSettings: React.FC = () => {
     <div className="flex flex-wrap">
       {Object.entries(abilityFilters).map(([ability, value]) => {
         return (
-          <div className="flex container" key={ability}>
-            <div className="flex title">
-              <big>{splitCamelCase(toCamelCase(ability))}</big>
-            </div>
-            <div className="flex abilities">
-              <textarea
-                onChange={(e) =>
-                  setAbilityFilter({
-                    ability: ability as keyof AbilityFilters<string>,
-                    value: e.target.value,
-                  })
-                }
-                value={value}
-                className="mrtNoteTextbox"
-              />
-            </div>
-          </div>
+          <OptionBox title={splitCamelCase(toCamelCase(ability))} key={ability}>
+            <textarea
+              onChange={(e) =>
+                setAbilityFilter({
+                  ability: ability as keyof AbilityFilters<string>,
+                  value: e.target.value,
+                })
+              }
+              value={value}
+              className="mrtNoteTextbox"
+            />
+          </OptionBox>
         );
       })}
     </div>

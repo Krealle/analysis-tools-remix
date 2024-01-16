@@ -63,7 +63,10 @@ export function toCamelCase(input: string): string {
 }
 
 export function splitCamelCase(input: string): string {
-  return input.replace(/([A-Z])/g, " $1").trim();
+  return input
+    .replace(/([A-Z])/g, " $1")
+    .trim()
+    .replace(/\b(\w)/g, (char) => char.toUpperCase());
 }
 
 export function formatUnixTime(unixTimestamp: number): string {

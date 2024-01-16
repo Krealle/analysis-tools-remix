@@ -49,40 +49,27 @@ const IntervalSettings: React.FC = () => {
           ))}
         </select>
       </OptionBox>
-      <div className="flex container">
-        <div className="flex title">
-          <big>Interval Timer</big>
-        </div>
-        <div className="flex abilities">
-          <select
-            onChange={(e) => handleIntervalChange(e)}
-            value={intervalTimer}
-          >
-            {intervals.map((number) => (
-              <option key={number} value={number}>
-                {number}
-              </option>
-            ))}
-          </select>
-        </div>
-      </div>
-      <div className="flex container">
-        <div className="flex title">
-          <big>Ebon Might Weight</big>
-        </div>
-        <div className="flex abilities">
-          <select
-            onChange={(e) => handleWeightChange(e)}
-            value={intervalEbonMightWeight}
-          >
-            {weights.map((number) => (
-              <option key={number} value={number}>
-                {number}
-              </option>
-            ))}
-          </select>
-        </div>
-      </div>
+      <OptionBox title="Interval Timer">
+        <select onChange={(e) => handleIntervalChange(e)} value={intervalTimer}>
+          {intervals.map((number) => (
+            <option key={number} value={number}>
+              {number}
+            </option>
+          ))}
+        </select>
+      </OptionBox>
+      <OptionBox title="Ebon Might Weight">
+        <select
+          onChange={(e) => handleWeightChange(e)}
+          value={intervalEbonMightWeight}
+        >
+          {weights.map((number) => (
+            <option key={number} value={number}>
+              {number}
+            </option>
+          ))}
+        </select>
+      </OptionBox>
       <TimePeriodFilter />
     </div>
   );
