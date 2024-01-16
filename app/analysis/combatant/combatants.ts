@@ -2,9 +2,12 @@ import { Static, Type } from "@sinclair/typebox";
 import { Buff, getBuffHistory } from "./buffs";
 import {
   CombatantInfo,
+  Player,
   PlayerDetails,
+  Talent,
 } from "../../wcl/types/report/playerDetails";
 import { Actor } from "../../wcl/types/report/masterData";
+import { getBaseStats } from "./stats";
 
 export const BaseStats = Type.Object({
   timestamp: Type.Number(),
@@ -29,13 +32,14 @@ export const Combatant = Type.Object({
   name: Type.String(),
   pets: Type.Array(Pet),
   buffHistory: Type.Array(Buff),
-  baseStats: Type.Optional(BaseStats),
+  baseStats: BaseStats,
   class: Type.String(),
   server: Type.Optional(Type.String()),
   icon: Type.String(),
   spec: Type.String(),
   role: Type.String(),
-  combatantInfo: Type.Union([CombatantInfo, Type.Array(Type.Never())]),
+  talents: Type.Array(Talent),
+  _combatantInfo: Type.Union([CombatantInfo, Type.Array(Type.Never())]),
 });
 export type Combatant = Static<typeof Combatant>;
 
@@ -55,13 +59,14 @@ export function generateCombatants(
         name: player.name,
         pets: findPets(player.id, actors),
         buffHistory: getBuffHistory(player.id, buffHistories),
-        //baseStats: getBaseStats(player),
+        baseStats: getBaseStats(player),
         class: player.type,
         server: player.server,
         icon: player.icon,
         spec: player.specs[0],
         role: key,
-        combatantInfo: player.combatantInfo,
+        talents: getTalents(player),
+        _combatantInfo: player.combatantInfo,
       };
       combatants.set(player.id, combatant);
     });
@@ -85,4 +90,29 @@ function findPets(playerId: number, actors: Actor[] | undefined): Pet[] {
 
     return acc;
   }, []);
+}
+
+export function getCombatantByName(
+  name: string,
+  combatants: Combatants
+): Combatant | undefined {
+  return Array.from(combatants.values()).find(
+    (combatant) => combatant.name === name
+  );
+}
+
+export function hasTalent(talentId: number, combatant: Combatant): boolean {
+  if (!combatant._combatantInfo || Array.isArray(combatant._combatantInfo)) {
+    return false;
+  }
+
+  return combatant.talents.some((talent) => talent.spellID === talentId);
+}
+
+function getTalents(combatant: Player): Talent[] {
+  if (!combatant.combatantInfo || Array.isArray(combatant.combatantInfo)) {
+    return [];
+  }
+
+  return combatant.combatantInfo.talentTree;
 }

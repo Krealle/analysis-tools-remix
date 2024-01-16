@@ -24,11 +24,12 @@ export const Stats = Type.Object({
 });
 
 export const Talent = Type.Object({
-  name: Type.String(),
-  guid: Type.Number(),
-  type: Type.Number(),
-  abilityIcon: Type.String(),
+  icon: Type.String(),
+  spellID: Type.Number(),
+  spellType: Type.Number(),
+  rank: Type.Number(),
 });
+export type Talent = Static<typeof Talent>;
 
 export const CustomPowerSet = Type.Object({
   name: Type.String(),
@@ -84,7 +85,7 @@ export const SecondaryCustomPowerSet = Type.Object({
 
 export const CombatantInfo = Type.Object({
   stats: Stats,
-  talents: Type.Array(Talent),
+  talentTree: Type.Array(Talent),
   gear: Type.Array(Item),
   customPowerSet: Type.Optional(Type.Array(CustomPowerSet)),
   secondaryCustomPowerSet: Type.Optional(Type.Array(SecondaryCustomPowerSet)),
@@ -113,6 +114,7 @@ export const Player = Type.Object({
    */
   combatantInfo: Type.Union([CombatantInfo, Type.Array(Type.Never())]),
 });
+export type Player = Static<typeof Player>;
 
 export const PlayerDetails = Type.Object({
   healers: Type.Array(Player),

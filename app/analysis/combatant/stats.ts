@@ -1,8 +1,8 @@
 import { EventType } from "../../wcl/types/events/eventEnums";
 import { AnyBuffEvent } from "../../wcl/types/events/eventTypes";
-import { PlayerDetails } from "../../wcl/types/report/playerDetails";
+import { Player, PlayerDetails } from "../../wcl/types/report/playerDetails";
 import { BUFF_GIVES_STATS } from "./buffsWithStats";
-import { BaseStats } from "./combatants";
+import { BaseStats, Combatant } from "./combatants";
 
 export type BuffStats = {
   MainStat: number;
@@ -12,7 +12,7 @@ export type BuffStats = {
   Versatility: number;
 };
 
-export function generateStatHistories(
+/* export function generateStatHistories(
   events: AnyBuffEvent[],
   playerDetails: PlayerDetails,
   fightStart: number,
@@ -59,7 +59,7 @@ export function generateStatHistories(
   }
 
   return statHistory;
-}
+} */
 
 export function getBuffStats(abilityId: number): BuffStats {
   const buffStats = BUFF_GIVES_STATS.get(abilityId);
@@ -101,7 +101,10 @@ export function getBuffs(
   return buffHistory;
 } */
 
-function getBaseStats(players: PlayerDetails, timestamp: number): BaseStats[] {
+/* export function getBaseStats(
+  players: PlayerDetails,
+  timestamp: number
+): BaseStats[] {
   const baselineStats: BaseStats[] = Object.keys(players).flatMap((key) => {
     return players[key as keyof PlayerDetails].map((player) => {
       if (!player.combatantInfo || Array.isArray(player.combatantInfo)) {
@@ -136,4 +139,35 @@ function getBaseStats(players: PlayerDetails, timestamp: number): BaseStats[] {
   });
 
   return baselineStats;
+} */
+
+export function getBaseStats(combatant: Player): BaseStats {
+  if (!combatant.combatantInfo || Array.isArray(combatant.combatantInfo)) {
+    return {
+      timestamp: -1,
+      playerId: combatant.id,
+      MainStat: -1,
+      Mastery: -1,
+      Haste: -1,
+      Crit: -1,
+      Versatility: -1,
+    };
+  } else {
+    const playerStats = combatant.combatantInfo.stats;
+    const mainStat =
+      playerStats?.Agility?.min ??
+      playerStats?.Intellect?.min ??
+      playerStats?.Strength?.min ??
+      -1;
+
+    return {
+      timestamp: -1,
+      playerId: combatant.id,
+      MainStat: mainStat,
+      Mastery: playerStats?.Mastery?.min ?? -1,
+      Haste: playerStats?.Haste?.min ?? -1,
+      Crit: playerStats?.Crit?.min ?? -1,
+      Versatility: playerStats?.Versatility?.min ?? -1,
+    };
+  }
 }
