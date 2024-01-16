@@ -7,7 +7,8 @@ import { PhaseMap, PlayerDamageInInterval } from "../interval/newIntervals";
 const experimentalIntervalRenderer = (
   phaseMap: PhaseMap,
   combatants: Combatants,
-  amountOfFights: number
+  amountOfFights: number,
+  amount: number = 6
 ): JSX.Element => {
   if (phaseMap.size === 0) {
     return <>No data found</>;
@@ -17,10 +18,9 @@ const experimentalIntervalRenderer = (
   const headerRow = (
     <tr>
       <th>Time</th>
-      <th>Player - Damage</th>
-      <th>Player - Damage</th>
-      <th>Player - Damage</th>
-      <th>Player - Damage</th>
+      {Array.from({ length: amount }, (_, i) => (
+        <th key={i}>Player - Damage</th>
+      ))}
     </tr>
   );
 
@@ -39,7 +39,7 @@ const experimentalIntervalRenderer = (
 
     tableRows.push(
       <tr key={phase.phaseName}>
-        <td colSpan={5}>
+        <td colSpan={amount + 1}>
           <b>{phase.phaseName}</b> {timeInformation}
         </td>
       </tr>
@@ -47,7 +47,11 @@ const experimentalIntervalRenderer = (
 
     if (phase.isDamageablePhase) {
       phase.intervalsInPhase.forEach((interval, intervalNum) => {
-        const normalizedDamage = normalizeInterval(interval.playerDamage);
+        const normalizedDamage = normalizeInterval(
+          interval.playerDamage,
+          false,
+          amount
+        );
 
         const formattedEntries: JSX.Element[] = normalizedDamage.map(
           (player) => (
@@ -61,10 +65,16 @@ const experimentalIntervalRenderer = (
         );
 
         tableRows.push(
-          <tr key={`${phaseNum}-${intervalNum}`}>
+          <tr
+            key={`${phaseNum}-${intervalNum}`}
+            className={`${interval.isBreathWindow && "breath-window"}`}
+          >
             <td>
               {formatDuration(Math.abs(interval.start))} -{" "}
               {formatDuration(Math.abs(interval.end))}
+              <br />
+              ~({formatDuration(Math.abs(interval.start + avgStart))} -{" "}
+              {formatDuration(Math.abs(interval.end + avgStart))})
             </td>
             {formattedEntries}
           </tr>
@@ -98,7 +108,11 @@ const experimentalIntervalRenderer = (
   );
 };
 
-function normalizeInterval(playerDamage: PlayerDamageInInterval): IntervalSet {
+export function normalizeInterval(
+  playerDamage: PlayerDamageInInterval,
+  noSplice?: boolean,
+  amount: number = 4
+): IntervalSet {
   const intervalSet: IntervalSet = [];
 
   playerDamage.forEach((playerDam, id) => {
@@ -109,7 +123,7 @@ function normalizeInterval(playerDamage: PlayerDamageInInterval): IntervalSet {
 
   intervalSet.sort((a, b) => b.damage - a.damage);
 
-  return intervalSet.splice(0, 4);
+  return noSplice ? intervalSet : intervalSet.splice(0, amount);
 }
 
 type NormalizedTimes = {
@@ -120,7 +134,10 @@ type NormalizedTimes = {
   highestEnd: number;
   avgEnd: number;
 };
-function getNormalizedTimes(starts: number[], end: number[]): NormalizedTimes {
+export function getNormalizedTimes(
+  starts: number[],
+  end: number[]
+): NormalizedTimes {
   const lowestStart = Math.min(...starts);
   const highestStart = Math.max(...starts);
   const avgStart = starts.reduce((acc, cur) => acc + cur, 0) / starts.length;

@@ -10,30 +10,39 @@ export type EbonMightWindow = {
 };
 const initialEbonMightWindows: EbonMightWindowsMap = new Map();
 initialEbonMightWindows.set(0, [
-  { start: 4, end: 33, useBreath: true },
-  { start: 38, end: 61, useBreath: false },
+  // p1
+  { start: 4, end: 34, useBreath: true },
+  { start: 38, end: 65, useBreath: false },
   { start: 68, end: 94, useBreath: false },
   { start: 100, end: 124, useBreath: false },
   { start: 129, end: 150, useBreath: false },
 ]);
-initialEbonMightWindows.set(1, [{ start: 4, end: 33, useBreath: true }]);
+initialEbonMightWindows.set(1, [{ start: 2, end: 33, useBreath: true }]); //i1
 initialEbonMightWindows.set(2, [
-  { start: 1, end: 26, useBreath: false },
-  { start: 30, end: 55, useBreath: false },
+  //p2
+  { start: 1, end: 27, useBreath: false },
 ]);
 initialEbonMightWindows.set(3, [
+  // colossus 1
   { start: 1, end: 26, useBreath: false },
   { start: 30, end: 55, useBreath: false },
 ]);
 initialEbonMightWindows.set(4, [
+  // colossus 2
   { start: 1, end: 34, useBreath: true },
   { start: 35, end: 60, useBreath: false },
+  { start: 64, end: 90, useBreath: false },
 ]);
 initialEbonMightWindows.set(5, [
-  { start: 8, end: 34, useBreath: false },
-  { start: 40, end: 65, useBreath: true },
-  { start: 68, end: 94, useBreath: false },
-  { start: 100, end: 124, useBreath: false },
+  // p3
+  { start: 0, end: 27, useBreath: false },
+  { start: 39, end: 72, useBreath: true },
+  { start: 68, end: 95, useBreath: false },
+  { start: 97, end: 124, useBreath: false },
+  { start: 130, end: 157, useBreath: false },
+  { start: 164, end: 190, useBreath: true },
+  { start: 197, end: 224, useBreath: false },
+  { start: 226, end: 253, useBreath: false },
 ]);
 
 type intervalParametersStore = {

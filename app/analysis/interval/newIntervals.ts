@@ -1,8 +1,3 @@
-/* eslint-disable no-empty */
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
-/* eslint-disable prefer-const */
-/* eslint-disable @typescript-eslint/no-unused-vars */
-// FIXME: remove eslint disable
 import { EnemyTracker } from "../../util/types";
 import { AbilityFilters } from "../../zustand/fightParametersStore";
 import {
@@ -30,6 +25,7 @@ export type Interval = {
   playerDamage: PlayerDamageInInterval;
   /** Whether or not this window was predefined - false for potential extra window */
   isAssignedWindow: boolean;
+  isBreathWindow: boolean;
 };
 
 /** PhaseNum, Phase */
@@ -270,6 +266,7 @@ export function getExperimentalIntervals(
       end: currEbonWindow.end * 1000,
       isAssignedWindow: !currEbonWindow.fabricated,
       playerDamage: new Map<number, number[]>(),
+      isBreathWindow: currEbonWindow.useBreath,
     };
 
     // Add the new damage to the current interval
