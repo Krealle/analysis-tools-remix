@@ -4,6 +4,7 @@ import useStatusStore from "../../zustand/statusStore";
 import useFightParametersStore from "../../zustand/fightParametersStore";
 import TimePeriodFilter from "./TimePeriodFilter";
 import { ChangeEvent } from "react";
+import OptionBox from "./generic/OptionBox";
 
 const intervals = Array.from({ length: 60 }, (_, index) => index + 1);
 const weights = Array.from({ length: 101 }, (_, index) => index / 100);
@@ -14,6 +15,8 @@ const IntervalSettings: React.FC = () => {
     intervalEbonMightWeight,
     setIntervalTimer,
     setIntervalEbonMightWeight,
+    mrtPlayerAmount,
+    setMrtPlayerAmount,
   } = useFightParametersStore();
   const isFetching = useStatusStore((state) => state.isFetching);
 
@@ -25,9 +28,27 @@ const IntervalSettings: React.FC = () => {
   const handleWeightChange = (event: ChangeEvent<HTMLSelectElement>): void => {
     setIntervalEbonMightWeight(parseFloat(event.target.value));
   };
+  const handleMrtPlayerAmountChange = (
+    event: ChangeEvent<HTMLSelectElement>
+  ): void => {
+    setMrtPlayerAmount(parseInt(event.target.value, 10));
+  };
+  const numbers = Array.from({ length: 4 }, (_, index) => index + 1);
 
   const content = (
     <div className="flex">
+      <OptionBox title="MRT Player Amount">
+        <select
+          onChange={(e) => handleMrtPlayerAmountChange(e)}
+          value={mrtPlayerAmount}
+        >
+          {numbers.map((number) => (
+            <option key={number} value={number}>
+              {number}
+            </option>
+          ))}
+        </select>
+      </OptionBox>
       <div className="flex container">
         <div className="flex title">
           <big>Interval Timer</big>

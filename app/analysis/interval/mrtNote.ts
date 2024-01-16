@@ -5,7 +5,8 @@ import { Combatants } from "../combatant/combatants";
 
 export function getMRTNote(
   avgTopPumpersData: TotInterval[],
-  combatants: Combatants
+  combatants: Combatants,
+  mrtPlayerAmount: number
 ): string {
   const threshold: number = 1.5;
   const defaultTargets: Set<number> = getDefaultTargets(avgTopPumpersData);
@@ -26,7 +27,7 @@ export function getMRTNote(
     }
     const dataSet: IntervalSet = interval.intervalEntries[0];
     const top2: Set<number> = new Set(
-      dataSet.slice(0, 2).map((entry) => entry.id)
+      dataSet.slice(0, mrtPlayerAmount).map((entry) => entry.id)
     );
 
     let isImportant: boolean = false;

@@ -56,6 +56,7 @@ const EventNormalizer: React.FC = () => {
     intervalTimer,
     deathCountFilter,
     weights,
+    mrtPlayerAmount,
   } = useFightParametersStore();
   const { isFetching, setIsFetching } = useStatusStore();
 
@@ -235,7 +236,8 @@ const EventNormalizer: React.FC = () => {
       const intervalContent = intervalRenderer(
         intervals,
         combinedCombatants,
-        fightsToRender.length
+      fightsToRender.length,
+      mrtPlayerAmount
       );
 
     if (errors.size > 0) {

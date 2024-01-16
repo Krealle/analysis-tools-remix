@@ -8,7 +8,8 @@ import { TotInterval } from "../../util/types";
 const intervalRenderer = (
   intervals: TotInterval[],
   combatants: Combatants,
-  amountOfFights: number
+  amountOfFights: number,
+  mrtPlayerAmount: number
 ): JSX.Element => {
   if (intervals.length === 0) {
     return <>No data found</>;
@@ -80,7 +81,7 @@ const intervalRenderer = (
     }
   });
 
-  const mrtNote = getMRTNote(intervals, combatants);
+  const mrtNote = getMRTNote(intervals, combatants, mrtPlayerAmount);
   const noteTextbox = (
     <textarea readOnly value={mrtNote} className="mrtNoteTextbox" />
   );

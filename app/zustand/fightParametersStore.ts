@@ -24,7 +24,7 @@ export type Weights = {
 };
 
 const initTS: TimeSkipIntervals[] = [
-  { start: "0:01", end: "0:03" },
+  { start: "0:00", end: "0:03" },
   { start: "0:36", end: "0:37" },
   { start: "1:01", end: "1:07" },
   { start: "1:34", end: "1:39" },
@@ -40,11 +40,13 @@ type FightParametersStore = {
   weights: Weights;
   intervalEbonMightWeight: number;
   intervalTimer: number;
+  mrtPlayerAmount: number;
   deathCountFilter: string;
 
   setTimeSkipIntervals: (payload: TimeSkipIntervals[]) => void;
   addTimeSkipInterval: (payload: TimeSkipIntervals) => void;
   removeTimeSkipInterval: (payload: number) => void;
+  setMrtPlayerAmount: (payload: number) => void;
   changeTimeSkipInterval: (payload: {
     index: number;
     entry: "start" | "end";
@@ -76,7 +78,8 @@ const useFightParametersStore = create<FightParametersStore>((set) => ({
     blacklist: ABILITY_BLACKLIST.toString(),
   },
   intervalEbonMightWeight: 0.5,
-  intervalTimer: 40,
+  intervalTimer: 30,
+  mrtPlayerAmount: 2,
   deathCountFilter: "",
   weights: {
     ebonMightWeight: EBON_MIGHT_CORRECTION_VALUE,
@@ -107,6 +110,7 @@ const useFightParametersStore = create<FightParametersStore>((set) => ({
       }
       return { timeSkipIntervals: newIntervals };
     }),
+  setMrtPlayerAmount: (payload) => set({ mrtPlayerAmount: payload }),
 
   /** Errors */
   setParameterError: (payload) => set({ parameterError: payload }),
