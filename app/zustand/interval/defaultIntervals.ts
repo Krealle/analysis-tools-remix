@@ -52,6 +52,8 @@ export const initialEncounterEbonMightWindows: EncounterEbonMightWindows = {
   },
   [EncounterNames.TindralSageswiftSeerOfTheFlame]: {
     0: [{ start: 4, end: 34, useBreath: true }],
+    1: [{ start: 4, end: 34, useBreath: true }],
+    2: [{ start: 4, end: 34, useBreath: true }],
   },
   [EncounterNames.FyrakkTheBlazing]: {
     0: [
