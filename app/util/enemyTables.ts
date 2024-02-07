@@ -199,3 +199,20 @@ export const EncounterPhaseNames: Record<string, Record<string, string>> = {
     P3: "Shadowflame Incarnate",
   },
 };
+
+export const EncounterIntervalPhaseNames: Record<string, string[]> = {
+  /** Amirdrassil */
+  [EncounterNames.TindralSageswiftSeerOfTheFlame]: [
+    "Phase 1",
+    "Phase 2",
+    "Phase 3",
+  ],
+  [EncounterNames.FyrakkTheBlazing]: [
+    "Phase 1",
+    "Intermission 1",
+    "Phase 2",
+    "Colossus set 1",
+    "Colossus set 2",
+    "Phase 3",
+  ],
+};

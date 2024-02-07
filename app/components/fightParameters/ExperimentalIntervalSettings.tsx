@@ -3,7 +3,10 @@ import "../../styles/fightParameterStyling.css";
 import useStatusStore from "../../zustand/statusStore";
 import OptionBox from "./generic/OptionBox";
 import useIntervalParametersStore from "../../zustand/intervalParametersStore";
-import { EncounterNames } from "../../util/enemyTables";
+import {
+  EncounterNames,
+  EncounterIntervalPhaseNames,
+} from "../../util/enemyTables";
 import ExperimentalIntervalImport from "./ExperimentalIntervalImport";
 
 const ExperimentalIntervalSettings: React.FC = () => {
@@ -59,12 +62,16 @@ const ExperimentalIntervalSettings: React.FC = () => {
           {Object.entries(encounterEbonMightWindows[selectedFight]).map(
             ([phase, windows], index) => {
               const phaseNumber = Number(phase);
+              const phaseName =
+                EncounterIntervalPhaseNames?.[selectedFight]?.[phaseNumber] ??
+                `Phase ${phaseNumber + 1}`;
+
               return (
                 <div
                   key={index}
                   className="experimental-time-intervals-container"
                 >
-                  <p className="title">Phase {phaseNumber + 1} </p>
+                  <p className="title">{phaseName}</p>
 
                   {windows.map((window, i) => (
                     <div
