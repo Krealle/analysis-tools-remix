@@ -81,7 +81,7 @@ export function getExperimentalIntervals(
         ? fight.deathEvents[deathCutOff - 1].timestamp
         : undefined;
 
-    let currEbonWindow = ebonMightWindows.get(currPhase)?.[currInterval];
+    let currEbonWindow = ebonMightWindows[currPhase]?.[currInterval];
     // TODO: make proper fallback
     // Could also just assume that people choose atleast 1 window madge
     if (!currEbonWindow) {
@@ -167,9 +167,8 @@ export function getExperimentalIntervals(
           break;
         }
 
-        currEbonWindow = ebonMightWindows.get(
-          currPhase - currIntermissionCount
-        )?.[currInterval];
+        currEbonWindow =
+          ebonMightWindows[currPhase - currIntermissionCount]?.[currInterval];
         if (
           !currEbonWindow &&
           event.timestamp + 27_000 < upcomingPhase.timestamp
@@ -209,9 +208,8 @@ export function getExperimentalIntervals(
         // Go next logic
         currInterval += 1;
         // Check if we have a next interval
-        currEbonWindow = ebonMightWindows.get(
-          currPhase - currIntermissionCount
-        )?.[currInterval];
+        currEbonWindow =
+          ebonMightWindows[currPhase - currIntermissionCount]?.[currInterval];
         if (!currEbonWindow) {
           /* console.warn(
             `No Ebon Might window found for phase ${currPhase} interval ${currInterval} - ${phaseName}`

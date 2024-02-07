@@ -6,6 +6,7 @@ import ErrorBear from "./generic/ErrorBear";
 import useStatusStore from "../zustand/statusStore";
 import { getWCLReport } from "../wcl/util/queryWCL";
 import useFightBoxesStore from "../zustand/fightBoxesStore";
+import useIntervalParametersStore from "../zustand/intervalParametersStore";
 
 const WCLUrlInput: React.FC = () => {
   const [url, setUrl] = useState<string>("");
@@ -14,6 +15,7 @@ const WCLUrlInput: React.FC = () => {
   const WCLReport = useWCLUrlInputStore();
   const status = useStatusStore();
   const { setSelectedIds } = useFightBoxesStore();
+  const { restoreFromLocalStorage } = useIntervalParametersStore();
 
   const handleSubmit = useCallback(
     async (event: FormEvent) => {
@@ -46,9 +48,10 @@ const WCLUrlInput: React.FC = () => {
         }
       } finally {
         status.setIsFetching(false);
+        restoreFromLocalStorage();
       }
     },
-    [url, WCLReport, status, setSelectedIds]
+    [url, WCLReport, status, setSelectedIds, restoreFromLocalStorage]
   );
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>): void => {
