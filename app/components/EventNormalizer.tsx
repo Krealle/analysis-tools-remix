@@ -191,6 +191,8 @@ const EventNormalizer: React.FC = () => {
       const isSameBoss = fightsToRender.every(
         (fight, i, arr) => i === 0 || fight.bossName === arr[i - 1].bossName
       );
+
+    const bossName = isSameBoss ? fightsToRender[0].bossName : selectedFight;
     const experimentalIntervals = getExperimentalIntervals(
       fightsToRender,
       selectedFights,
@@ -200,7 +202,7 @@ const EventNormalizer: React.FC = () => {
       enemyBlacklist,
       Number(deathCountFilter),
       isSameBoss,
-      encounterEbonMightWindows[selectedFight]
+      encounterEbonMightWindows[bossName]
     );
       const intervals = getAverageIntervals(
         fightsToRender,
