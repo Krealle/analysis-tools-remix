@@ -1,13 +1,26 @@
 import { EventType } from "../../wcl/types/events/eventEnums";
 import { AnyEvent, PhaseStartEvent } from "../../wcl/types/events/eventTypes";
 
-/** Fyrakk */
-export const incarnateCastId = 412761;
-export const incarnateDamageTakenId = 421831;
-export const corruptShieldBuffId = 421922;
-export const eternalFirestormCastId = 422935;
-export const flameFallDamageId = 419123;
-export const greaterFirestormCast = 422518;
+export const castEvents = {
+  /** Fyrakk */
+  incarnate: 412761,
+  greaterFirestorm: 422518,
+  eternalFirestorm: 422935,
+  /** Tindral */
+  typhoon: 421636,
+};
+export const damageEvents = {
+  /** Fyrakk */
+  incarnate: 421831,
+  flameFall: 419123,
+};
+export const removeBuffEvents = {
+  /** Fyrakk */
+  corruptShield: 421922,
+  /** Tindral */
+  superNova: 424140,
+  owlOfTheFlame: 421603,
+};
 
 export function generatePhaseEvents(events: AnyEvent[]): PhaseStartEvent[] {
   const phaseStartEvents: PhaseStartEvent[] = [];
@@ -17,12 +30,15 @@ export function generatePhaseEvents(events: AnyEvent[]): PhaseStartEvent[] {
   let fyrakkHasEnteredP2 = false;
   let fyrakkP2IntermissionCount = 1;
 
+  let tindralFlyoffs = 0;
+  let tindralIsFlying = false;
+
   for (const event of events) {
     switch (event.type) {
       case EventType.CastEvent:
         switch (event.abilityGameID) {
           // Fyrakk Fly off 1 & 3
-          case incarnateCastId:
+          case castEvents.incarnate:
             fyrakkIncarnateCastCount += 1;
             if (
               fyrakkIncarnateCastCount === 1 ||
@@ -38,17 +54,17 @@ export function generatePhaseEvents(events: AnyEvent[]): PhaseStartEvent[] {
 
             break;
           // Fyrakk Phase 2 (intermission ish) - summon colossus
-          case greaterFirestormCast:
+          case castEvents.greaterFirestorm:
             phaseStartEvents.push({
               type: EventType.PhaseStartEvent,
               timestamp: event.timestamp,
-              name: `Phase 2 Colossus set ${fyrakkP2IntermissionCount}`,
+              name: `Colossus set ${fyrakkP2IntermissionCount}`,
               isDamageable: true,
             });
             fyrakkP2IntermissionCount += 1;
             break;
           // Fyrakk Phase 3
-          case eternalFirestormCastId:
+          case castEvents.eternalFirestorm:
             phaseStartEvents.push({
               type: EventType.PhaseStartEvent,
               timestamp: event.timestamp,
@@ -56,12 +72,24 @@ export function generatePhaseEvents(events: AnyEvent[]): PhaseStartEvent[] {
               isDamageable: true,
             });
             break;
+
+          // Tindral Fly off 1 & 2
+          case castEvents.typhoon:
+            phaseStartEvents.push({
+              type: EventType.PhaseStartEvent,
+              timestamp: event.timestamp,
+              name: `Fly off ${tindralFlyoffs + 1}`,
+              isDamageable: false,
+            });
+            tindralFlyoffs += 1;
+            tindralIsFlying = true;
+            break;
         }
         break;
       case EventType.RemoveBuffEvent:
         switch (event.abilityGameID) {
           // Fyrakk Fly off 2
-          case corruptShieldBuffId:
+          case removeBuffEvents.corruptShield:
             phaseStartEvents.push({
               type: EventType.PhaseStartEvent,
               timestamp: event.timestamp,
@@ -69,12 +97,26 @@ export function generatePhaseEvents(events: AnyEvent[]): PhaseStartEvent[] {
               isDamageable: false,
             });
             break;
+
+          // Tindral P2 & P3
+          case removeBuffEvents.owlOfTheFlame:
+            if (!tindralIsFlying) {
+              break;
+            }
+            phaseStartEvents.push({
+              type: EventType.PhaseStartEvent,
+              timestamp: event.timestamp,
+              name: `Phase ${tindralFlyoffs + 1}`,
+              isDamageable: true,
+            });
+            tindralIsFlying = false;
+            break;
         }
         break;
       case EventType.DamageEvent:
         switch (event.abilityGameID) {
           // Fyrakk Intermission 1
-          case incarnateDamageTakenId:
+          case damageEvents.incarnate:
             if (fyrakkHasEnteredI1) {
               break;
             }
@@ -88,7 +130,7 @@ export function generatePhaseEvents(events: AnyEvent[]): PhaseStartEvent[] {
             });
             break;
           // Fyrakk P2
-          case flameFallDamageId:
+          case damageEvents.flameFall:
             if (fyrakkHasEnteredP2) {
               break;
             }

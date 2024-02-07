@@ -1,10 +1,7 @@
 import {
-  corruptShieldBuffId,
-  eternalFirestormCastId,
-  flameFallDamageId,
-  greaterFirestormCast,
-  incarnateCastId,
-  incarnateDamageTakenId,
+  castEvents,
+  damageEvents,
+  removeBuffEvents,
 } from "../../analysis/util/generatePhaseEvents";
 import {
   COMBUSTION_BUFF,
@@ -89,13 +86,13 @@ export function getDeathFilter(): string {
 export function getPhaseEventsFilter(): string {
   const filter = `
   (type = "${EventType.CastEvent}"
-  AND ability.id in (${incarnateCastId}, ${eternalFirestormCastId}, ${greaterFirestormCast}))
+  AND ability.id in (${Object.values(castEvents).map(Number).join()}))
   OR 
   (type = "${EventType.RemoveBuffEvent}"
-  AND ability.id = ${corruptShieldBuffId})
+  AND ability.id in (${Object.values(removeBuffEvents).map(Number).join()}))
   OR 
   (type = "${EventType.DamageEvent}"
-  AND ability.id in (${incarnateDamageTakenId}, ${flameFallDamageId}))
+  AND ability.id in (${Object.values(damageEvents).map(Number).join()}))
   `;
 
   return filter;
