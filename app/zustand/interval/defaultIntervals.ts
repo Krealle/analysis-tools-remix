@@ -3,57 +3,57 @@ import { EncounterEbonMightWindows } from "../intervalParametersStore";
 
 export const initialEncounterEbonMightWindows: EncounterEbonMightWindows = {
   [EncounterNames.Kazzara]: {
-    0: [{ start: 4, end: 34, useBreath: true }],
+    0: [],
   },
   [EncounterNames.AssaultOfTheZaqali]: {
-    0: [{ start: 4, end: 34, useBreath: true }],
+    0: [],
   },
   [EncounterNames.RashokTheElder]: {
-    0: [{ start: 4, end: 34, useBreath: true }],
+    0: [],
   },
   [EncounterNames.TheAmalgamationChamber]: {
-    0: [{ start: 4, end: 34, useBreath: true }],
+    0: [],
   },
   [EncounterNames.TheForgottenExperiments]: {
-    0: [{ start: 4, end: 34, useBreath: true }],
+    0: [],
   },
   [EncounterNames.TheVigilantStewardZskarn]: {
-    0: [{ start: 4, end: 34, useBreath: true }],
+    0: [],
   },
   [EncounterNames.Magmorax]: {
-    0: [{ start: 4, end: 34, useBreath: true }],
+    0: [],
   },
   [EncounterNames.EchoOfNeltharion]: {
-    0: [{ start: 4, end: 34, useBreath: true }],
+    0: [],
   },
   [EncounterNames.ScalecommanderSarkareth]: {
-    0: [{ start: 4, end: 34, useBreath: true }],
+    0: [],
   },
   [EncounterNames.Gnarlroot]: {
-    0: [{ start: 4, end: 34, useBreath: true }],
+    0: [],
   },
   [EncounterNames.IgiraTheCruel]: {
-    0: [{ start: 4, end: 34, useBreath: true }],
+    0: [],
   },
   [EncounterNames.Volcoross]: {
-    0: [{ start: 4, end: 34, useBreath: true }],
+    0: [],
   },
   [EncounterNames.CouncilOfDreams]: {
-    0: [{ start: 4, end: 34, useBreath: true }],
+    0: [],
   },
   [EncounterNames.LarodarKeeperOfTheFlame]: {
-    0: [{ start: 4, end: 34, useBreath: true }],
+    0: [],
   },
   [EncounterNames.NymueWeaverOfTheCycle]: {
-    0: [{ start: 4, end: 34, useBreath: true }],
+    0: [],
   },
   [EncounterNames.Smolderon]: {
-    0: [{ start: 4, end: 34, useBreath: true }],
+    0: [],
   },
   [EncounterNames.TindralSageswiftSeerOfTheFlame]: {
-    0: [{ start: 4, end: 34, useBreath: true }],
-    1: [{ start: 4, end: 34, useBreath: true }],
-    2: [{ start: 4, end: 34, useBreath: true }],
+    0: [],
+    1: [],
+    2: [],
   },
   [EncounterNames.FyrakkTheBlazing]: {
     0: [
