@@ -52,6 +52,7 @@ export function getExperimentalIntervals(
   ebonMightWindows: EbonMightWindowsMap
 ): PhaseMap {
   const phaseMap: PhaseMap = new Map();
+  if (!fights.length) return phaseMap;
 
   for (const fight of fights) {
     if (

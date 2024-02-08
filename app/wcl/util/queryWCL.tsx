@@ -86,10 +86,6 @@ export async function fetchReportData<T extends AnyReport>(
 
       return maybeRootReport.data.reportData.report;
     } catch (error) {
-      /* if (error instanceof Error) {
-        console.log(error);
-      } */
-
       attempts += 1;
 
       if (attempts >= MAX_RETRIES) {
@@ -114,9 +110,9 @@ export async function getSummaryTable(
     return response.table.data;
   } catch (error) {
     if (error instanceof Error) {
-      throw error;
+      throw error.message;
     }
-    throw new Error(ReportParseError.UNKNOWN_ERROR);
+    throw ReportParseError.UNKNOWN_ERROR;
   }
 }
 
@@ -126,9 +122,9 @@ export async function getWCLReport(variables: Variables): Promise<WCLReport> {
     return response;
   } catch (error) {
     if (error instanceof Error) {
-      throw error;
+      throw error.message;
     }
-    throw new Error(ReportParseError.UNKNOWN_ERROR);
+    throw ReportParseError.UNKNOWN_ERROR;
   }
 }
 
@@ -186,8 +182,8 @@ export async function getEvents<T extends AnyEvent>(
     return allEvents;
   } catch (error) {
     if (error instanceof Error) {
-      throw error;
+      throw error.message;
     }
-    throw new Error(ReportParseError.UNKNOWN_ERROR);
+    throw ReportParseError.UNKNOWN_ERROR;
   }
 }
