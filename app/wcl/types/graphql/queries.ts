@@ -44,6 +44,7 @@ query getReport($reportID: String!) {
           subType
           type
         }
+        gameVersion
       }
       visibility
     }
