@@ -1,5 +1,5 @@
 import { Static, Type } from "@sinclair/typebox";
-import { Actor } from "../report/masterData";
+import { Actor, GameVersions } from "../report/masterData";
 import { BaseWCLReport } from "../report/report";
 import Ajv, { ErrorObject } from "ajv";
 
@@ -9,7 +9,7 @@ export type SummaryTableResponse = Static<typeof GetSummaryTableQuery>;
 export const GetEventsQuery = Type.Pick(BaseWCLReport, ["events"]);
 export type EventsResponse = Static<typeof GetEventsQuery>;
 
-export const GetWCLReportQuery = Type.Intersect([
+export const GetWCLReportQuery = Type.Composite([
   Type.Pick(BaseWCLReport, [
     "title",
     "code",
@@ -19,7 +19,7 @@ export const GetWCLReportQuery = Type.Intersect([
     "visibility",
   ]),
   Type.Object({
-    masterData: Type.Intersect([
+    masterData: Type.Composite([
       Type.Object({
         actors: Type.Array(
           Type.Pick(Actor, [
@@ -31,6 +31,7 @@ export const GetWCLReportQuery = Type.Intersect([
             "petOwner",
           ])
         ),
+        gameVersion: Type.Enum(GameVersions),
       }),
     ]),
   }),

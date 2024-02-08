@@ -17,6 +17,7 @@ import { useEffect } from "react";
 import { AccessSession, getSession } from "./sessions";
 import WCLAuthorization from "../components/WCLAuthorization";
 import Information from "../components/Information";
+import { GameVersions } from "../wcl/types/report/masterData";
 
 export const meta: MetaFunction = () => {
   return [{ title: "Analysis Tools" }];
@@ -57,10 +58,21 @@ export default function Index(): JSX.Element {
           <WCLUrlInput />
           {fightReport && (
             <>
-              <h2>Select fights to analyze</h2>
-              <SelectFightButtons />
-              <FightBoxes />
-              <EventNormalizer />
+              {fightReport.masterData.gameVersion === GameVersions.Retail ? (
+                <>
+                  <h2>Select fights to analyze</h2>
+                  <SelectFightButtons />
+                  <FightBoxes />
+                  <EventNormalizer />
+                </>
+              ) : (
+                <>
+                  <h2>
+                    This application only support retail logs, for obvious
+                    reasons.
+                  </h2>
+                </>
+              )}
             </>
           )}
         </>

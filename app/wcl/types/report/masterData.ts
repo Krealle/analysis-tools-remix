@@ -35,6 +35,10 @@ export const Actor = Type.Object({
 });
 export type Actor = Static<typeof Actor>;
 
+export enum GameVersions {
+  Retail = 1,
+  Classic = 2,
+}
 /** The ReportMasterData object contains information about the log version of a report, as well as the actors and abilities used in the report. */
 export const ReportMasterData = Type.Object({
   __typename: Type.Optional(Type.Literal("ReportMasterData")),
@@ -43,7 +47,7 @@ export const ReportMasterData = Type.Object({
   /** A list of every actor (player, NPC, pet) that occurs in the report. */
   actors: Type.Optional(Type.Array(Actor)),
   /** The version of the game that generated the log file. Used to distinguish Classic and Retail Warcraft primarily. */
-  gameVersion: Type.Optional(Type.Number()),
+  gameVersion: Type.Optional(Type.Enum(GameVersions)),
   /** The auto-detected locale of the report. This is the source language of the original log file. */
   lang: Type.Optional(Type.String()),
   /** The version of the client parser that was used to parse and upload this log file. */
