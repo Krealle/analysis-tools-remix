@@ -60,6 +60,7 @@ const ExperimentalIntervalSettings: React.FC = () => {
             </select>
           </OptionBox>
           <div className="flex experimental-interval-options">
+            AutoGen window settings:
             <OptionBox title="Window Length">
               <input
                 type="number"
