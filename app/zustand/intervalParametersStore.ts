@@ -117,6 +117,41 @@ const useIntervalParametersStore = create<intervalParametersStore>((set) => ({
           if (!maybeProperInput) {
             throw new Error();
           }
+
+          // When changes to data structure have been made
+          // We need to ensure that the local format is synced with new format
+          Object.entries(initialEncounterEbonMightWindows).forEach(
+            ([encounterName, defaultValue]) => {
+              if (!maybeProperInput[encounterName]) {
+                console.warn(
+                  `Added missing encounter entry for ${encounterName}!`
+                );
+                maybeProperInput[encounterName] = defaultValue;
+              } else {
+                // Sometimes phases are added after the fact, we should therefor put in the new phases.
+                const currentLocalPhases = Object.entries(
+                  maybeProperInput[encounterName]
+                );
+                const currentInitialPhases = Object.entries(defaultValue);
+                const phaseDifference =
+                  currentInitialPhases.length - currentLocalPhases.length;
+
+                if (phaseDifference > 0) {
+                  console.warn(
+                    `Phase difference detected for ${encounterName}! Adding missing phases.`
+                  );
+                  for (
+                    let i = currentInitialPhases.length - phaseDifference;
+                    i > 0;
+                    i -= 1
+                  ) {
+                    maybeProperInput[encounterName][i] = defaultValue[i];
+                  }
+                }
+              }
+            }
+          );
+
           return { encounterEbonMightWindows: maybeProperInput };
         } catch (e) {
           // if somehow localStorage format is incorrect just default it
