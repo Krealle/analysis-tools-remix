@@ -3,6 +3,7 @@ import { AbilityFilters } from "../../zustand/fightParametersStore";
 import {
   EbonMightWindowsMap,
   EbonMightWindow,
+  AutoGenWindowSettings,
 } from "../../zustand/intervalParametersStore";
 import { Fight } from "../util/handleFightData";
 
@@ -50,7 +51,8 @@ export function getExperimentalIntervals(
   deathCutOff: number,
   /** Mainly used to turn off phase usage when comparing lots of different fights at once */
   usePhases: boolean = true,
-  ebonMightWindows: EbonMightWindowsMap
+  ebonMightWindows: EbonMightWindowsMap,
+  autoGenSettings: AutoGenWindowSettings
 ): PhaseMap {
   const phaseMap: PhaseMap = new Map();
   if (!fights.length) return phaseMap;
@@ -334,9 +336,9 @@ export function getExperimentalIntervals(
         : 1;
 
     /** Settings for window gen */
-    const ebonMightCooldown = 27;
-    const defaultWindowLength = 24; // average
-    const windowDelay = 4; // space between dropping EM and putting it up again
+    const ebonMightCooldown = autoGenSettings.Threads ? 27 : 30;
+    const defaultWindowLength = autoGenSettings["Window Length"];
+    const windowDelay = autoGenSettings["Window Delay"];
 
     let curStartTime = longestFight.startTime;
     for (let phase = 0; amountOfPhases > phase; phase += 1) {

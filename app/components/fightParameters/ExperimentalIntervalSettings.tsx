@@ -18,6 +18,8 @@ const ExperimentalIntervalSettings: React.FC = () => {
     selectedFight,
     changeFight,
     encounterEbonMightWindows,
+    autoGenWindowSettings,
+    setAutoGenSetting,
   } = useIntervalParametersStore();
 
   const handleFightChange = (input: string): void => {
@@ -57,6 +59,35 @@ const ExperimentalIntervalSettings: React.FC = () => {
               ))}
             </select>
           </OptionBox>
+          <div className="flex experimental-interval-options">
+            <OptionBox title="Window Length">
+              <input
+                type="number"
+                value={autoGenWindowSettings["Window Length"]}
+                onChange={(e) =>
+                  setAutoGenSetting("Window Length", Number(e.target.value))
+                }
+                min="1"
+              />
+            </OptionBox>
+            <OptionBox title="Window Delay">
+              <input
+                type="number"
+                value={autoGenWindowSettings["Window Delay"]}
+                onChange={(e) =>
+                  setAutoGenSetting("Window Delay", Number(e.target.value))
+                }
+                min="0"
+              />
+            </OptionBox>
+            <OptionBox title="Threads">
+              <input
+                type="checkbox"
+                checked={autoGenWindowSettings.Threads}
+                onChange={(e) => setAutoGenSetting("Threads", e.target.checked)}
+              />
+            </OptionBox>
+          </div>
           * indicates fabricated windows. These wont save until you make a
           change.
           {/** Interval render below */}

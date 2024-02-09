@@ -26,6 +26,14 @@ export type EncounterEbonMightWindows = Static<
   typeof EncounterEbonMightWindows
 >;
 
+type Setting = "Window Length" | "Window Delay" | "Threads";
+type SettingValue<T extends Setting> = T extends "Threads" ? boolean : number;
+export type AutoGenWindowSettings = {
+  "Window Length": number;
+  "Window Delay": number;
+  Threads: boolean;
+};
+
 type intervalParametersStore = {
   setEbonMightWindow: (
     phase: number,
@@ -42,6 +50,12 @@ type intervalParametersStore = {
 
   selectedFight: string;
   changeFight: (fight: string) => void;
+
+  autoGenWindowSettings: AutoGenWindowSettings;
+  setAutoGenSetting: <T extends Setting>(
+    setting: T,
+    value: SettingValue<T>
+  ) => void;
 };
 
 const useIntervalParametersStore = create<intervalParametersStore>((set) => ({
@@ -136,6 +150,20 @@ const useIntervalParametersStore = create<intervalParametersStore>((set) => ({
     set({
       selectedFight: fight,
     });
+  },
+
+  autoGenWindowSettings: {
+    "Window Length": 24,
+    "Window Delay": 4,
+    Threads: true,
+  },
+  setAutoGenSetting: (setting, value) => {
+    set((state) => ({
+      autoGenWindowSettings: {
+        ...state.autoGenWindowSettings,
+        [setting]: value,
+      },
+    }));
   },
 }));
 
