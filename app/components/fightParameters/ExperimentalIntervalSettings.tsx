@@ -57,7 +57,8 @@ const ExperimentalIntervalSettings: React.FC = () => {
               ))}
             </select>
           </OptionBox>
-
+          * indicates fabricated windows. These wont save until you make a
+          change.
           {/** Interval render below */}
           {Object.entries(encounterEbonMightWindows[selectedFight]).map(
             ([phase, windows], index) => {
@@ -78,6 +79,7 @@ const ExperimentalIntervalSettings: React.FC = () => {
                       key={i}
                       className="experimental-time-intervals-content"
                     >
+                      {window.fabricated && "*"}
                       <label>
                         Start:{" "}
                         <input

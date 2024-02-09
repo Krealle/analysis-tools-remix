@@ -60,8 +60,7 @@ const EventNormalizer: React.FC = () => {
   } = useFightParametersStore();
   const { isFetching, setIsFetching } = useStatusStore();
 
-  const { encounterEbonMightWindows, selectedFight } =
-    useIntervalParametersStore();
+  const { encounterEbonMightWindows } = useIntervalParametersStore();
 
   useEffect(() => {
     enemyTracker.clear();
@@ -192,7 +191,7 @@ const EventNormalizer: React.FC = () => {
         (fight, i, arr) => i === 0 || fight.bossName === arr[i - 1].bossName
       );
 
-    const bossName = isSameBoss ? fightsToRender[0].bossName : selectedFight;
+    const bossName = isSameBoss ? fightsToRender?.[0]?.bossName : "Default";
     const experimentalIntervals = getExperimentalIntervals(
       fightsToRender,
       selectedFights,

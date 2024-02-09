@@ -96,6 +96,8 @@ export const AberrusEnemies: EnemyMap = {
 };
 
 export const EncounterNames: Record<string, string> = {
+  /** Fallback for intervals */
+  Default: "Default",
   /** Aberrus */
   Kazzara: "Kazzara",
   AssaultOfTheZaqali: "Assault of the Zaqali",

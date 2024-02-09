@@ -67,7 +67,13 @@ const experimentalIntervalRenderer = (
         tableRows.push(
           <tr
             key={`${phaseNum}-${intervalNum}`}
-            className={`${interval.isBreathWindow && "breath-window"}`}
+            className={`${
+              interval.isBreathWindow
+                ? "breath-window"
+                : !interval.isAssignedWindow
+                ? "fabricated-window"
+                : ""
+            }`}
           >
             <td>
               {formatDuration(Math.abs(interval.start))} -{" "}

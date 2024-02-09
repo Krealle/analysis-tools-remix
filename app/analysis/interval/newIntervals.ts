@@ -48,11 +48,15 @@ export function getExperimentalIntervals(
   abilityFilters: AbilityFilters<number[]>,
   enemyBlacklist: Set<number>,
   deathCutOff: number,
+  /** Mainly used to turn off phase usage when comparing lots of different fights at once */
   usePhases: boolean = true,
   ebonMightWindows: EbonMightWindowsMap
 ): PhaseMap {
   const phaseMap: PhaseMap = new Map();
   if (!fights.length) return phaseMap;
+
+  /** Here we try to resolve if we should inject extra windows - base it on the longest fight */
+  ebonMightWindows = addExtraWindows();
 
   for (const fight of fights) {
     if (
@@ -309,5 +313,249 @@ export function getExperimentalIntervals(
     phaseMap.set(phaseNum, curPhase);
   }
 
+  /**
+   * Checks to see if we can fit in extra windows between the pre-selected ones.
+   * And adds them to the ebonMightWindows, the new windows are based on the longest fight selected.
+   */
+  function addExtraWindows(): EbonMightWindowsMap {
+    const longestFight = fights.reduce((maxFight, currentFight) => {
+      return currentFight.endTime - currentFight.startTime >
+        maxFight.endTime - maxFight.startTime
+        ? currentFight
+        : maxFight;
+    }, fights[0]);
+
+    const newEbonMightWindows = ebonMightWindows;
+    const phaseEvents = [...longestFight.phaseEvents];
+
+    const amountOfPhases =
+      Object.keys(newEbonMightWindows).length > 0 && usePhases
+        ? Object.keys(newEbonMightWindows).length
+        : 1;
+
+    /** Settings for window gen */
+    const ebonMightCooldown = 27;
+    const defaultWindowLength = 24; // average
+    const windowDelay = 4; // space between dropping EM and putting it up again
+
+    let curStartTime = longestFight.startTime;
+    for (let phase = 0; amountOfPhases > phase; phase += 1) {
+      let nextPhase = phaseEvents.shift();
+
+      const phaseEndTime =
+        nextPhase && usePhases ? nextPhase.timestamp : longestFight.endTime;
+      const phaseLength = (phaseEndTime - curStartTime) / 1000; // in seconds
+
+      /* console.log("phase", phase);
+      console.log("nextPhase", nextPhase);
+      console.log("curStartTime", curStartTime);
+      console.log("phaseEndTime", phaseEndTime);
+      console.log("phaseLength", phaseLength); */
+
+      /** Loop over our current windows and see if we can fit in more between them
+       * At the end check if we can fit in more windows before phase change / fight end
+       * Initialize array with an entry if it's empty */
+      if (!newEbonMightWindows[phase].length) {
+        newEbonMightWindows[phase] = [
+          {
+            fabricated: true,
+            start: windowDelay,
+            end: windowDelay + defaultWindowLength,
+            useBreath: false,
+          },
+        ];
+      }
+      const reducedNewEbonMightWindows = newEbonMightWindows[phase].reduce<
+        EbonMightWindow[]
+      >((acc, curWindow, idx) => {
+        let prevWindow = idx > 0 ? acc[acc.length - 1] : undefined;
+
+        /** Check to see if we can squeeze in windows between previous and upcoming */
+        let generateWindow = true;
+        while (generateWindow) {
+          const prevWindowLength = prevWindow
+            ? prevWindow.end - prevWindow.start
+            : 0;
+
+          const windowBuffer = prevWindow
+            ? getWindowBuffer(ebonMightCooldown, prevWindowLength, windowDelay)
+            : windowDelay;
+          const windowSpaceNeeded = defaultWindowLength + windowBuffer * 2;
+
+          generateWindow = canFitExtraWindow(
+            curWindow.start - (prevWindow?.end ?? 0),
+            windowSpaceNeeded
+          );
+
+          if (generateWindow) {
+            const newStart = (prevWindow?.end ?? 0) + windowBuffer;
+            const newEnd = newStart + defaultWindowLength;
+
+            const newWindow = {
+              fabricated: true,
+              start: newStart,
+              end: newEnd,
+              useBreath: false,
+            };
+
+            prevWindow = newWindow;
+            acc.push(newWindow);
+          } else {
+            generateWindow = false;
+          }
+        }
+
+        acc.push(curWindow);
+
+        /** Check to see if we can fit in more windows before phase change / fight end */
+        if (idx === newEbonMightWindows[phase].length - 1) {
+          let lastWindow = curWindow;
+
+          const lastWindowLength = lastWindow.end - lastWindow.start;
+          const windowBuffer = getWindowBuffer(
+            ebonMightCooldown,
+            lastWindowLength,
+            windowDelay
+          );
+
+          const windowSpaceNeeded = defaultWindowLength + windowBuffer * 2;
+
+          let generateWindows = canFitExtraWindow(
+            phaseLength - lastWindow.end,
+            windowSpaceNeeded
+          );
+
+          while (generateWindows) {
+            const lastWindowLength = lastWindow
+              ? lastWindow.end - lastWindow.start
+              : defaultWindowLength;
+
+            const windowBuffer = lastWindow
+              ? getWindowBuffer(
+                  ebonMightCooldown,
+                  lastWindowLength,
+                  windowDelay
+                )
+              : windowDelay;
+
+            const newStart = lastWindow.end + windowBuffer;
+            const newEnd = newStart + defaultWindowLength;
+
+            const newWindow = {
+              fabricated: true,
+              start: newStart,
+              end: newEnd,
+              useBreath: false,
+            };
+
+            acc.push(newWindow);
+            lastWindow = newWindow;
+
+            const newWindowBuffer = getWindowBuffer(
+              ebonMightCooldown,
+              lastWindowLength,
+              windowDelay
+            );
+            const windowSpaceNeeded = defaultWindowLength + newWindowBuffer * 2;
+            const timeTillPhaseEnd = phaseLength - newEnd;
+
+            const keepGenerating = canFitExtraWindow(
+              timeTillPhaseEnd,
+              windowSpaceNeeded
+            );
+            if (!keepGenerating) {
+              // Check to see if we can sneak in an extra window if upcoming phase is an intermission
+              if (nextPhase && !nextPhase.isDamageable && phaseEvents.length) {
+                const nextRealPhaseStart = phaseEvents[0].timestamp;
+                const intermissionLength =
+                  (nextRealPhaseStart - nextPhase.timestamp) / 1000;
+
+                const keepGenerating = canFitExtraWindow(
+                  timeTillPhaseEnd + intermissionLength,
+                  windowSpaceNeeded
+                );
+
+                if (keepGenerating) {
+                  continue;
+                }
+              }
+
+              generateWindows = false;
+            }
+          }
+        }
+
+        return acc;
+      }, []);
+      /* console.log(reducedNewEbonMightWindows); */
+      newEbonMightWindows[phase] = reducedNewEbonMightWindows;
+
+      if (nextPhase) {
+        /* console.group("Next phase setup"); */
+        const potentiallyIntermission = nextPhase;
+
+        if (!potentiallyIntermission.isDamageable) {
+          nextPhase = phaseEvents.shift();
+          if (!nextPhase) {
+            // If we don't have any more real phases don't try to create any more windows.
+            console.groupEnd();
+            break;
+          }
+        }
+
+        /* console.log("potentiallyIntermission", potentiallyIntermission);
+        console.log("nextPhase", nextPhase); */
+
+        const intermissionLength =
+          (nextPhase.timestamp - potentiallyIntermission.timestamp) / 1000 ?? 0;
+
+        /* console.log("intermissionLength", intermissionLength); */
+
+        const lastEbonWindow =
+          newEbonMightWindows?.[phase]?.[
+            newEbonMightWindows?.[phase].length - 1
+          ];
+
+        const timeToNextPhase =
+          (nextPhase.timestamp - curStartTime + intermissionLength) / 1000 -
+            lastEbonWindow.end ?? 0;
+        /* console.log("timeToNextPhase", timeToNextPhase); */
+
+        const windowBuffer = getWindowBuffer(
+          ebonMightCooldown,
+          defaultWindowLength,
+          windowDelay
+        );
+
+        const startTimeOffset =
+          timeToNextPhase < windowBuffer ? windowBuffer - timeToNextPhase : 0;
+
+        curStartTime = nextPhase.timestamp + startTimeOffset;
+
+        /* console.groupEnd(); */
+      } else {
+        // If we don't have any more real phases don't try to create any more windows.
+        break;
+      }
+    }
+
+    return newEbonMightWindows;
+  }
+
   return phaseMap;
+}
+
+function getWindowBuffer(
+  ebonMightCooldown: number,
+  windowLength: number,
+  windowDelay: number
+): number {
+  const windowBuffer =
+    Math.max(ebonMightCooldown - windowLength, 0) + windowDelay;
+  return windowBuffer;
+}
+
+/** Check to see if we can fit in an extra window between two windows or before an intermission. */
+function canFitExtraWindow(gap: number, requiredGapLength: number): boolean {
+  return gap >= requiredGapLength;
 }
