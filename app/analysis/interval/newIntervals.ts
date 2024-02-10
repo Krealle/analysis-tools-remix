@@ -58,7 +58,9 @@ export function getExperimentalIntervals(
   if (!fights.length) return phaseMap;
 
   /** Here we try to resolve if we should inject extra windows - base it on the longest fight */
-  ebonMightWindows = addExtraWindows();
+  if (ebonMightWindows) {
+    ebonMightWindows = addExtraWindows();
+  }
 
   for (const fight of fights) {
     if (
