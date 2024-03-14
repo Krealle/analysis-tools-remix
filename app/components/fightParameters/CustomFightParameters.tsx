@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { formatTime } from "../../util/format";
 import EnemyFilter from "./EnemyFilter";
 import AbilityFilterSettings from "./AbilityFilterSettings";
-import IntervalSettings from "./IntervalSettings";
+/* import IntervalSettings from "./IntervalSettings"; */
 import DeathFilter from "./DeathFilter";
 import useFightParametersStore from "../../zustand/fightParametersStore";
 import WeightsSettings from "./WeightsSettings";
@@ -51,7 +51,7 @@ const CustomFightParameters: React.FC = () => {
         <WeightsSettings />
         <AbilityFilterSettings />
         <EnemyFilter />
-        <IntervalSettings />
+        {/* <IntervalSettings /> */}
         <ExperimentalIntervalSettings />
         <DeathFilter />
       </div>
