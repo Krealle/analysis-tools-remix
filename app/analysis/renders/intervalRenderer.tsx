@@ -14,6 +14,16 @@ const intervalRenderer = (
   if (intervals.length === 0) {
     return <>No data found</>;
   }
+  return (
+    <>
+      <div className="flex gap flex-wrap flex-top">
+        <div>
+          <h3>Intervals</h3>
+          <p>Disabled so Spanky uses the proper one :)</p>
+        </div>
+      </div>
+    </>
+  );
   const top4Pumpers: TotInterval[] = getTop4Pumpers(intervals);
 
   const tableRows: JSX.Element[] = [];
