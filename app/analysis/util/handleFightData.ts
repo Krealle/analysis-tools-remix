@@ -87,6 +87,7 @@ export function handleFightData(
       fightDataSet.summaryTable.playerDetails,
       WCLReport.masterData.actors
     );
+    console.log("Combatants", combatants);
 
     const linkedEvents = eventLinkNormalizer(eventsToLink);
 

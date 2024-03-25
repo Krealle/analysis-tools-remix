@@ -184,6 +184,11 @@ function getSupportDamage(
 ): number {
   let attributedAmount = supEvent.normalizedAmount;
 
+  /* const raw = event.normalizedAmount;
+  return (
+    raw - raw / (1 + getAbilityMultiplier(supEvent.abilityGameID, weights) / 2)
+  ); */
+
   if (attributedAmount === 0 && event.normalizedAmount !== 0) {
     attributedAmount =
       event.normalizedAmount *

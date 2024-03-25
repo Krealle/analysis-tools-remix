@@ -21,6 +21,7 @@ import useFightParametersStore, {
 import { getExperimentalIntervals } from "../analysis/interval/newIntervals";
 import useIntervalParametersStore from "../zustand/intervalParametersStore";
 import experimentalIntervalRenderer from "../analysis/renders/experimentalIntervalRenderer";
+import { buildPrescienceMap } from "../analysis/prescience/prescienceHelper";
 
 const fights: Fight[] = [];
 const fetchedFightDataSets: FightDataSet[] = [];
@@ -94,6 +95,9 @@ const EventNormalizer: React.FC = () => {
       return;
     }
 
+    /* fights.splice(0, fights.length);
+    console.log("fights cleared"); */
+
     setIsFetching(true);
     setNormalizeStatus(FetchStatus.FETCHING);
     setParseError(undefined);
@@ -112,87 +116,88 @@ const EventNormalizer: React.FC = () => {
     const fightDataGenerator = fetchFightData(WCLReport, fightsToFetch);
     const errors: Map<ReportParseError, number[]> = new Map();
 
-      let fightNumber = 0;
+    let fightNumber = 0;
 
-      for await (const fightData of fightDataGenerator) {
-        fightNumber += 1;
-        await new Promise((resolve) => {
-          setProgress(fightNumber);
-          requestAnimationFrame(() => {
-            requestAnimationFrame(resolve);
-          });
+    for await (const fightData of fightDataGenerator) {
+      fightNumber += 1;
+      await new Promise((resolve) => {
+        setProgress(fightNumber);
+        requestAnimationFrame(() => {
+          requestAnimationFrame(resolve);
         });
+      });
       if ("error" in fightData) {
-        console.log(fightData.error);
         const currErrors = errors.get(fightData.error) || [];
         errors.set(fightData.error, [...currErrors, fightData.fight]);
       } else {
         fetchedFightDataSets.push(fightData);
       }
-      }
+    }
 
-      await new Promise((resolve) => {
-        setNormalizeStatus(FetchStatus.ANALYZING);
-        requestAnimationFrame(() => {
-          requestAnimationFrame(resolve);
-        });
+    await new Promise((resolve) => {
+      setNormalizeStatus(FetchStatus.ANALYZING);
+      requestAnimationFrame(() => {
+        requestAnimationFrame(resolve);
       });
+    });
 
-      const fightsToHandle = fetchedFightDataSets.filter(
-        (id) =>
-          !fights.map((f) => f.fightId).includes(id.fight.id) &&
+    const fightsToHandle = fetchedFightDataSets.filter(
+      (id) =>
+        !fights.map((f) => f.fightId).includes(id.fight.id) &&
         id.fight.reportCode === WCLReport.code &&
         selectedFights.has(id.fight.id)
-      );
+    );
 
-      const formattedAbilityFilters = Object.fromEntries(
-        Object.entries(abilityFilters).map(([key, value]) => {
-          return [key, value.split(",").map(Number)];
-        })
-      ) as AbilityFilters<number[]>;
+    const formattedAbilityFilters = Object.fromEntries(
+      Object.entries(abilityFilters).map(([key, value]) => {
+        return [key, value.split(",").map(Number)];
+      })
+    ) as AbilityFilters<number[]>;
 
-      console.time("handleFightData");
-      const newFights = handleFightData(
-        WCLReport,
-        fightsToHandle,
-        formattedAbilityFilters,
-        weights
-      );
-      console.timeEnd("handleFightData");
+    console.time("handleFightData");
+    const newFights = handleFightData(
+      WCLReport,
+      fightsToHandle,
+      formattedAbilityFilters,
+      weights
+    );
+    console.timeEnd("handleFightData");
 
-      fights.push(...newFights);
+    fights.push(...newFights);
 
-      const fightsToRender = fights.filter(
-        (fight) =>
+    const fightsToRender = fights.filter(
+      (fight) =>
         selectedFights.has(fight.fightId) && fight.reportCode === WCLReport.code
-      );
+    );
 
-      const wclTableContent = tableRenderer(
-        fightsToRender,
-        enemyTracker,
-        formattedAbilityFilters.blacklist,
-        enemyBlacklist,
-        Number(deathCountFilter)
-      );
+    const wclTableContent = tableRenderer(
+      fightsToRender,
+      enemyTracker,
+      formattedAbilityFilters.blacklist,
+      enemyBlacklist,
+      Number(deathCountFilter)
+    );
 
-      const formattedTimeSkipIntervals: FormattedTimeSkipIntervals[] = [];
-      for (const interval of timeSkipIntervals) {
-        const formattedStartTime = formatTime(interval.start);
-        const formattedEndTime = formatTime(interval.end);
+    const formattedTimeSkipIntervals: FormattedTimeSkipIntervals[] = [];
+    for (const interval of timeSkipIntervals) {
+      const formattedStartTime = formatTime(interval.start);
+      const formattedEndTime = formatTime(interval.end);
       if (formattedStartTime !== undefined && formattedEndTime !== undefined) {
-          formattedTimeSkipIntervals.push({
-            start: formattedStartTime,
-            end: formattedEndTime,
-          });
-        }
+        formattedTimeSkipIntervals.push({
+          start: formattedStartTime,
+          end: formattedEndTime,
+        });
       }
+    }
 
-      // If all fights are the same we can use phases for Intervals
-      const isSameBoss = fightsToRender.every(
-        (fight, i, arr) => i === 0 || fight.bossName === arr[i - 1].bossName
-      );
+    // If all fights are the same we can use phases for Intervals
+    const isSameBoss = fightsToRender.every(
+      (fight, i, arr) => i === 0 || fight.bossName === arr[i - 1].bossName
+    );
 
     const bossName = isSameBoss ? fightsToRender?.[0]?.bossName : "Default";
+
+    console.time("getExperimentalIntervals");
     const experimentalIntervals = getExperimentalIntervals(
       fightsToRender,
       selectedFights,
@@ -205,31 +210,37 @@ const EventNormalizer: React.FC = () => {
       encounterEbonMightWindows[bossName],
       autoGenWindowSettings
     );
-      const intervals = getAverageIntervals(
-        fightsToRender,
-        selectedFights,
-        WCLReport.code,
-        formattedTimeSkipIntervals,
-        enemyTracker,
-        formattedAbilityFilters,
-        intervalEbonMightWeight,
-        intervalTimer,
-        enemyBlacklist,
-        Number(deathCountFilter),
-        isSameBoss
-      );
+    console.timeEnd("getExperimentalIntervals");
 
-      const combinedCombatants: Combatants = new Map<number, Combatant>();
+    console.time("getAverageIntervals");
+    const intervals = getAverageIntervals(
+      fightsToRender,
+      selectedFights,
+      WCLReport.code,
+      formattedTimeSkipIntervals,
+      enemyTracker,
+      formattedAbilityFilters,
+      intervalEbonMightWeight,
+      intervalTimer,
+      enemyBlacklist,
+      Number(deathCountFilter),
+      isSameBoss
+    );
+    console.timeEnd("getAverageIntervals");
 
-      fightsToRender.forEach((fight) => {
-        const combatants = fight.combatants;
+    const combinedCombatants: Combatants = new Map<number, Combatant>();
 
-        combatants.forEach((combatant) => {
-          if (!combinedCombatants.has(combatant.id)) {
-            combinedCombatants.set(combatant.id, combatant);
-          }
-        });
+    fightsToRender.forEach((fight) => {
+      const combatants = fight.combatants;
+
+      combatants.forEach((combatant) => {
+        if (!combinedCombatants.has(combatant.id)) {
+          combinedCombatants.set(combatant.id, combatant);
+        }
       });
+    });
+
+    buildPrescienceMap(experimentalIntervals, combinedCombatants, "Vollmer");
 
     const experimentalIntervalContent = experimentalIntervalRenderer(
       experimentalIntervals,
@@ -237,16 +248,17 @@ const EventNormalizer: React.FC = () => {
       fightsToRender.length
     );
 
-      const intervalContent = intervalRenderer(
-        intervals,
-        combinedCombatants,
+    const intervalContent = intervalRenderer(
+      intervals,
+      combinedCombatants,
       fightsToRender.length,
       mrtPlayerAmount
-      );
+    );
 
     if (errors.size > 0) {
       const errs: JSX.Element[] = [];
       errors.forEach((fights, error) => {
+        console.log(error);
         if (error === ReportParseError.MISSING_AUTHORIZATION) {
           setDefaultParseError(ReportParseError.MISSING_AUTHORIZATION);
         }
@@ -271,12 +283,12 @@ const EventNormalizer: React.FC = () => {
       setParseError(undefined);
     }
 
-      setWclTableContent(wclTableContent);
-      setIntervalsContent(intervalContent);
+    setWclTableContent(wclTableContent);
+    setIntervalsContent(intervalContent);
     setExperimentalIntervalsContent(experimentalIntervalContent);
-      setNormalizeStatus(undefined);
-      setIsFetching(false);
-      setProgress(0);
+    setNormalizeStatus(undefined);
+    setIsFetching(false);
+    setProgress(0);
   };
 
   return (

@@ -42,6 +42,7 @@ const WCLUrlInput: React.FC = () => {
         }
 
         WCLReport.setFightReport(newFightReport);
+        console.log("newFightReport", newFightReport);
       } catch (error) {
         if (error instanceof Error) {
           setErrorBear(error.message as ReportParseError);
