@@ -1,12 +1,10 @@
 import { useEffect } from "react";
-import { formatTime } from "../../util/format";
 import EnemyFilter from "./EnemyFilter";
 import AbilityFilterSettings from "./AbilityFilterSettings";
-/* import IntervalSettings from "./IntervalSettings"; */
 import DeathFilter from "./DeathFilter";
 import useFightParametersStore from "../../zustand/fightParametersStore";
 import WeightsSettings from "./WeightsSettings";
-import ExperimentalIntervalSettings from "./ExperimentalIntervalSettings";
+import IntervalSettings from "./IntervalSettings";
 
 /** In my eyes this is black magic but all
  * it does is check if blacklist format is correct:
@@ -17,23 +15,9 @@ const isNumberListValid = (str: string): boolean => {
 };
 
 const CustomFightParameters: React.FC = () => {
-  const { abilityFilters, timeSkipIntervals, setParameterError } =
-    useFightParametersStore();
+  const { abilityFilters, setParameterError } = useFightParametersStore();
 
   useEffect(() => {
-    for (const interval of timeSkipIntervals) {
-      const formattedStartTime = formatTime(interval.start);
-      const formattedEndTime = formatTime(interval.end);
-      if (
-        formattedStartTime === undefined ||
-        formattedEndTime === undefined ||
-        formattedStartTime > formattedEndTime
-      ) {
-        setParameterError("Invalid time interval");
-        return;
-      }
-    }
-
     const abilityFilterValid =
       Object.values(abilityFilters).every(isNumberListValid);
     if (!abilityFilterValid) {
@@ -42,7 +26,7 @@ const CustomFightParameters: React.FC = () => {
     }
 
     setParameterError(undefined);
-  }, [abilityFilters, timeSkipIntervals, setParameterError]);
+  }, [abilityFilters, setParameterError]);
 
   return (
     <div className="container">
@@ -51,8 +35,7 @@ const CustomFightParameters: React.FC = () => {
         <WeightsSettings />
         <AbilityFilterSettings />
         <EnemyFilter />
-        {/* <IntervalSettings /> */}
-        <ExperimentalIntervalSettings />
+        <IntervalSettings />
         <DeathFilter />
       </div>
     </div>

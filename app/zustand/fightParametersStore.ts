@@ -1,5 +1,4 @@
 import { create } from "zustand";
-import { TimeSkipIntervals } from "../util/types";
 import {
   ABILITY_BLACKLIST,
   ABILITY_NO_EM_SCALING,
@@ -23,35 +22,16 @@ export type Weights = {
   prescienceWeight: number;
 };
 
-const initTS: TimeSkipIntervals[] = [
-  { start: "0:00", end: "0:03" },
-  { start: "0:36", end: "0:37" },
-  { start: "1:01", end: "1:07" },
-  { start: "1:34", end: "1:39" },
-  { start: "2:04", end: "2:08" },
-];
-
 type FightParametersStore = {
-  timeSkipIntervals: TimeSkipIntervals[];
   parameterError: string | undefined;
   showOptions: boolean;
   enemyBlacklist: Set<number>;
   abilityFilters: AbilityFilters<string>;
   weights: Weights;
-  intervalEbonMightWeight: number;
-  intervalTimer: number;
   mrtPlayerAmount: number;
   deathCountFilter: string;
 
-  setTimeSkipIntervals: (payload: TimeSkipIntervals[]) => void;
-  addTimeSkipInterval: (payload: TimeSkipIntervals) => void;
-  removeTimeSkipInterval: (payload: number) => void;
   setMrtPlayerAmount: (payload: number) => void;
-  changeTimeSkipInterval: (payload: {
-    index: number;
-    entry: "start" | "end";
-    value: string;
-  }) => void;
   setParameterError: (payload: string | undefined) => void;
   setShowOptions: (payload: boolean) => void;
   modifyEnemyBlacklist: (payload: { value: number; add: boolean }) => void;
@@ -59,14 +39,11 @@ type FightParametersStore = {
     ability: keyof AbilityFilters<string>;
     value: string;
   }) => void;
-  setIntervalEbonMightWeight: (payload: number) => void;
   setWeights: (payload: { ability: keyof Weights; value: string }) => void;
-  setIntervalTimer: (payload: number) => void;
   setDeathCountFilter: (payload: string) => void;
 };
 
 const useFightParametersStore = create<FightParametersStore>((set) => ({
-  timeSkipIntervals: initTS,
   parameterError: undefined,
   parameterErrorMsg: "",
   showOptions: false,
@@ -77,8 +54,6 @@ const useFightParametersStore = create<FightParametersStore>((set) => ({
     noScaling: ABILITY_NO_SCALING.toString(),
     blacklist: ABILITY_BLACKLIST.toString(),
   },
-  intervalEbonMightWeight: 0.5,
-  intervalTimer: 30,
   mrtPlayerAmount: 2,
   deathCountFilter: "",
   weights: {
@@ -87,29 +62,6 @@ const useFightParametersStore = create<FightParametersStore>((set) => ({
     prescienceWeight: PRESCIENCE_CORRECTION_VALUE,
   },
 
-  /** Time skips */
-  setTimeSkipIntervals: (payload) => set({ timeSkipIntervals: payload }),
-  addTimeSkipInterval: (payload) =>
-    set((state) => ({
-      timeSkipIntervals: [...state.timeSkipIntervals, payload],
-    })),
-  removeTimeSkipInterval: (payload) =>
-    set((state) => ({
-      timeSkipIntervals: state.timeSkipIntervals.filter(
-        (_, idx) => idx !== payload
-      ),
-    })),
-  changeTimeSkipInterval: (payload) =>
-    set((state) => {
-      const { index, entry, value } = payload;
-      const newIntervals = [...state.timeSkipIntervals];
-      if (entry === "start") {
-        newIntervals[index].start = value;
-      } else {
-        newIntervals[index].end = value;
-      }
-      return { timeSkipIntervals: newIntervals };
-    }),
   setMrtPlayerAmount: (payload) => set({ mrtPlayerAmount: payload }),
 
   /** Errors */
@@ -136,12 +88,9 @@ const useFightParametersStore = create<FightParametersStore>((set) => ({
         [payload.ability]: payload.value,
       },
     })),
-  setIntervalTimer: (payload) => set({ intervalTimer: payload }),
   setDeathCountFilter: (payload) => set({ deathCountFilter: payload }),
 
   /** Weights */
-  setIntervalEbonMightWeight: (payload) =>
-    set({ intervalEbonMightWeight: payload }),
   setWeights: (payload) =>
     set((state) => ({
       weights: {
