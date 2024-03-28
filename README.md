@@ -1,10 +1,16 @@
 # Welcome to Remix!
 
-- [Remix Docs](https://remix.run/docs)
+- [Remix Docs](https://reminpx.run/docs)
 
 ## Development
 
-From your terminal:
+To start off you need to install node modules:
+
+```sh
+npm install
+```
+
+Then you can start your app in development mode:
 
 ```sh
 npm run dev
