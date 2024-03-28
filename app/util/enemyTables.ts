@@ -95,10 +95,7 @@ export const AberrusEnemies: EnemyMap = {
   ],
 };
 
-export const EncounterNames: Record<string, string> = {
-  /** Fallback for intervals */
-  Default: "Default",
-  /** Aberrus */
+export const Aberrus: Record<string, string> = {
   Kazzara: "Kazzara",
   AssaultOfTheZaqali: "Assault of the Zaqali",
   RashokTheElder: "Rashok, the Elder",
@@ -108,7 +105,9 @@ export const EncounterNames: Record<string, string> = {
   Magmorax: "Magmorax",
   EchoOfNeltharion: "Echo of Neltharion",
   ScalecommanderSarkareth: "Scalecommander Sarkareth",
-  /** Amirdrassil */
+};
+
+export const Amirdrassil: Record<string, string> = {
   Gnarlroot: "Gnarlroot",
   IgiraTheCruel: "Igira the Cruel",
   Volcoross: "Volcoross",
@@ -118,6 +117,19 @@ export const EncounterNames: Record<string, string> = {
   Smolderon: "Smolderon",
   TindralSageswiftSeerOfTheFlame: "Tindral Sageswift, Seer of the Flame",
   FyrakkTheBlazing: "Fyrakk the Blazing",
+};
+
+export const Encounters = {
+  Default: { Default: "Default" },
+  Aberrus: Aberrus,
+  Amirdrassil: Amirdrassil,
+};
+
+export const EncounterNames: Record<string, string> = {
+  /** Fallback for intervals */
+  Default: "Default",
+  ...Aberrus,
+  ...Amirdrassil,
 };
 
 export const EncounterImages: Record<string, string> = {
