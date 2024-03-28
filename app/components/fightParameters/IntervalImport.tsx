@@ -3,7 +3,7 @@ import useIntervalParametersStore from "../../zustand/intervalParametersStore";
 import PopupContent from "../generic/PopupContent";
 import { validateIntervalFormat } from "../../zustand/interval/validation";
 
-const ExperimentalIntervalImport: React.FC = () => {
+const IntervalImport: React.FC = () => {
   const [importValue, setImportValue] = useState<string>("");
   const [isProperFormat, setIsProperFormat] = useState<boolean>(false);
   const [error, setError] = useState<string>("");
@@ -55,4 +55,4 @@ const ExperimentalIntervalImport: React.FC = () => {
   return <PopupContent content={content} name="Import" />;
 };
 
-export default ExperimentalIntervalImport;
+export default IntervalImport;

@@ -47,21 +47,7 @@
   width: 20px;
 }
 
-.time-intervals-container {
-  .time-intervals-content {
-    input {
-      width: 5rem;
-      text-align: center;
-      font-size: large;
-    }
-    button {
-      background-color: inherit;
-      padding: 0.2em 0.6em;
-    }
-  }
-}
-
-.experimental-time-intervals-container {
+.interval-time-options-container {
   button {
     padding: 0.2em 0.6em;
   }
@@ -73,7 +59,7 @@
       font-size: 0.5em;
     }
   }
-  .experimental-time-intervals-content {
+  .interval-time-options-content {
     input {
       max-width: 5rem;
       text-align: center;
@@ -89,10 +75,17 @@
   }
 }
 
-.experimental-interval-options {
+.interval-options {
   input {
     max-width: 5rem;
     text-align: center;
     font-size: large;
+  }
+}
+.interval-boss-select {
+  optgroup {
+    font-weight: bold;
+    font-style: normal;
+    font-size: 18px;
   }
 }

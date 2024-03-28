@@ -1,17 +1,1 @@
-.mrtNoteTextbox {
-  min-width: 30rem;
-  min-height: 300px; }
-
-.intervalTable {
-  background: #302e2e;
-  border-spacing: 0;
-  border-collapse: collapse; }
-  .intervalTable th,
-  .intervalTable td {
-    border: 1px solid #6f6f6f;
-    padding: 4px 12px;
-    text-align: center; }
-  .intervalTable .breath-window {
-    background: #58411f; }
-  .intervalTable .fabricated-window {
-    background: #1c1c1c; }
+.mrtNoteTextbox{min-width:30rem;min-height:300px}.intervalTable{background:#302e2e;border-spacing:0;border-collapse:collapse}.intervalTable th,.intervalTable td{border:1px solid #6f6f6f;padding:4px 12px;text-align:center}.intervalTable .breath-window{background:#58411f}.intervalTable .fabricated-window{background:#1c1c1c}
