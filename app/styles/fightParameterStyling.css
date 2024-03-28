@@ -36,38 +36,34 @@
   margin: 5px;
   width: 20px; }
 
-.time-intervals-container .time-intervals-content input {
-  width: 5rem;
-  text-align: center;
-  font-size: large; }
-
-.time-intervals-container .time-intervals-content button {
-  background-color: inherit;
+.interval-time-options-container button {
   padding: 0.2em 0.6em; }
 
-.experimental-time-intervals-container button {
-  padding: 0.2em 0.6em; }
-
-.experimental-time-intervals-container .title {
+.interval-time-options-container .title {
   font-size: 24px;
   margin: 10px;
   font-weight: bold; }
-  .experimental-time-intervals-container .title button {
+  .interval-time-options-container .title button {
     font-size: 0.5em; }
 
-.experimental-time-intervals-container .experimental-time-intervals-content input {
+.interval-time-options-container .interval-time-options-content input {
   max-width: 5rem;
   text-align: center;
   font-size: large; }
 
-.experimental-time-intervals-container .experimental-time-intervals-content button {
+.interval-time-options-container .interval-time-options-content button {
   background-color: inherit;
   padding: 0.2em 0.6em; }
 
-.experimental-time-intervals-container .experimental-time-intervals-content label {
+.interval-time-options-container .interval-time-options-content label {
   margin: 3px; }
 
-.experimental-interval-options input {
+.interval-options input {
   max-width: 5rem;
   text-align: center;
   font-size: large; }
+
+.interval-boss-select optgroup {
+  font-weight: bold;
+  font-style: normal;
+  font-size: 18px; }
