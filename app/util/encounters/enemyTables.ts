@@ -1,6 +1,10 @@
 import { ReportFight } from "../../wcl/types/report/report";
 import { Abberus, AberrusEncounterNames } from "./Aberrus";
 import { Amirdrassil, AmirdrassilEncounterNames } from "./Amirdrassil";
+import {
+  VOTIEncounterNames,
+  VaultOfTheIncarnate,
+} from "./VaultOfTheIncarnates";
 import { Encounter, EncounterMap, EnemyType, Enemy } from "./types";
 
 /** Defaul encounter used as fallback for unknown encounters or multi fights */
@@ -19,17 +23,20 @@ export const Encounters = {
   Default: DefaultEncounter,
   Abberus,
   Amirdrassil,
+  VaultOfTheIncarnate,
 } as const;
 
 export const EncounterNames = {
   Default: "Default",
   ...AberrusEncounterNames,
   ...AmirdrassilEncounterNames,
+  ...VOTIEncounterNames,
 } as const;
 
 export const CombinedEncounters: EncounterMap = new Map([
   ...Abberus.entries(),
   ...Amirdrassil.entries(),
+  ...VaultOfTheIncarnate.entries(),
 ]);
 
 export function getEncounter(encounter: string): Encounter {

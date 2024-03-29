@@ -1,6 +1,47 @@
 import { EncounterNames } from "../../util/encounters/enemyTables";
 import { EncounterEbonMightWindows } from "../intervalParametersStore";
 
+const initialVOTI: EncounterEbonMightWindows = {
+  [EncounterNames.Eranog]: {
+    0: [], // p1
+    1: [], // i1
+    2: [], // p2
+    3: [], // i2
+    4: [], // p3
+  },
+  [EncounterNames.Terros]: {
+    0: [],
+  },
+  [EncounterNames["Council of Dreams"]]: {
+    0: [],
+  },
+  [EncounterNames["Sennarth, The Cold Breath"]]: {
+    0: [], // p1
+    1: [], // p2
+  },
+  [EncounterNames["Dathea, Ascended"]]: {
+    0: [],
+  },
+  [EncounterNames["Kurog Grimtotem"]]: {
+    0: [], // p1
+    1: [], // i1
+    2: [], // p2
+    3: [], // i2
+    4: [], // p3
+  },
+  [EncounterNames["Broodkeeper Diurna"]]: {
+    0: [], // p1
+    1: [], // p2
+  },
+  [EncounterNames["Raszageth the Storm-Eater"]]: {
+    0: [], // p1
+    1: [], // i1
+    2: [], // p2
+    3: [], // i2
+    4: [], // p3
+  },
+};
+
 export const initialEncounterEbonMightWindows: EncounterEbonMightWindows = {
   [EncounterNames.Default]: {
     0: [],
@@ -93,4 +134,5 @@ export const initialEncounterEbonMightWindows: EncounterEbonMightWindows = {
       { start: 226, end: 253, useBreath: false },
     ],
   },
+  ...initialVOTI,
 };
