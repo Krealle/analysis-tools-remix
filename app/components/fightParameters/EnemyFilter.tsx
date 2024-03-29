@@ -1,6 +1,6 @@
 import {
   getEncounter,
-  getEncounterInReport,
+  getEncountersInReport,
 } from "../../util/encounters/enemyTables";
 import ButtonCheckbox from "../generic/ButtonCheckbox";
 import PopupContent from "../generic/PopupContent";
@@ -16,7 +16,7 @@ const EnemyFilter: React.FC = () => {
   const isFetching = useStatusStore((state) => state.isFetching);
 
   const encountersInReport = useMemo(() => {
-    return getEncounterInReport(fightReport?.fights);
+    return getEncountersInReport(fightReport?.fights);
   }, [fightReport?.fights]);
 
   const content = useMemo(() => {

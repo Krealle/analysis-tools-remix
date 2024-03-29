@@ -7,7 +7,7 @@ import {
   EncounterNames,
   Encounters,
   getEncounter,
-  getEncounterInReport,
+  getEncountersInReport,
 } from "../../util/encounters/enemyTables";
 import IntervalImport from "./IntervalImport";
 import React, { useMemo } from "react";
@@ -32,7 +32,7 @@ const IntervalSettings: React.FC = () => {
   };
 
   const encountersInReport = useMemo(() => {
-    return getEncounterInReport(fightReport?.fights);
+    return getEncountersInReport(fightReport?.fights);
   }, [fightReport?.fights]);
 
   const intervalExport = (): string =>

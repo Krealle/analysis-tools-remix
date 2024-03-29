@@ -47,7 +47,7 @@ export function getEncounter(encounter: string): Encounter {
   return maybeEncounter;
 }
 
-export function getEncounterInReport(
+export function getEncountersInReport(
   fightsInReport: ReportFight[] | undefined,
   keepOrder: boolean = true
 ): string[] {
