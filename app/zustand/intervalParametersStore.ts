@@ -51,6 +51,8 @@ type intervalParametersStore = {
 
   selectedInterval: string;
   changeSelectedInterval: (fight: EncounterName) => void;
+  intervalToUse: string;
+  changeIntervalToUse: (fight: EncounterName) => void;
 
   autoGenWindowSettings: AutoGenWindowSettings;
   setAutoGenSetting: <T extends Setting>(
@@ -185,6 +187,13 @@ const useIntervalParametersStore = create<intervalParametersStore>((set) => ({
   changeSelectedInterval: (fight) => {
     set({
       selectedInterval: fight,
+    });
+  },
+  intervalToUse: EncounterNames.FyrakkTheBlazing,
+  changeIntervalToUse: (fight) => {
+    set({
+      selectedInterval: fight,
+      intervalToUse: fight,
     });
   },
 

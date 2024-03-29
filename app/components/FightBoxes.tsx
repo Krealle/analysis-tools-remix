@@ -1,12 +1,14 @@
 import { formatDuration, formatUnixTime } from "../util/format";
 import ButtonCheckbox from "./generic/ButtonCheckbox";
 import "../styles/FightBoxes.css";
-import { getEncounter } from "../util/encounters/enemyTables";
+import { EncounterNames, getEncounter } from "../util/encounters/enemyTables";
 import useWCLUrlInputStore from "../zustand/WCLUrlInputStore";
 import useStatusStore from "../zustand/statusStore";
 import useFightBoxesStore from "../zustand/fightBoxesStore";
-import React, { useCallback, useMemo } from "react";
+import React, { useCallback, useEffect, useMemo } from "react";
 import { ReportFight } from "../wcl/types/report/report";
+import useIntervalParametersStore from "../zustand/intervalParametersStore";
+import { IsKnownEncounter } from "../util/encounters/types";
 
 type FightPercentageColor =
   | "kill"
@@ -54,6 +56,34 @@ const FightBoxes = (): JSX.Element => {
 
   const isFetching = useStatusStore((state) => state.isFetching);
   const report = useWCLUrlInputStore((state) => state.fightReport);
+  const changeIntervalToUse = useIntervalParametersStore(
+    (state) => state.changeIntervalToUse
+  );
+
+  useEffect(() => {
+    /** Fallback */
+    if (selectedIds.size === 0 || !report?.fights) {
+      changeIntervalToUse(EncounterNames.Default);
+      return;
+    }
+
+    const selectedFights = report.fights.filter((fight) =>
+      selectedIds.has(fight.id)
+    );
+
+    const isSameBoss = selectedFights.every(
+      (fight, i, arr) =>
+        fight.name && (i === 0 || fight.name === arr[i - 1].name)
+    );
+
+    const encounterName = selectedFights[0].name;
+
+    if (isSameBoss && IsKnownEncounter(encounterName)) {
+      changeIntervalToUse(encounterName);
+    } else {
+      changeIntervalToUse(EncounterNames.Default);
+    }
+  }, [changeIntervalToUse, report?.fights, selectedIds]);
 
   const handleDivClick = useCallback(
     (id: number) => {
