@@ -91,7 +91,7 @@ const intervalRenderer = (
 
   return (
     <>
-      <div className="flex gap flex-wrap flex-top">
+      <div className="flex gap wrap top">
         <div>
           <h3>Intervals</h3>
           <table className="intervalTable">

@@ -10,10 +10,6 @@
   }
 }
 
-.enemies {
-  gap: 10px;
-}
-
 .enemy {
   border: solid black 1px;
   border-radius: 8px;
@@ -30,6 +26,8 @@
 }
 
 .enemies {
+  gap: 10px;
+
   .buttonCheckbox {
     min-width: 0px;
     padding-left: 10px;

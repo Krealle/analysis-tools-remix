@@ -215,7 +215,7 @@ const FightBoxes = (): JSX.Element => {
                     </div>
                   )}
 
-                  <div className="flex fights" key={phaseName}>
+                  <div className="flex wrap" key={phaseName}>
                     {Array.from(fights).map((fight) => {
                       const fightPercentageColor =
                         getFightPercentageColor(fight);

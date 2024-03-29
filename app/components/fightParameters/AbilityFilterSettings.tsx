@@ -12,7 +12,7 @@ const AbilityFilterSettings: React.FC = () => {
   const isFetching = useStatusStore((state) => state.isFetching);
 
   const content = (
-    <div className="flex flex-wrap">
+    <div className="flex wrap">
       {Object.entries(abilityFilters).map(([ability, value]) => {
         return (
           <OptionBox title={splitCamelCase(toCamelCase(ability))} key={ability}>
