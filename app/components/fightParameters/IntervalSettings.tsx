@@ -54,11 +54,7 @@ const IntervalSettings: React.FC = () => {
       const encounterIntervals = encounterIntervalsToShow.map(
         ([encounterName]) => {
           return (
-            <option
-              key={encounterName}
-              value={encounterName}
-              className={encounterName === selectedInterval ? "selected" : ""}
-            >
+            <option key={encounterName} value={encounterName}>
               {encounterName}
             </option>
           );
@@ -74,7 +70,7 @@ const IntervalSettings: React.FC = () => {
         </React.Fragment>
       );
     });
-  }, [encountersInReport, selectedInterval]);
+  }, [encountersInReport]);
 
   const content = (
     <div className="flex">
