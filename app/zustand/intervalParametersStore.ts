@@ -130,7 +130,6 @@ const useIntervalParametersStore = create<intervalParametersStore>((set) => ({
                   `Added missing encounter entry for ${encounterName}!`
                 );
                 maybeProperInput[encounterName] = defaultValue;
-                state.writeToLocalStorage(initialEncounterEbonMightWindows);
               } else {
                 // Sometimes phases are added after the fact, we should therefor put in the new phases.
                 const currentLocalPhases = Object.entries(
@@ -156,6 +155,7 @@ const useIntervalParametersStore = create<intervalParametersStore>((set) => ({
             }
           );
 
+          state.writeToLocalStorage(maybeProperInput);
           return { encounterEbonMightWindows: maybeProperInput };
         } catch (e) {
           // if somehow localStorage format is incorrect just default it
