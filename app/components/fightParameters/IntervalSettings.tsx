@@ -12,6 +12,7 @@ import {
 import IntervalImport from "./IntervalImport";
 import React, { useMemo } from "react";
 import useWCLUrlInputStore from "../../zustand/WCLUrlInputStore";
+import { IsKnownEncounter } from "../../util/encounters/types";
 
 const IntervalSettings: React.FC = () => {
   const isFetching = useStatusStore((state) => state.isFetching);
@@ -28,7 +29,9 @@ const IntervalSettings: React.FC = () => {
   const fightReport = useWCLUrlInputStore((state) => state.fightReport);
 
   const handleFightChange = (input: string): void => {
-    changeSelectedInterval(input);
+    changeSelectedInterval(
+      IsKnownEncounter(input) ? input : EncounterNames.Default
+    );
   };
 
   const encountersInReport = useMemo(() => {

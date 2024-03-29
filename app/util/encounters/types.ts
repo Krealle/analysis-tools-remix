@@ -1,3 +1,5 @@
+import { EncounterNames, EncounterNameValues } from "./enemyTables";
+
 export enum EnemyType {
   Boss = "boss",
   Add = "add",
@@ -18,3 +20,16 @@ export type Encounter = {
   intervalPhases?: string[];
 };
 export type EncounterMap = Map<string, Encounter>;
+
+export type EncounterName =
+  (typeof EncounterNames)[keyof typeof EncounterNames];
+
+export function IsKnownEncounter(
+  name: string | undefined
+): name is EncounterName {
+  if (!name) {
+    return false;
+  }
+
+  return EncounterNameValues.has(name);
+}

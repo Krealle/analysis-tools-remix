@@ -26,6 +26,9 @@ export const EncounterNames = {
   ...AberrusEncounterNames,
   ...AmirdrassilEncounterNames,
 } as const;
+export const EncounterNameValues = new Map<string, boolean>(
+  Object.values(EncounterNames).map((x) => [x, true])
+);
 
 export const CombinedEncounters: EncounterMap = new Map([
   ...Abberus.entries(),

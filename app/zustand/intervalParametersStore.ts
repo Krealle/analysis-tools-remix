@@ -3,6 +3,7 @@ import { initialEncounterEbonMightWindows } from "./interval/defaultIntervals";
 import { EncounterNames } from "../util/encounters/enemyTables";
 import { Static, Type } from "@sinclair/typebox";
 import { validateIntervalFormat } from "./interval/validation";
+import { EncounterName } from "../util/encounters/types";
 
 const EbonMightWindow = Type.Object({
   start: Type.Number(),
@@ -49,7 +50,7 @@ type intervalParametersStore = {
   importIntervals: (intervals: string) => void;
 
   selectedInterval: string;
-  changeSelectedInterval: (fight: string) => void;
+  changeSelectedInterval: (fight: EncounterName) => void;
 
   autoGenWindowSettings: AutoGenWindowSettings;
   setAutoGenSetting: <T extends Setting>(
