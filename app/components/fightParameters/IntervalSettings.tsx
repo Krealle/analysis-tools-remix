@@ -51,7 +51,7 @@ const IntervalSettings: React.FC = () => {
 
       /** Don't show anything if we don't have any encounters in the zone */
       if (!encounterIntervalsToShow.length) {
-        return <></>;
+        return <React.Fragment key={zoneName}></React.Fragment>;
       }
 
       const encounterIntervals = encounterIntervalsToShow.map(
