@@ -4,7 +4,7 @@ import useIntervalParametersStore from "../zustand/intervalParametersStore";
 /* eslint-disable react/prop-types */
 type FightButtonProps = {
   isFetching: boolean;
-  handleButtonClick: (getCSV: boolean) => Promise<void>;
+  handleButtonClick: (getCSV: boolean) => void;
 };
 
 const FightButtons: React.FC<FightButtonProps> = ({
@@ -19,17 +19,17 @@ const FightButtons: React.FC<FightButtonProps> = ({
   return (
     <>
       <div className="flex column">
-      <button
-        onClick={() => handleButtonClick(false)}
-        disabled={isFetching || Boolean(parameterError)}
-      >
-        <b>Get DPS</b>
-      </button>
+        <button
+          onClick={() => handleButtonClick(false)}
+          disabled={isFetching || Boolean(parameterError)}
+        >
+          <b>Get DPS</b>
+        </button>
         <p>
           Currently using the{" "}
           <span style={{ fontWeight: "bold" }}>{intervalToUse}</span> intervals.
         </p>
-    </div>
+      </div>
     </>
   );
 };
