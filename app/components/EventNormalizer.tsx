@@ -17,6 +17,7 @@ import useFightParametersStore, {
 import { getIntervals } from "../analysis/interval/intervals";
 import useIntervalParametersStore from "../zustand/intervalParametersStore";
 import intervalRenderer from "../analysis/renders/intervalRenderer";
+import { EncounterNames } from "../util/encounters/enemyTables";
 
 const fights: Fight[] = [];
 const fetchedFightDataSets: FightDataSet[] = [];
@@ -50,7 +51,7 @@ const EventNormalizer: React.FC = () => {
   } = useFightParametersStore();
   const { isFetching, setIsFetching } = useStatusStore();
 
-  const { encounterEbonMightWindows, autoGenWindowSettings } =
+  const { encounterEbonMightWindows, autoGenWindowSettings, intervalToUse } =
     useIntervalParametersStore();
 
   useEffect(() => {
@@ -166,11 +167,11 @@ const EventNormalizer: React.FC = () => {
     );
 
     // If all fights are the same we can use phases for Intervals
-    const isSameBoss = fightsToRender.every(
-      (fight, i, arr) => i === 0 || fight.bossName === arr[i - 1].bossName
-    );
+    const isSameBoss = intervalToUse !== EncounterNames.Default;
 
-    const bossName = isSameBoss ? fightsToRender?.[0]?.bossName : "Default";
+    const bossName = isSameBoss
+      ? fightsToRender?.[0]?.bossName
+      : EncounterNames.Default;
     const intervals = getIntervals(
       fightsToRender,
       selectedFights,
