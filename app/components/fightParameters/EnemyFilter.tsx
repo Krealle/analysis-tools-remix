@@ -35,7 +35,6 @@ const EnemyFilter: React.FC = () => {
                 return (
                   <ButtonCheckbox
                     key={enemy.id}
-                    id="enemy"
                     title={enemy.name}
                     onClick={() =>
                       modifyEnemyBlacklist({
