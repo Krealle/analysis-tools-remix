@@ -1,8 +1,8 @@
-import { EncounterNames } from "../../util/enemyTables";
+import { EncounterNames } from "../../util/encounters/enemyTables";
 import { EncounterEbonMightWindows } from "../intervalParametersStore";
 
 export const initialEncounterEbonMightWindows: EncounterEbonMightWindows = {
-  Default: {
+  [EncounterNames.Default]: {
     0: [],
   },
   [EncounterNames.Kazzara]: {

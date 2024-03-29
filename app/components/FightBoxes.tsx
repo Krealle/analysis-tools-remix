@@ -1,11 +1,7 @@
-import { formatDuration, formatUnixTime, toCamelCase } from "../util/format";
+import { formatDuration, formatUnixTime } from "../util/format";
 import ButtonCheckbox from "./generic/ButtonCheckbox";
 import "../styles/FightBoxes.css";
-import {
-  EncounterImages,
-  EncounterPhaseNames,
-  EncountersWithTruePhases,
-} from "../util/enemyTables";
+import { getEncounter } from "../util/encounters/enemyTables";
 import useWCLUrlInputStore from "../zustand/WCLUrlInputStore";
 import useStatusStore from "../zustand/statusStore";
 import useFightBoxesStore from "../zustand/fightBoxesStore";
@@ -94,8 +90,7 @@ const FightBoxes = (): JSX.Element => {
       let groupFights =
         acc.get(groupName) || new Map<string, IndexedReportFight[]>();
 
-      const normalizedGroupName = toCamelCase(groupName);
-      const usePhases = EncountersWithTruePhases.has(normalizedGroupName);
+      const usePhases = Boolean(getEncounter(groupName)?.wclPhases);
 
       const phase = fight.lastPhase ?? 0;
       const phaseType = fight.lastPhaseIsIntermission ? "I" : "P";
@@ -150,15 +145,16 @@ const FightBoxes = (): JSX.Element => {
   const fightBoxesElement: JSX.Element = (
     <div>
       {Array.from(fightsByName).map(([groupName, phases], groupIndex) => {
-        const normalizedGroupName = toCamelCase(groupName);
         const fightIds = Array.from(phases).flatMap(([, fights]) =>
           fights.map((fight) => fight.id)
         );
 
+        const encounter = getEncounter(groupName);
+
         return (
           <div key={groupName} className="flex column fightContainer">
             <div className="flex fightsName">
-              <img src={EncounterImages[normalizedGroupName]} alt="" />
+              <img src={encounter.image} alt="" />
               {groupName}
               <button
                 className="fightSelectAll"
@@ -171,8 +167,7 @@ const FightBoxes = (): JSX.Element => {
             {Array.from(phases).map(([phaseName, fights], phaseIndex) => {
               const phaseIds = fights.map((fight) => fight.id);
               const formattedPhaseName =
-                EncounterPhaseNames[normalizedGroupName]?.[phaseName] ??
-                "Unknown Phase Name";
+                encounter.wclPhases?.[phaseName] ?? "Unknown Phase Name";
 
               return (
                 <React.Fragment key={`${groupIndex}-${phaseIndex}`}>

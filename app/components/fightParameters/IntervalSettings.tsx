@@ -4,11 +4,14 @@ import useStatusStore from "../../zustand/statusStore";
 import OptionBox from "./generic/OptionBox";
 import useIntervalParametersStore from "../../zustand/intervalParametersStore";
 import {
-  EncounterIntervalPhaseNames,
+  EncounterNames,
   Encounters,
-} from "../../util/enemyTables";
+  getEncounter,
+  getEncounterInReport,
+} from "../../util/encounters/enemyTables";
 import IntervalImport from "./IntervalImport";
-import React from "react";
+import React, { useMemo } from "react";
+import useWCLUrlInputStore from "../../zustand/WCLUrlInputStore";
 
 const IntervalSettings: React.FC = () => {
   const isFetching = useStatusStore((state) => state.isFetching);
@@ -16,42 +19,62 @@ const IntervalSettings: React.FC = () => {
     setEbonMightWindow,
     addEbonMightWindow,
     removeEbonMightWindow,
-    selectedFight,
-    changeFight,
+    selectedInterval,
+    changeSelectedInterval,
     encounterEbonMightWindows,
     autoGenWindowSettings,
     setAutoGenSetting,
   } = useIntervalParametersStore();
+  const fightReport = useWCLUrlInputStore((state) => state.fightReport);
 
   const handleFightChange = (input: string): void => {
-    changeFight(input);
+    changeSelectedInterval(input);
   };
+
+  const encountersInReport = useMemo(() => {
+    return getEncounterInReport(fightReport?.fights);
+  }, [fightReport?.fights]);
 
   const intervalExport = (): string =>
     JSON.stringify(encounterEbonMightWindows);
 
-  const encounterOptions = Object.entries(Encounters).map(
-    ([encounterName, bosses]) => {
-      const bossOptions = Object.entries(bosses).map(
-        ([_camelCaseName, normalizedName]) => {
+  const encounterOptions = useMemo(() => {
+    return Object.entries(Encounters).map(([zoneName, bosses]) => {
+      const encounterIntervalsToShow = Array.from(bosses.entries()).filter(
+        ([encounterName]) =>
+          encountersInReport.includes(encounterName) ||
+          encounterName === EncounterNames.Default
+      );
+
+      /** Don't show anything if we don't have any encounters in the zone */
+      if (!encounterIntervalsToShow.length) {
+        return <></>;
+      }
+
+      const encounterIntervals = encounterIntervalsToShow.map(
+        ([encounterName]) => {
           return (
-            <option key={normalizedName} value={normalizedName}>
-              {normalizedName}
+            <option
+              key={encounterName}
+              value={encounterName}
+              className={encounterName === selectedInterval ? "selected" : ""}
+            >
+              {encounterName}
             </option>
           );
         }
       );
 
       return (
-        <React.Fragment key={encounterName}>
-          {encounterName !== "Default" && (
-            <optgroup label={encounterName} key={`${encounterName}-opt`} />
+        <React.Fragment key={zoneName}>
+          {zoneName !== "Default" && (
+            <optgroup label={zoneName} key={`${zoneName}-opt`} />
           )}
-          {bossOptions}
+          {encounterIntervals}
         </React.Fragment>
       );
-    }
-  );
+    });
+  }, [encountersInReport, selectedInterval]);
 
   const content = (
     <div className="flex">
@@ -74,7 +97,7 @@ const IntervalSettings: React.FC = () => {
           <OptionBox title="Fight">
             <select
               onChange={(e) => handleFightChange(e.target.value)}
-              value={selectedFight}
+              value={selectedInterval}
               className="interval-boss-select"
             >
               {encounterOptions}
@@ -113,11 +136,11 @@ const IntervalSettings: React.FC = () => {
           * indicates fabricated windows. These wont save until you make a
           change.
           {/** Interval render below */}
-          {Object.entries(encounterEbonMightWindows[selectedFight]).map(
+          {Object.entries(encounterEbonMightWindows[selectedInterval]).map(
             ([phase, windows], index) => {
               const phaseNumber = Number(phase);
               const phaseName =
-                EncounterIntervalPhaseNames?.[selectedFight]?.[phaseNumber] ??
+                getEncounter(selectedInterval).intervalPhases?.[phaseNumber] ??
                 `Phase ${phaseNumber + 1}`;
 
               return (

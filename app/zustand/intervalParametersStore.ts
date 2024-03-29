@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import { initialEncounterEbonMightWindows } from "./interval/defaultIntervals";
-import { EncounterNames } from "../util/enemyTables";
+import { EncounterNames } from "../util/encounters/enemyTables";
 import { Static, Type } from "@sinclair/typebox";
 import { validateIntervalFormat } from "./interval/validation";
 
@@ -48,8 +48,8 @@ type intervalParametersStore = {
   restoreFromLocalStorage: () => void;
   importIntervals: (intervals: string) => void;
 
-  selectedFight: string;
-  changeFight: (fight: string) => void;
+  selectedInterval: string;
+  changeSelectedInterval: (fight: string) => void;
 
   autoGenWindowSettings: AutoGenWindowSettings;
   setAutoGenSetting: <T extends Setting>(
@@ -62,7 +62,7 @@ const useIntervalParametersStore = create<intervalParametersStore>((set) => ({
   setEbonMightWindow: (phase, index, window) => {
     set((state) => {
       const windows =
-        state.encounterEbonMightWindows[state.selectedFight][phase];
+        state.encounterEbonMightWindows[state.selectedInterval][phase];
       if (windows) {
         windows[index] = window;
         state.writeToLocalStorage(state.encounterEbonMightWindows);
@@ -74,7 +74,7 @@ const useIntervalParametersStore = create<intervalParametersStore>((set) => ({
   addEbonMightWindow: (phase) => {
     set((state) => {
       const windows =
-        state.encounterEbonMightWindows[state.selectedFight][phase];
+        state.encounterEbonMightWindows[state.selectedInterval][phase];
       if (windows) {
         windows.push({ start: 0, end: 0, useBreath: false });
         state.writeToLocalStorage(state.encounterEbonMightWindows);
@@ -86,7 +86,7 @@ const useIntervalParametersStore = create<intervalParametersStore>((set) => ({
   removeEbonMightWindow: (phase, index) => {
     set((state) => {
       const windows =
-        state.encounterEbonMightWindows[state.selectedFight][phase];
+        state.encounterEbonMightWindows[state.selectedInterval][phase];
       if (windows) {
         windows.splice(index, 1);
         state.writeToLocalStorage(state.encounterEbonMightWindows);
@@ -180,10 +180,10 @@ const useIntervalParametersStore = create<intervalParametersStore>((set) => ({
     });
   },
 
-  selectedFight: EncounterNames.FyrakkTheBlazing,
-  changeFight: (fight) => {
+  selectedInterval: EncounterNames.FyrakkTheBlazing,
+  changeSelectedInterval: (fight) => {
     set({
-      selectedFight: fight,
+      selectedInterval: fight,
     });
   },
 
