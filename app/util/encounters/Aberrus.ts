@@ -1,5 +1,5 @@
 import { EncounterMap, EnemyType } from "./types";
-import { createEnemy } from "./enemyTables";
+import { createEnemy } from "./encounters";
 
 export const AberrusEncounterNames = {
   Kazzara: "Kazzara",

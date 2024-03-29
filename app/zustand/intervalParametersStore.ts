@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import { initialEncounterEbonMightWindows } from "./interval/defaultIntervals";
-import { EncounterNames } from "../util/encounters/enemyTables";
+import { EncounterNames } from "../util/encounters/encounters";
 import { Static, Type } from "@sinclair/typebox";
 import { validateIntervalFormat } from "./interval/validation";
 import { EncounterName } from "../util/encounters/types";

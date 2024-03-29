@@ -1,4 +1,4 @@
-import { EncounterNames } from "../../util/encounters/enemyTables";
+import { EncounterNames } from "../../util/encounters/encounters";
 import { EncounterEbonMightWindows } from "../intervalParametersStore";
 
 const initialVOTI: EncounterEbonMightWindows = {

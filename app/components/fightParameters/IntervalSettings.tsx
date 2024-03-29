@@ -8,7 +8,7 @@ import {
   Encounters,
   getEncounter,
   getEncountersInReport,
-} from "../../util/encounters/enemyTables";
+} from "../../util/encounters/encounters";
 import IntervalImport from "./IntervalImport";
 import React, { useMemo } from "react";
 import useWCLUrlInputStore from "../../zustand/WCLUrlInputStore";

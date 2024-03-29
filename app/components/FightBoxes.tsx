@@ -1,7 +1,7 @@
 import { formatDuration, formatUnixTime } from "../util/format";
 import ButtonCheckbox from "./generic/ButtonCheckbox";
 import "../styles/FightBoxes.css";
-import { EncounterNames, getEncounter } from "../util/encounters/enemyTables";
+import { EncounterNames, getEncounter } from "../util/encounters/encounters";
 import useWCLUrlInputStore from "../zustand/WCLUrlInputStore";
 import useStatusStore from "../zustand/statusStore";
 import useFightBoxesStore from "../zustand/fightBoxesStore";

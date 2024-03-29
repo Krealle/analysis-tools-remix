@@ -1,7 +1,7 @@
 import {
   getEncounter,
   getEncountersInReport,
-} from "../../util/encounters/enemyTables";
+} from "../../util/encounters/encounters";
 import ButtonCheckbox from "../generic/ButtonCheckbox";
 import PopupContent from "../generic/PopupContent";
 import "../../styles/fightParameterStyling.css";

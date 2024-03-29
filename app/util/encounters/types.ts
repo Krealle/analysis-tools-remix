@@ -1,4 +1,4 @@
-import { EncounterNames } from "./enemyTables";
+import { EncounterNames } from "./encounters";
 
 export enum EnemyType {
   Boss = "boss",

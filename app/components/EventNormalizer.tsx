@@ -17,7 +17,7 @@ import useFightParametersStore, {
 import { getIntervals } from "../analysis/interval/intervals";
 import useIntervalParametersStore from "../zustand/intervalParametersStore";
 import intervalRenderer from "../analysis/renders/intervalRenderer";
-import { EncounterNames } from "../util/encounters/enemyTables";
+import { EncounterNames } from "../util/encounters/encounters";
 
 const fights: Fight[] = [];
 const fetchedFightDataSets: FightDataSet[] = [];
