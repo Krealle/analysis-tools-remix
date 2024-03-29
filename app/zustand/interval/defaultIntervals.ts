@@ -8,57 +8,57 @@ export const initialEncounterEbonMightWindows: EncounterEbonMightWindows = {
   [EncounterNames.Kazzara]: {
     0: [],
   },
-  [EncounterNames.AssaultOfTheZaqali]: {
+  [EncounterNames["Assault of the Zaqali"]]: {
     0: [],
   },
-  [EncounterNames.RashokTheElder]: {
+  [EncounterNames["Rashok, the Elder"]]: {
     0: [],
   },
-  [EncounterNames.TheAmalgamationChamber]: {
+  [EncounterNames["The Amalgamation Chamber"]]: {
     0: [],
   },
-  [EncounterNames.TheForgottenExperiments]: {
+  [EncounterNames["The Forgotten Experiments"]]: {
     0: [],
   },
-  [EncounterNames.TheVigilantStewardZskarn]: {
+  [EncounterNames["The Vigilant Steward, Zskarn"]]: {
     0: [],
   },
   [EncounterNames.Magmorax]: {
     0: [],
   },
-  [EncounterNames.EchoOfNeltharion]: {
+  [EncounterNames["Echo of Neltharion"]]: {
     0: [],
   },
-  [EncounterNames.ScalecommanderSarkareth]: {
+  [EncounterNames["Scalecommander Sarkareth"]]: {
     0: [],
   },
   [EncounterNames.Gnarlroot]: {
     0: [],
   },
-  [EncounterNames.IgiraTheCruel]: {
+  [EncounterNames["Igira the Cruel"]]: {
     0: [],
   },
   [EncounterNames.Volcoross]: {
     0: [],
   },
-  [EncounterNames.CouncilOfDreams]: {
+  [EncounterNames["Council of Dreams"]]: {
     0: [],
   },
-  [EncounterNames.LarodarKeeperOfTheFlame]: {
+  [EncounterNames["Larodar, Keeper of the Flame"]]: {
     0: [],
   },
-  [EncounterNames.NymueWeaverOfTheCycle]: {
+  [EncounterNames["Nymue, Weaver of the Cycle"]]: {
     0: [],
   },
   [EncounterNames.Smolderon]: {
     0: [],
   },
-  [EncounterNames.TindralSageswiftSeerOfTheFlame]: {
+  [EncounterNames["Tindral Sageswift, Seer of the Flame"]]: {
     0: [],
     1: [],
     2: [],
   },
-  [EncounterNames.FyrakkTheBlazing]: {
+  [EncounterNames["Fyrakk the Blazing"]]: {
     0: [
       // p1
       { start: 4, end: 34, useBreath: true },

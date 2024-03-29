@@ -3,14 +3,14 @@ import { createEnemy } from "./enemyTables";
 
 export const AberrusEncounterNames = {
   Kazzara: "Kazzara",
-  AssaultOfTheZaqali: "Assault of the Zaqali",
-  RashokTheElder: "Rashok, the Elder",
-  TheAmalgamationChamber: "The Amalgamation Chamber",
-  TheForgottenExperiments: "The Forgotten Experiments",
-  TheVigilantStewardZskarn: "The Vigilant Steward, Zskarn",
+  "Assault of the Zaqali": "Assault of the Zaqali",
+  "Rashok, the Elder": "Rashok, the Elder",
+  "The Amalgamation Chamber": "The Amalgamation Chamber",
+  "The Forgotten Experiments": "The Forgotten Experiments",
+  "The Vigilant Steward, Zskarn": "The Vigilant Steward, Zskarn",
   Magmorax: "Magmorax",
-  EchoOfNeltharion: "Echo of Neltharion",
-  ScalecommanderSarkareth: "Scalecommander Sarkareth",
+  "Echo of Neltharion": "Echo of Neltharion",
+  "Scalecommander Sarkareth": "Scalecommander Sarkareth",
 } as const;
 
 export const Abberus: EncounterMap = new Map([
@@ -25,9 +25,9 @@ export const Abberus: EncounterMap = new Map([
     },
   ],
   [
-    AberrusEncounterNames.AssaultOfTheZaqali,
+    AberrusEncounterNames["Assault of the Zaqali"],
     {
-      name: AberrusEncounterNames.AssaultOfTheZaqali,
+      name: AberrusEncounterNames["Assault of the Zaqali"],
       id: -1,
       image:
         "https://wow.zamimg.com/images/wow/journal/ui-ej-boss-assault-of-the-zaqali.png",
@@ -41,9 +41,9 @@ export const Abberus: EncounterMap = new Map([
     },
   ],
   [
-    AberrusEncounterNames.RashokTheElder,
+    AberrusEncounterNames["Rashok, the Elder"],
     {
-      name: AberrusEncounterNames.RashokTheElder,
+      name: AberrusEncounterNames["Rashok, the Elder"],
       id: -1,
       image:
         "https://wow.zamimg.com/images/wow/journal/ui-ej-boss-rashok-the-elder.png",
@@ -51,9 +51,9 @@ export const Abberus: EncounterMap = new Map([
     },
   ],
   [
-    AberrusEncounterNames.TheAmalgamationChamber,
+    AberrusEncounterNames["The Amalgamation Chamber"],
     {
-      name: AberrusEncounterNames.TheAmalgamationChamber,
+      name: AberrusEncounterNames["The Amalgamation Chamber"],
       id: -1,
       image:
         "https://wow.zamimg.com/images/wow/journal/ui-ej-boss-the-amalgamation-chamber.png",
@@ -65,9 +65,9 @@ export const Abberus: EncounterMap = new Map([
     },
   ],
   [
-    AberrusEncounterNames.TheForgottenExperiments,
+    AberrusEncounterNames["The Forgotten Experiments"],
     {
-      name: AberrusEncounterNames.TheForgottenExperiments,
+      name: AberrusEncounterNames["The Forgotten Experiments"],
       id: -1,
       image:
         "https://wow.zamimg.com/images/wow/journal/ui-ej-boss-the-forgotten-experiments.png",
@@ -80,9 +80,9 @@ export const Abberus: EncounterMap = new Map([
     },
   ],
   [
-    AberrusEncounterNames.TheVigilantStewardZskarn,
+    AberrusEncounterNames["The Vigilant Steward, Zskarn"],
     {
-      name: AberrusEncounterNames.TheVigilantStewardZskarn,
+      name: AberrusEncounterNames["The Vigilant Steward, Zskarn"],
       id: -1,
       image:
         "https://wow.zamimg.com/images/wow/journal/ui-ej-boss-the-vigilant-steward-zskarn.png",
@@ -103,9 +103,9 @@ export const Abberus: EncounterMap = new Map([
     },
   ],
   [
-    AberrusEncounterNames.EchoOfNeltharion,
+    AberrusEncounterNames["Echo of Neltharion"],
     {
-      name: AberrusEncounterNames.EchoOfNeltharion,
+      name: AberrusEncounterNames["Echo of Neltharion"],
       id: -1,
       image:
         "https://wow.zamimg.com/images/wow/journal/ui-ej-boss-echo-of-neltharion.png",
@@ -117,9 +117,9 @@ export const Abberus: EncounterMap = new Map([
     },
   ],
   [
-    AberrusEncounterNames.ScalecommanderSarkareth,
+    AberrusEncounterNames["Scalecommander Sarkareth"],
     {
-      name: AberrusEncounterNames.ScalecommanderSarkareth,
+      name: AberrusEncounterNames["Scalecommander Sarkareth"],
       id: -1,
       image:
         "https://wow.zamimg.com/images/wow/journal/ui-ej-boss-scalecommander-sarkareth.png",

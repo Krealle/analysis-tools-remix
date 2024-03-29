@@ -3,14 +3,15 @@ import { createEnemy } from "./enemyTables";
 
 export const AmirdrassilEncounterNames = {
   Gnarlroot: "Gnarlroot",
-  IgiraTheCruel: "Igira the Cruel",
+  "Igira the Cruel": "Igira the Cruel",
   Volcoross: "Volcoross",
-  CouncilOfDreams: "Council of Dreams",
-  LarodarKeeperOfTheFlame: "Larodar, Keeper of the Flame",
-  NymueWeaverOfTheCycle: "Nymue, Weaver of the Cycle",
+  "Council of Dreams": "Council of Dreams",
+  "Larodar, Keeper of the Flame": "Larodar, Keeper of the Flame",
+  "Nymue, Weaver of the Cycle": "Nymue, Weaver of the Cycle",
   Smolderon: "Smolderon",
-  TindralSageswiftSeerOfTheFlame: "Tindral Sageswift, Seer of the Flame",
-  FyrakkTheBlazing: "Fyrakk the Blazing",
+  "Tindral Sageswift, Seer of the Flame":
+    "Tindral Sageswift, Seer of the Flame",
+  "Fyrakk the Blazing": "Fyrakk the Blazing",
 } as const;
 
 export const Amirdrassil: EncounterMap = new Map([
@@ -29,9 +30,9 @@ export const Amirdrassil: EncounterMap = new Map([
     },
   ],
   [
-    AmirdrassilEncounterNames.IgiraTheCruel,
+    AmirdrassilEncounterNames["Igira the Cruel"],
     {
-      name: AmirdrassilEncounterNames.IgiraTheCruel,
+      name: AmirdrassilEncounterNames["Igira the Cruel"],
       id: 2709,
       image:
         "https://wow.zamimg.com/images/wow/journal/ui-ej-boss-igira-the-cruel.png",
@@ -52,9 +53,9 @@ export const Amirdrassil: EncounterMap = new Map([
     },
   ],
   [
-    AmirdrassilEncounterNames.CouncilOfDreams,
+    AmirdrassilEncounterNames["Council of Dreams"],
     {
-      name: AmirdrassilEncounterNames.CouncilOfDreams,
+      name: AmirdrassilEncounterNames["Council of Dreams"],
       id: 2728,
       image:
         "https://wow.zamimg.com/images/wow/journal/ui-ej-boss-council-of-dreams.png",
@@ -66,9 +67,9 @@ export const Amirdrassil: EncounterMap = new Map([
     },
   ],
   [
-    AmirdrassilEncounterNames.LarodarKeeperOfTheFlame,
+    AmirdrassilEncounterNames["Larodar, Keeper of the Flame"],
     {
-      name: AmirdrassilEncounterNames.LarodarKeeperOfTheFlame,
+      name: AmirdrassilEncounterNames["Larodar, Keeper of the Flame"],
       id: 2731,
       image:
         "https://wow.zamimg.com/images/wow/journal/ui-ej-boss-larodar-keeper-of-the-flame.png",
@@ -85,9 +86,9 @@ export const Amirdrassil: EncounterMap = new Map([
     },
   ],
   [
-    AmirdrassilEncounterNames.NymueWeaverOfTheCycle,
+    AmirdrassilEncounterNames["Nymue, Weaver of the Cycle"],
     {
-      name: AmirdrassilEncounterNames.NymueWeaverOfTheCycle,
+      name: AmirdrassilEncounterNames["Nymue, Weaver of the Cycle"],
       id: 2708,
       image:
         "https://wow.zamimg.com/images/wow/journal/ui-ej-boss-nymue-weaver-of-the-cycle.png",
@@ -109,9 +110,9 @@ export const Amirdrassil: EncounterMap = new Map([
     },
   ],
   [
-    AmirdrassilEncounterNames.TindralSageswiftSeerOfTheFlame,
+    AmirdrassilEncounterNames["Tindral Sageswift, Seer of the Flame"],
     {
-      name: AmirdrassilEncounterNames.TindralSageswiftSeerOfTheFlame,
+      name: AmirdrassilEncounterNames["Tindral Sageswift, Seer of the Flame"],
       id: 2786,
       image:
         "https://wow.zamimg.com/images/wow/journal/ui-ej-boss-tindral-sageswift-seer-of-flame.png",
@@ -131,9 +132,9 @@ export const Amirdrassil: EncounterMap = new Map([
     },
   ],
   [
-    AmirdrassilEncounterNames.FyrakkTheBlazing,
+    AmirdrassilEncounterNames["Fyrakk the Blazing"],
     {
-      name: AmirdrassilEncounterNames.FyrakkTheBlazing,
+      name: AmirdrassilEncounterNames["Fyrakk the Blazing"],
       id: 2677,
       image:
         "https://wow.zamimg.com/images/wow/journal/ui-ej-boss-fyrakk-the-burning.png",

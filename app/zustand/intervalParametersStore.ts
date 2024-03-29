@@ -183,13 +183,13 @@ const useIntervalParametersStore = create<intervalParametersStore>((set) => ({
     });
   },
 
-  selectedInterval: EncounterNames.FyrakkTheBlazing,
+  selectedInterval: EncounterNames.Default,
   changeSelectedInterval: (fight) => {
     set({
       selectedInterval: fight,
     });
   },
-  intervalToUse: EncounterNames.FyrakkTheBlazing,
+  intervalToUse: EncounterNames.Default,
   changeIntervalToUse: (fight) => {
     set({
       selectedInterval: fight,
