@@ -20,7 +20,7 @@ export const VaultOfTheIncarnate: EncounterMap = new Map([
       id: -1,
       image: "https://wow.zamimg.com/images/wow/journal/ui-ej-boss-eranog.png",
       enemies: [
-        createEnemy(201261, VOTIEncounterNames.Eranog, EnemyType.Boss),
+        createEnemy(184972, VOTIEncounterNames.Eranog, EnemyType.Boss),
         createEnemy(187638, "Flamescale Tarasek", EnemyType.Add),
         createEnemy(199233, "Flamescale Captain", EnemyType.Add),
         createEnemy(187593, "Primal Flame", EnemyType.Add),
@@ -59,6 +59,7 @@ export const VaultOfTheIncarnate: EncounterMap = new Map([
         createEnemy(187768, "Dathea Stormlash", EnemyType.Boss),
         createEnemy(187772, "Opalfang", EnemyType.Boss),
         createEnemy(187767, "Embar Firepath", EnemyType.Boss),
+        createEnemy(188026, "Frost Tomb", EnemyType.Add),
       ],
     },
   ],
@@ -75,7 +76,7 @@ export const VaultOfTheIncarnate: EncounterMap = new Map([
           VOTIEncounterNames["Sennarth, The Cold Breath"],
           EnemyType.Boss
         ),
-        createEnemy(199333, "Frostbreath Arachnid", EnemyType.Add),
+        createEnemy(189234, "Frostbreath Arachnid", EnemyType.Add),
         createEnemy(189233, "Caustic Spiderling", EnemyType.Add),
       ],
       wclPhases: {
