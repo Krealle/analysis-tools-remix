@@ -4,7 +4,7 @@ import useIntervalParametersStore from "../zustand/intervalParametersStore";
 /* eslint-disable react/prop-types */
 type FightButtonProps = {
   isFetching: boolean;
-  handleButtonClick: (getCSV: boolean) => void;
+  handleButtonClick: (() => void) | (() => Promise<void>);
 };
 
 const FightButtons: React.FC<FightButtonProps> = ({
@@ -20,7 +20,7 @@ const FightButtons: React.FC<FightButtonProps> = ({
     <>
       <div className="flex column">
         <button
-          onClick={() => handleButtonClick(false)}
+          onClick={() => handleButtonClick}
           disabled={isFetching || Boolean(parameterError)}
         >
           <b>Get DPS</b>
