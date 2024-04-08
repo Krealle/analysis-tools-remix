@@ -138,9 +138,9 @@ const EventNormalizer: React.FC = () => {
 
     const formattedAbilityFilters = Object.fromEntries(
       Object.entries(abilityFilters).map(([key, value]) => {
-        return [key, value.split(",").map(Number)];
+        return [key, new Set(value.split(",").map(Number))];
       })
-    ) as AbilityFilters<number[]>;
+    ) as AbilityFilters<Set<number>>;
 
     console.time("handleFightData");
     const newFights = handleFightData(

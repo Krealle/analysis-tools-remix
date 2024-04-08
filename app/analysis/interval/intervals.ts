@@ -46,7 +46,7 @@ export function getIntervals(
   selectedFights: Set<number>,
   currentReportCode: string,
   enemyTracker: EnemyTracker,
-  abilityFilters: AbilityFilters<number[]>,
+  abilityFilters: AbilityFilters<Set<number>>,
   enemyBlacklist: Set<number>,
   deathCutOff: number,
   /** Mainly used to turn off phase usage when comparing lots of different fights at once */
@@ -109,8 +109,8 @@ export function getIntervals(
         event.source.spec === "Augmentation" ||
         event.normalizedAmount === 0 ||
         enemyBlacklist.has(enemyTracker.get(event.targetID) ?? -1) ||
-        abilityFilters.blacklist.includes(event.abilityGameID) ||
-        abilityFilters.noScaling.includes(event.abilityGameID) ||
+        abilityFilters.blacklist.has(event.abilityGameID) ||
+        abilityFilters.noScaling.has(event.abilityGameID) ||
         event.source.id === -1
       ) {
         continue;
@@ -238,7 +238,7 @@ export function getIntervals(
       }
 
       // Evaluate the event
-      const multiplier = abilityFilters.noEbonMightScaling.includes(
+      const multiplier = abilityFilters.noEbonMightScaling.has(
         event.abilityGameID
       )
         ? currEbonWindow.useBreath

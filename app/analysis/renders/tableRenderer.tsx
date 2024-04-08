@@ -8,7 +8,7 @@ import { AttributionHook } from "../../wcl/types/events/customEventTypes";
 const tableRenderer = (
   fights: Fight[],
   enemyTracker: EnemyTracker,
-  abilityBlacklist: number[],
+  abilityBlacklist: Set<number>,
   enemyBlacklist: Set<number>,
   deathCutOff: number
 ): JSX.Element => {
@@ -61,7 +61,7 @@ const tableRenderer = (
       for (const event of playerEvents) {
         if (
           enemyBlacklist.has(enemyTracker.get(event.targetID) ?? -1) ||
-          abilityBlacklist.includes(event.abilityGameID)
+          abilityBlacklist.has(event.abilityGameID)
         ) {
           continue;
         }

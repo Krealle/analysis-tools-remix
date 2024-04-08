@@ -16,7 +16,7 @@ import { EventType, HitType } from "../../wcl/types/events/eventEnums";
 export function correctSupportEvents(
   events: NormalizedDamageEvent[],
   combatants: Combatants,
-  abilityFilters: AbilityFilters<number[]>,
+  abilityFilters: AbilityFilters<Set<number>>,
   weights: Weights
 ): NormalizedDamageEvent[] {
   const correctedEvents = events.reduce<NormalizedDamageEvent[]>(
@@ -133,15 +133,15 @@ function fabricateEvent(
 
 function getRelevantPlayerBuffs(
   event: NormalizedDamageEvent,
-  abilityFilters: AbilityFilters<number[]>
+  abilityFilters: AbilityFilters<Set<number>>
 ): Buff[] {
   const hasCombustion = event.activeBuffs.find(
     (buff) => buff.abilityGameID === COMBUSTION_BUFF
   );
 
   let playerBuffs: Buff[] =
-    abilityFilters.noScaling.includes(event.abilityGameID) ||
-    abilityFilters.blacklist.includes(event.abilityGameID)
+    abilityFilters.noScaling.has(event.abilityGameID) ||
+    abilityFilters.blacklist.has(event.abilityGameID)
       ? []
       : event.activeBuffs.filter(
           (buff) =>
@@ -162,13 +162,13 @@ function getRelevantPlayerBuffs(
     );
   }
 
-  if (abilityFilters.noEbonMightScaling.includes(event.abilityGameID)) {
+  if (abilityFilters.noEbonMightScaling.has(event.abilityGameID)) {
     playerBuffs = playerBuffs.filter(
       (buff) => buff.abilityGameID !== EBON_MIGHT
     );
   }
 
-  if (abilityFilters.noShiftingSandsScaling.includes(event.abilityGameID)) {
+  if (abilityFilters.noShiftingSandsScaling.has(event.abilityGameID)) {
     playerBuffs = playerBuffs.filter(
       (buff) => buff.abilityGameID !== SHIFTING_SANDS
     );

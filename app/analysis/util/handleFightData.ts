@@ -37,7 +37,7 @@ export type Fight = {
 export function handleFightData(
   WCLReport: WCLReport,
   FightDataSets: FightDataSet[],
-  abilityFilters: AbilityFilters<number[]>,
+  abilityFilters: AbilityFilters<Set<number>>,
   weights: Weights
 ): Fight[] {
   const newFights: Fight[] = [];
