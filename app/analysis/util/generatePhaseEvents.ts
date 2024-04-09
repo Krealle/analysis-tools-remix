@@ -9,7 +9,6 @@ export const castEvents = {
   eternalFirestorm: 422935,
   /** Tindral */
   typhoon: 421636,
-
   /** Eranog */
   armyOfFlame: 370307,
 };
@@ -24,6 +23,8 @@ export const removeBuffEvents = {
   /** Tindral */
   superNova: 424140,
   owlOfTheFlame: 421603,
+  /** Broodkeeper */
+  broodKeepersBond: 375809,
 };
 
 export function generatePhaseEvents(
@@ -130,6 +131,16 @@ export function generatePhaseEvents(
               isDamageable: true,
             });
             tindralIsFlying = false;
+            break;
+
+          // Broodkeeper P2
+          case removeBuffEvents.broodKeepersBond:
+            phaseStartEvents.push({
+              type: EventType.PhaseStartEvent,
+              timestamp: event.timestamp,
+              name: "Phase 2",
+              isDamageable: true,
+            });
             break;
         }
         break;
