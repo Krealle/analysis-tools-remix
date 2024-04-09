@@ -38,7 +38,7 @@ const intervalRenderer = (
     }
 
     tableRows.push(
-      <tr key={phase.phaseName}>
+      <tr key={`${phase.phaseName}-${phaseNum}`}>
         <td colSpan={amount + 1}>
           <b>{phase.phaseName}</b> {timeInformation}
         </td>
