@@ -28,6 +28,10 @@ query getReport($reportID: String!) {
         fightPercentage
         lastPhase
         lastPhaseIsIntermission
+        phaseTransitions {
+          id
+          startTime
+        }
         difficulty
         kill
         friendlyPlayers

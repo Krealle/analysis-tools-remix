@@ -32,6 +32,12 @@ export const GameZone = Type.Object({
   id: Type.Number(),
 });
 
+export const PhaseTransition = Type.Object({
+  id: Type.Number(),
+  startTime: Type.Number(),
+});
+export type PhaseTransition = Static<typeof PhaseTransition>;
+
 export const ReportFight = Type.Object({
   id: Type.Number(),
   startTime: Type.Number(),
@@ -42,6 +48,7 @@ export const ReportFight = Type.Object({
   keystoneTime: Type.Optional(Type.Union([Type.Number(), Type.Null()])),
   lastPhase: Type.Optional(Type.Number()),
   lastPhaseIsIntermission: Type.Optional(Type.Boolean()),
+  phaseTransitions: Type.Optional(Type.Array(PhaseTransition)),
   name: Type.Optional(Type.String()),
   difficulty: Type.Optional(Type.Union([Type.Number(), Type.Null()])),
   kill: Type.Optional(Type.Union([Type.Boolean(), Type.Null()])),
