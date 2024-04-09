@@ -25,6 +25,7 @@ const IntervalSettings: React.FC = () => {
     encounterEbonMightWindows,
     autoGenWindowSettings,
     setAutoGenSetting,
+    changeIntervalToUse,
   } = useIntervalParametersStore();
   const fightReport = useWCLUrlInputStore((state) => state.fightReport);
 
@@ -32,6 +33,9 @@ const IntervalSettings: React.FC = () => {
     changeSelectedInterval(
       IsKnownEncounter(input) ? input : EncounterNames.Default
     );
+    if (IsKnownEncounter(input)) {
+      changeIntervalToUse(input);
+    }
   };
 
   const encountersInReport = useMemo(() => {
