@@ -62,7 +62,12 @@ const WCLUrlInput: React.FC = () => {
 
   return (
     <>
-      <form onSubmit={handleSubmit} className="flex">
+      <form
+        onSubmit={(e) => {
+          handleSubmit(e).catch(() => {});
+        }}
+        className="flex"
+      >
         <div className="flex">
           <div>
             <input
