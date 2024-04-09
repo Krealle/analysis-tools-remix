@@ -21,8 +21,11 @@ export function generateBuffHistories(
   fightStart: number,
   fightEnd: number
 ): Buff[] {
-  if (!events || events.length === 0 || fightEnd <= fightStart) {
-    console.error("Invalid input data or fight duration");
+  if (fightEnd <= fightStart) {
+    console.error("Invalid fight duration");
+  }
+  if (!events || events.length === 0) {
+    console.info("No buff events found");
   }
 
   const buffHistory: Buff[] = [];
