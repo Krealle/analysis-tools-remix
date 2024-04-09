@@ -1,8 +1,4 @@
-import {
-  castEvents,
-  damageEvents,
-  removeBuffEvents,
-} from "../../analysis/util/generatePhaseEvents";
+import { PhaseEventTriggers as triggers } from "../../analysis/util/generatePhaseEvents";
 import {
   COMBUSTION_BUFF,
   EBON_MIGHT,
@@ -95,15 +91,24 @@ export function getEnemyDeathFilter(): string {
 export function getPhaseEventsFilter(): string {
   const filter = `
   (type = "${EventType.CastEvent}"
-  AND ability.id in (${Object.values(castEvents).map(Number).join()}))
+  AND ability.id in (${Object.values(triggers.castEvents).map(Number).join()}))
   OR 
   (type = "${EventType.RemoveBuffEvent}"
-  AND ability.id in (${Object.values(removeBuffEvents).map(Number).join()}))
+  AND ability.id in (${Object.values(triggers.removeBuffEvents)
+    .map(Number)
+    .join()}))
   OR 
   (type = "${EventType.DamageEvent}"
-  AND ability.id in (${Object.values(damageEvents).map(Number).join()}))
+  AND ability.id in (${Object.values(triggers.damageEvents)
+    .map(Number)
+    .join()}))
   OR 
   (${getEnemyDeathFilter()})
+  OR
+  (type = "${EventType.ApplyBuffEvent}"
+  AND ability.id in (${Object.values(triggers.applyBuffEvents)
+    .map(Number)
+    .join()}))
   `;
 
   return filter;

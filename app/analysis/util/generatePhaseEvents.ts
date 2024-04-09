@@ -2,7 +2,7 @@ import { getEnemyGuid } from "../../util/encounters/encounters";
 import { EventType } from "../../wcl/types/events/eventEnums";
 import { AnyEvent, PhaseStartEvent } from "../../wcl/types/events/eventTypes";
 
-export const castEvents = {
+const castEvents = {
   /** Fyrakk */
   incarnate: 412761,
   greaterFirestorm: 422518,
@@ -13,13 +13,17 @@ export const castEvents = {
   armyOfFlame: 370307,
   /** Kurog */
   primalBarrier: 374779,
-};
-export const damageEvents = {
+  /** Raszageth */
+  electricScales: 381249,
+  surge: 382530,
+  stormNova: 390463,
+} as const;
+const damageEvents = {
   /** Fyrakk */
   incarnate: 421831,
   flameFall: 419123,
-};
-export const removeBuffEvents = {
+} as const;
+const removeBuffEvents = {
   /** Fyrakk */
   corruptShield: 421922,
   /** Tindral */
@@ -29,7 +33,38 @@ export const removeBuffEvents = {
   broodKeepersBond: 375809,
   /** Kurog */
   primalBarrier: castEvents.primalBarrier,
-};
+  /** Raszageth */
+  electricScales: castEvents.electricScales,
+  stormShroud: 396734,
+} as const;
+const applyBuffEvents = {
+  // Raszageth
+  cracklingEnergy: 391281,
+} as const;
+
+export const PhaseEventTriggers = {
+  castEvents,
+  damageEvents,
+  removeBuffEvents,
+  applyBuffEvents,
+} as const;
+
+const BossState = {
+  Phase: "Phase",
+  Intermission: "Intermission",
+  Immune: "Immune",
+} as const;
+type BossState = keyof typeof BossState;
+const RaszagethStates = {
+  P1: "Phase 1",
+  P2: "Phase 2",
+  P3: "Phase 3",
+  Immune: "Immune",
+  I1: "Intermission 1",
+  I2: "Intermission 2",
+  Knock: "Knock back",
+} as const;
+type RaszagethStates = (typeof RaszagethStates)[keyof typeof RaszagethStates];
 
 export function generatePhaseEvents(
   events: AnyEvent[],
@@ -48,6 +83,11 @@ export function generatePhaseEvents(
   let eranogInIntermission = false;
 
   let kurogPrimalBarrierCount = 0;
+
+  let raszagethState: RaszagethStates = RaszagethStates.P1;
+  // Inconsistent push timings means this is the most accurate way to get consistent phase start
+  const raszagethElectricScalesBuffer = 8_000;
+
   const primalFlameGuid = getEnemyGuid("Primal Flame");
 
   for (const event of events) {
@@ -123,6 +163,45 @@ export function generatePhaseEvents(
               isDamageable: true,
             });
             break;
+
+          // Raszageth phases
+          // P2 push
+          case castEvents.electricScales: {
+            if (raszagethState === RaszagethStates.I1) {
+              raszagethState = RaszagethStates.P2;
+
+              phaseStartEvents.push({
+                type: EventType.PhaseStartEvent,
+                timestamp: event.timestamp - raszagethElectricScalesBuffer,
+                name: RaszagethStates.P2,
+                isDamageable: true,
+              });
+            }
+            break;
+          }
+          // Raszageth Intermission 1
+          case castEvents.surge:
+            if (raszagethState === RaszagethStates.Immune) {
+              raszagethState = RaszagethStates.I1;
+
+              phaseStartEvents.push({
+                type: EventType.PhaseStartEvent,
+                timestamp: event.timestamp,
+                name: RaszagethStates.I1,
+                isDamageable: true,
+              });
+            }
+            break;
+          // Raszageth Knock I2->P3
+          case castEvents.stormNova:
+            raszagethState = RaszagethStates.Knock;
+            phaseStartEvents.push({
+              type: EventType.PhaseStartEvent,
+              timestamp: event.timestamp,
+              name: RaszagethStates.Knock,
+              isDamageable: false,
+            });
+            break;
         }
         break;
       case EventType.RemoveBuffEvent:
@@ -169,6 +248,35 @@ export function generatePhaseEvents(
               name: `Phase ${kurogPrimalBarrierCount + 1}`,
               isDamageable: true,
             });
+            break;
+
+          // Raszageth - Immune (P1->I1 & P2->I2)
+          case removeBuffEvents.electricScales:
+            if (
+              raszagethState === RaszagethStates.P1 ||
+              raszagethState === RaszagethStates.P2
+            ) {
+              // It gets removed when boss deadge, so let's not add it at the end
+              raszagethState = BossState.Immune;
+              phaseStartEvents.push({
+                type: EventType.PhaseStartEvent,
+                timestamp: event.timestamp,
+                name: "Immune",
+                isDamageable: false,
+              });
+            }
+            break;
+          // Raszageth - Immune (Knock back->P3)
+          case removeBuffEvents.stormShroud:
+            if (raszagethState === RaszagethStates.Knock) {
+              raszagethState = RaszagethStates.P3;
+              phaseStartEvents.push({
+                type: EventType.PhaseStartEvent,
+                timestamp: event.timestamp,
+                name: RaszagethStates.P3,
+                isDamageable: true,
+              });
+            }
             break;
         }
         break;
@@ -219,6 +327,22 @@ export function generatePhaseEvents(
         }
         break;
       }
+      case EventType.ApplyBuffEvent:
+        switch (event.abilityGameID) {
+          // Raszageth Intermission 2
+          case applyBuffEvents.cracklingEnergy:
+            if (raszagethState === RaszagethStates.Immune) {
+              raszagethState = RaszagethStates.I2;
+              phaseStartEvents.push({
+                type: EventType.PhaseStartEvent,
+                timestamp: event.timestamp,
+                name: "Intermission 2",
+                isDamageable: true,
+              });
+            }
+            break;
+        }
+        break;
     }
   }
 
