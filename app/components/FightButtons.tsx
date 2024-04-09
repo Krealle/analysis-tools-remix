@@ -20,7 +20,13 @@ const FightButtons: React.FC<FightButtonProps> = ({
     <>
       <div className="flex column">
         <button
-          onClick={handleButtonClick}
+          onClick={() => {
+            const res = handleButtonClick();
+
+            if (res instanceof Promise) {
+              res.catch((err) => console.error(err));
+            }
+          }}
           disabled={isFetching || Boolean(parameterError)}
         >
           <b>Get DPS</b>
