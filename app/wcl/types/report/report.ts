@@ -48,7 +48,9 @@ export const ReportFight = Type.Object({
   keystoneTime: Type.Optional(Type.Union([Type.Number(), Type.Null()])),
   lastPhase: Type.Optional(Type.Number()),
   lastPhaseIsIntermission: Type.Optional(Type.Boolean()),
-  phaseTransitions: Type.Optional(Type.Array(PhaseTransition)),
+  phaseTransitions: Type.Optional(
+    Type.Union([Type.Array(PhaseTransition), Type.Null()])
+  ),
   name: Type.Optional(Type.String()),
   difficulty: Type.Optional(Type.Union([Type.Number(), Type.Null()])),
   kill: Type.Optional(Type.Union([Type.Boolean(), Type.Null()])),
