@@ -254,7 +254,7 @@ const EventNormalizer: React.FC = () => {
       )}
       <FightButtons
         isFetching={isFetching}
-        handleButtonClick={attemptNormalize}
+        handleButtonClick={() => attemptNormalize()}
       />
       <CustomFightParameters />
       {isFetching && (
