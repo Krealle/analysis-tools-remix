@@ -12,7 +12,7 @@ const initialVOTI: EncounterEbonMightWindows = {
   [EncounterNames.Terros]: {
     0: [],
   },
-  [EncounterNames["Council of Dreams"]]: {
+  [EncounterNames["The Primal Council"]]: {
     0: [],
   },
   [EncounterNames["Sennarth, The Cold Breath"]]: {
