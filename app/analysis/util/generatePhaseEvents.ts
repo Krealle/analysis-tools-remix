@@ -11,6 +11,8 @@ export const castEvents = {
   typhoon: 421636,
   /** Eranog */
   armyOfFlame: 370307,
+  /** Kurog */
+  primalBarrier: 374779,
 };
 export const damageEvents = {
   /** Fyrakk */
@@ -25,6 +27,8 @@ export const removeBuffEvents = {
   owlOfTheFlame: 421603,
   /** Broodkeeper */
   broodKeepersBond: 375809,
+  /** Kurog */
+  primalBarrier: castEvents.primalBarrier,
 };
 
 export function generatePhaseEvents(
@@ -42,6 +46,8 @@ export function generatePhaseEvents(
   let tindralIsFlying = false;
 
   let eranogInIntermission = false;
+
+  let kurogPrimalBarrierCount = 0;
   const primalFlameGuid = getEnemyGuid("Primal Flame");
 
   for (const event of events) {
@@ -95,6 +101,7 @@ export function generatePhaseEvents(
             tindralFlyoffs += 1;
             tindralIsFlying = true;
             break;
+
           // Eranog intermission
           case castEvents.armyOfFlame:
             phaseStartEvents.push({
@@ -104,6 +111,17 @@ export function generatePhaseEvents(
               isDamageable: true,
             });
             eranogInIntermission = true;
+            break;
+
+          // Kurog Intermission
+          case castEvents.primalBarrier:
+            kurogPrimalBarrierCount += 1;
+            phaseStartEvents.push({
+              type: EventType.PhaseStartEvent,
+              timestamp: event.timestamp,
+              name: `Intermission ${kurogPrimalBarrierCount}`,
+              isDamageable: true,
+            });
             break;
         }
         break;
@@ -139,6 +157,16 @@ export function generatePhaseEvents(
               type: EventType.PhaseStartEvent,
               timestamp: event.timestamp,
               name: "Phase 2",
+              isDamageable: true,
+            });
+            break;
+
+          // Kurog Phase
+          case removeBuffEvents.primalBarrier:
+            phaseStartEvents.push({
+              type: EventType.PhaseStartEvent,
+              timestamp: event.timestamp,
+              name: `Phase ${kurogPrimalBarrierCount + 1}`,
               isDamageable: true,
             });
             break;
