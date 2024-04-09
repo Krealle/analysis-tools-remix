@@ -1,3 +1,4 @@
+import { getEnemyGuid } from "../../util/encounters/encounters";
 import { EventType } from "../../wcl/types/events/eventEnums";
 import { AnyEvent, PhaseStartEvent } from "../../wcl/types/events/eventTypes";
 
@@ -8,6 +9,9 @@ export const castEvents = {
   eternalFirestorm: 422935,
   /** Tindral */
   typhoon: 421636,
+
+  /** Eranog */
+  armyOfFlame: 370307,
 };
 export const damageEvents = {
   /** Fyrakk */
@@ -22,7 +26,10 @@ export const removeBuffEvents = {
   owlOfTheFlame: 421603,
 };
 
-export function generatePhaseEvents(events: AnyEvent[]): PhaseStartEvent[] {
+export function generatePhaseEvents(
+  events: AnyEvent[],
+  enemyTracker: Map<number, number>
+): PhaseStartEvent[] {
   const phaseStartEvents: PhaseStartEvent[] = [];
 
   let fyrakkIncarnateCastCount = 0;
@@ -32,6 +39,9 @@ export function generatePhaseEvents(events: AnyEvent[]): PhaseStartEvent[] {
 
   let tindralFlyoffs = 0;
   let tindralIsFlying = false;
+
+  let eranogInIntermission = false;
+  const primalFlameGuid = getEnemyGuid("Primal Flame");
 
   for (const event of events) {
     switch (event.type) {
@@ -83,6 +93,16 @@ export function generatePhaseEvents(events: AnyEvent[]): PhaseStartEvent[] {
             });
             tindralFlyoffs += 1;
             tindralIsFlying = true;
+            break;
+          // Eranog intermission
+          case castEvents.armyOfFlame:
+            phaseStartEvents.push({
+              type: EventType.PhaseStartEvent,
+              timestamp: event.timestamp,
+              name: "Intermission",
+              isDamageable: true,
+            });
+            eranogInIntermission = true;
             break;
         }
         break;
@@ -145,6 +165,21 @@ export function generatePhaseEvents(events: AnyEvent[]): PhaseStartEvent[] {
             break;
         }
         break;
+      case EventType.DeathEvent: {
+        // Eranog P1
+        if (eranogInIntermission) {
+          if (primalFlameGuid === enemyTracker.get(event.targetID)) {
+            phaseStartEvents.push({
+              type: EventType.PhaseStartEvent,
+              timestamp: event.timestamp,
+              name: "Phase 1",
+              isDamageable: true,
+            });
+            eranogInIntermission = false;
+          }
+        }
+        break;
+      }
     }
   }
 

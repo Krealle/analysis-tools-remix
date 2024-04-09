@@ -38,7 +38,8 @@ export function handleFightData(
   WCLReport: WCLReport,
   FightDataSets: FightDataSet[],
   abilityFilters: AbilityFilters<Set<number>>,
-  weights: Weights
+  weights: Weights,
+  enemyTracker: Map<number, number>
 ): Fight[] {
   const newFights: Fight[] = [];
 
@@ -103,7 +104,8 @@ export function handleFightData(
     );
 
     const phaseEvents: PhaseStartEvent[] = generatePhaseEvents(
-      fightDataSet.phaseEvents
+      fightDataSet.phaseEvents,
+      enemyTracker
     );
 
     newFights.push({

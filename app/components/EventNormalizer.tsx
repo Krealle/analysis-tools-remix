@@ -147,7 +147,8 @@ const EventNormalizer: React.FC = () => {
       WCLReport,
       fightsToHandle,
       formattedAbilityFilters,
-      weights
+      weights,
+      enemyTracker
     );
     console.timeEnd("handleFightData");
 

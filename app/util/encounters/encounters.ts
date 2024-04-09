@@ -7,7 +7,7 @@ import {
 } from "./VaultOfTheIncarnates";
 import { Encounter, EncounterMap, EnemyType, Enemy } from "./types";
 
-/** Defaul encounter used as fallback for unknown encounters or multi fights */
+/** Default encounter used as fallback for unknown encounters or multi fights */
 const DefaultEncounter: EncounterMap = new Map([
   [
     "Default",
@@ -84,4 +84,14 @@ export function getEncountersInReport(
 
 export function createEnemy(id: number, name: string, type: EnemyType): Enemy {
   return { id, name, type };
+}
+
+export function getEnemyGuid(name: string): number {
+  for (const [, encounter] of CombinedEncounters) {
+    const enemy = encounter.enemies.find((enemy) => enemy.name === name);
+    if (enemy) {
+      return enemy.id;
+    }
+  }
+  return -2;
 }

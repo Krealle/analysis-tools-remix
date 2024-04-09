@@ -83,6 +83,15 @@ export function getDeathFilter(): string {
   return filter;
 }
 
+export function getEnemyDeathFilter(): string {
+  const filter = `type = "death"  
+    AND target.disposition != "friendly"
+    AND target.type != "player"
+    AND feign = false`;
+
+  return filter;
+}
+
 export function getPhaseEventsFilter(): string {
   const filter = `
   (type = "${EventType.CastEvent}"
@@ -93,6 +102,8 @@ export function getPhaseEventsFilter(): string {
   OR 
   (type = "${EventType.DamageEvent}"
   AND ability.id in (${Object.values(damageEvents).map(Number).join()}))
+  OR 
+  (${getEnemyDeathFilter()})
   `;
 
   return filter;
