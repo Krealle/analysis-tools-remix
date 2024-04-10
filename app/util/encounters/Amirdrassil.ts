@@ -1,5 +1,7 @@
 import { EncounterMap, EnemyType } from "./types";
 import { createEnemy } from "./encounters";
+import { PhaseEventTrigger } from "../../analysis/util/generatePhaseEvents";
+import { EventType } from "../../wcl/types/events/eventEnums";
 
 export const AmirdrassilEncounterNames = {
   Gnarlroot: "Gnarlroot",
@@ -161,3 +163,95 @@ export const Amirdrassil: EncounterMap = new Map([
     },
   ],
 ]);
+
+export const AmirdrassilPhaseTriggers: PhaseEventTrigger[] = [
+  //region TINDRAL
+  {
+    triggerEventType: [EventType.CastEvent],
+    triggerEventId: [421636],
+    previousPhase: "Phase",
+    nextPhase: "Fly off",
+    isDamageable: false,
+    bossName: AmirdrassilEncounterNames["Tindral Sageswift, Seer of the Flame"],
+    displayPhaseCount: 0,
+    maximumPhases: 2,
+  },
+  {
+    triggerEventType: [EventType.RemoveBuffEvent],
+    triggerEventId: [421603],
+    previousPhase: "Fly off",
+    nextPhase: "Phase",
+    isDamageable: true,
+    bossName: AmirdrassilEncounterNames["Tindral Sageswift, Seer of the Flame"],
+    displayPhaseCount: 1,
+    maximumPhases: 2,
+  },
+  //region FYRAKK
+  {
+    triggerEventType: [EventType.CastEvent],
+    triggerEventId: [412761],
+    previousPhase: ["Phase 1", "Colossus set 2"],
+    nextPhase: ["Fly off 1", "Fly off 3"],
+    isDamageable: false,
+    bossName: AmirdrassilEncounterNames["Fyrakk the Blazing"],
+    maximumPhases: 2,
+    customCondition: {
+      cnd: (event, _eventTargetGuid, _eventSourceGuid, prevPhase): boolean => {
+        // Fyrakk casts two Incarnate between summoning the 2nd colossus and transitioning into Fly Off 3
+        // So we ignore the first one
+        return !prevPhase || event.timestamp - prevPhase.timestamp > 20_000;
+      },
+    },
+  },
+  {
+    triggerEventType: [EventType.DamageEvent],
+    triggerEventId: [421831],
+    previousPhase: "Fly off 1",
+    nextPhase: "Intermission",
+    isDamageable: true,
+    bossName: AmirdrassilEncounterNames["Fyrakk the Blazing"],
+    maximumPhases: 1,
+    filter: `target.disposition = "friendly"
+    AND target.type = "player"
+    AND source.disposition != "friendly"`,
+  },
+  {
+    triggerEventType: [EventType.RemoveBuffEvent],
+    triggerEventId: [421922],
+    previousPhase: "Intermission",
+    nextPhase: "Fly off 2",
+    isDamageable: false,
+    bossName: AmirdrassilEncounterNames["Fyrakk the Blazing"],
+    maximumPhases: 1,
+  },
+  {
+    triggerEventType: [EventType.DamageEvent],
+    triggerEventId: [419123],
+    previousPhase: "Fly off 2",
+    nextPhase: "Phase 2",
+    isDamageable: true,
+    bossName: AmirdrassilEncounterNames["Fyrakk the Blazing"],
+    maximumPhases: 1,
+    filter: `target.disposition = "friendly"
+    AND target.type = "player"
+    AND source.disposition != "friendly"`,
+  },
+  {
+    triggerEventType: [EventType.CastEvent],
+    triggerEventId: [422518],
+    previousPhase: ["Phase 2", "Colossus set 1"],
+    nextPhase: ["Colossus set 1", "Colossus set 2"],
+    isDamageable: true,
+    bossName: AmirdrassilEncounterNames["Fyrakk the Blazing"],
+    maximumPhases: 2,
+  },
+  {
+    triggerEventType: [EventType.CastEvent],
+    triggerEventId: [422935],
+    previousPhase: "Fly off 3",
+    nextPhase: "Phase 3",
+    isDamageable: true,
+    bossName: AmirdrassilEncounterNames["Fyrakk the Blazing"],
+    maximumPhases: 1,
+  },
+];

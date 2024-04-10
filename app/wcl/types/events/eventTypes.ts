@@ -15,6 +15,7 @@ export const BaseAbility = Type.Object({
   sourceMarker: Type.Optional(Type.Number()),
   targetMarker: Type.Optional(Type.Number()),
 });
+export type BaseAbility = Static<typeof BaseAbility>;
 
 const DeathEvent = Type.Intersect([
   BaseEvent,
@@ -377,6 +378,17 @@ const AnyEvent = Type.Union([
   DispelEvent,
 ]);
 export type AnyEvent = Static<typeof AnyEvent>;
+export type AbilityEvent = AnyEvent & BaseAbility;
+export type TargetedEvent = AnyEvent & {
+  targetID: number;
+  targetInstance?: number;
+  targetIsFriendly: boolean;
+};
+export type SourcedEvent = AnyEvent & {
+  sourceID: number;
+  sourceInstance?: number;
+  sourceIsFriendly: boolean;
+};
 
 const AllTrackedEvents = Type.Union([
   CastEvent,
@@ -412,3 +424,15 @@ const AnyDebuffEvent = Type.Union([
   RefreshDebuffEvent,
 ]);
 export type AnyDebuffEvent = Static<typeof AnyDebuffEvent>;
+
+export function HasAbility(event: AnyEvent): event is AbilityEvent {
+  return (event as AbilityEvent).abilityGameID !== undefined;
+}
+
+export function HasTarget(event: AnyEvent): event is TargetedEvent {
+  return (event as TargetedEvent).targetID !== undefined;
+}
+
+export function HasSource(event: AnyEvent): event is SourcedEvent {
+  return (event as SourcedEvent).sourceID !== undefined;
+}

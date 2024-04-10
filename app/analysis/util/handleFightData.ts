@@ -5,7 +5,6 @@ import { correctSupportEvents } from "../normalizers/supportEventCorrecter";
 import { supportEventLinkNormalizer } from "../normalizers/supportEventLinkNormalizer";
 import { FightDataSet } from "./fetchFightData";
 import { AbilityFilters, Weights } from "../../zustand/fightParametersStore";
-import { generatePhaseEvents } from "./generatePhaseEvents";
 import { WCLReport } from "../../wcl/types/graphql/queryTypes";
 import { NormalizedDamageEvent } from "../../wcl/types/events/customEventTypes";
 import { EventType } from "../../wcl/types/events/eventEnums";
@@ -18,6 +17,8 @@ import {
   DeathEvent,
   PhaseStartEvent,
 } from "../../wcl/types/events/eventTypes";
+import { generatePhaseEvents } from "./generatePhaseEvents";
+import { EncounterPhaseTriggers } from "../../util/encounters/encounters";
 
 export type Fight = {
   fightId: number;
@@ -104,7 +105,9 @@ export function handleFightData(
     );
 
     const phaseEvents: PhaseStartEvent[] = generatePhaseEvents(
+      EncounterPhaseTriggers,
       fightDataSet.phaseEvents,
+      fightDataSet.fight,
       enemyTracker
     );
 

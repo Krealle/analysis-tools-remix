@@ -1,9 +1,15 @@
+import { PhaseEventTrigger } from "../../analysis/util/generatePhaseEvents";
 import { ReportFight } from "../../wcl/types/report/report";
 import { Abberus, AberrusEncounterNames } from "./Aberrus";
-import { Amirdrassil, AmirdrassilEncounterNames } from "./Amirdrassil";
+import {
+  Amirdrassil,
+  AmirdrassilEncounterNames,
+  AmirdrassilPhaseTriggers,
+} from "./Amirdrassil";
 import {
   VOTIEncounterNames,
   VaultOfTheIncarnate,
+  VaultOfTheIncarnatePhaseTriggers,
 } from "./VaultOfTheIncarnates";
 import { Encounter, EncounterMap, EnemyType, Enemy } from "./types";
 
@@ -32,6 +38,11 @@ export const EncounterNames = {
   ...AmirdrassilEncounterNames,
   ...VOTIEncounterNames,
 } as const;
+
+export const EncounterPhaseTriggers: PhaseEventTrigger[] = [
+  ...AmirdrassilPhaseTriggers,
+  ...VaultOfTheIncarnatePhaseTriggers,
+];
 
 export const CombinedEncounters: EncounterMap = new Map([
   ...Abberus.entries(),

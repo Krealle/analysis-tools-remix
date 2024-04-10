@@ -1,4 +1,3 @@
-import { PhaseEventTriggers as triggers } from "../../analysis/util/generatePhaseEvents";
 import {
   COMBUSTION_BUFF,
   EBON_MIGHT,
@@ -37,7 +36,7 @@ export function getFilter(): string {
  *
  * @returns WCL filter expression
  */
-export function getDamageFilter(): string {
+function getDamageFilter(): string {
   const filter = `type = "damage" 
       AND (target.id != source.id)
       AND target.id not in(169428, 169430, 169429, 169426, 169421, 169425, 168932)
@@ -50,66 +49,31 @@ export function getDamageFilter(): string {
   return filter;
 }
 
-export function getBuffFilter(): string {
+function getBuffFilter(): string {
   const filter = `(ability.id in (${EBON_MIGHT},${SHIFTING_SANDS},${PRESCIENCE},${COMBUSTION_BUFF},268998)) 
       AND (type in ("${EventType.ApplyBuffEvent}", "${EventType.RemoveBuffEvent}","${EventType.ApplyBuffStackEvent}", "${EventType.RemoveBuffStackEvent}"))`;
   return filter;
 }
 
-export function getDebuffFilter(): string {
+function getDebuffFilter(): string {
   const filter = `type in ("${EventType.ApplyDebuffEvent}","${EventType.RefreshDebuffEvent}","${EventType.RemoveDebuffEvent}") 
     AND source.disposition = "friendly"`;
 
   return filter;
 }
 
-export function getCastFilter(): string {
+function getCastFilter(): string {
   const filter = `type = "${EventType.CastEvent}"
     AND source.disposition = "friendly"`;
 
   return filter;
 }
 
-export function getDeathFilter(): string {
+function getDeathFilter(): string {
   const filter = `type = "death"  
     AND target.disposition = "friendly"
     AND target.type = "player"
     AND feign = false`;
-
-  return filter;
-}
-
-export function getEnemyDeathFilter(): string {
-  const filter = `type = "death"  
-    AND target.disposition != "friendly"
-    AND target.type != "player"
-    AND feign = false`;
-
-  return filter;
-}
-
-export function getPhaseEventsFilter(): string {
-  const filter = `
-  (type = "${EventType.CastEvent}"
-  AND ability.id in (${Object.values(triggers.castEvents).map(Number).join()}))
-  OR 
-  (type = "${EventType.RemoveBuffEvent}"
-  AND ability.id in (${Object.values(triggers.removeBuffEvents)
-    .map(Number)
-    .join()}))
-  OR 
-  (type = "${EventType.DamageEvent}"
-  AND ability.id in (${Object.values(triggers.damageEvents)
-    .map(Number)
-    .join()}))
-  OR 
-  (${getEnemyDeathFilter()})
-  OR
-  (type = "${EventType.ApplyBuffEvent}"
-  AND ability.id in (${Object.values(triggers.applyBuffEvents)
-    .map(Number)
-    .join()}))
-  `;
 
   return filter;
 }

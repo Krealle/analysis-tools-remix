@@ -1,5 +1,7 @@
 import { EncounterMap, EnemyType } from "./types";
 import { createEnemy } from "./encounters";
+import { PhaseEventTrigger } from "../../analysis/util/generatePhaseEvents";
+import { EventType } from "../../wcl/types/events/eventEnums";
 
 export const VOTIEncounterNames = {
   Eranog: "Eranog",
@@ -212,3 +214,126 @@ export const VaultOfTheIncarnate: EncounterMap = new Map([
     },
   ],
 ]);
+
+export const VaultOfTheIncarnatePhaseTriggers: PhaseEventTrigger[] = [
+  //region ERANOG
+  {
+    triggerEventType: [EventType.CastEvent],
+    triggerEventId: [370307],
+    previousPhase: "Phase 1",
+    nextPhase: "Phase 2",
+    isDamageable: true,
+    bossName: VOTIEncounterNames.Eranog,
+    maximumPhases: 2,
+  },
+  {
+    triggerEventType: [EventType.DeathEvent],
+    triggerEventId: [],
+    previousPhase: "Phase 2",
+    nextPhase: "Phase 1",
+    isDamageable: true,
+    bossName: VOTIEncounterNames.Eranog,
+    maximumPhases: 2,
+    targetGuid: [187593],
+  },
+  //region SENNARTH
+  {
+    triggerEventType: [EventType.CastEvent, EventType.BeginCastEvent],
+    triggerEventId: [372539],
+    previousPhase: "Phase 1",
+    nextPhase: "Phase 2",
+    isDamageable: true,
+    bossName: VOTIEncounterNames["Sennarth, The Cold Breath"],
+    maximumPhases: 1,
+  },
+  //region KUROG
+  {
+    triggerEventType: [EventType.CastEvent],
+    triggerEventId: [374779],
+    previousPhase: "Phase",
+    nextPhase: "Intermission",
+    displayPhaseCount: 0,
+    isDamageable: true,
+    bossName: VOTIEncounterNames["Kurog Grimtotem"],
+    maximumPhases: 2,
+  },
+  {
+    triggerEventType: [EventType.RemoveBuffEvent],
+    triggerEventId: [374779],
+    previousPhase: "Intermission",
+    nextPhase: "Phase",
+    displayPhaseCount: 0,
+    isDamageable: true,
+    bossName: VOTIEncounterNames["Kurog Grimtotem"],
+    maximumPhases: 2,
+  },
+  //region BROODKEEPER
+  {
+    triggerEventType: [EventType.RemoveBuffEvent],
+    triggerEventId: [375809],
+    previousPhase: "Phase 1",
+    nextPhase: "Phase 2",
+    isDamageable: true,
+    bossName: VOTIEncounterNames["Broodkeeper Diurna"],
+    maximumPhases: 1,
+  },
+  //region RASZAGETH
+  {
+    triggerEventType: [EventType.RemoveBuffEvent],
+    triggerEventId: [381249],
+    previousPhase: ["Phase 1", "Phase 2"],
+    nextPhase: "Immune",
+    isDamageable: false,
+    bossName: VOTIEncounterNames["Raszageth the Storm-Eater"],
+    maximumPhases: 2,
+  },
+  {
+    triggerEventType: [EventType.CastEvent],
+    triggerEventId: [382530],
+    previousPhase: "Immune",
+    nextPhase: "Intermission 1",
+    isDamageable: true,
+    bossName: VOTIEncounterNames["Raszageth the Storm-Eater"],
+    maximumPhases: 1,
+  },
+  {
+    /** Ideally this would be based on removal of Storm Shroud, but inconsistent push timings
+     * means it can trigger well before Raz actually lands, so we trigger on Storm Scales cast
+     * and make the phase change trigger 8s earlier, since this cast is consistent. */
+    triggerEventType: [EventType.CastEvent],
+    triggerEventId: [381249],
+    previousPhase: "Intermission 1",
+    nextPhase: "Phase 2",
+    isDamageable: true,
+    bossName: VOTIEncounterNames["Raszageth the Storm-Eater"],
+    maximumPhases: 1,
+    buffer: -8_000,
+  },
+  {
+    triggerEventType: [EventType.ApplyBuffEvent],
+    triggerEventId: [391281],
+    previousPhase: "Immune",
+    nextPhase: "Intermission 2",
+    isDamageable: true,
+    bossName: VOTIEncounterNames["Raszageth the Storm-Eater"],
+    maximumPhases: 1,
+  },
+  {
+    triggerEventType: [EventType.CastEvent],
+    triggerEventId: [390463],
+    previousPhase: "Intermission 2",
+    nextPhase: "Knock Back",
+    isDamageable: false,
+    bossName: VOTIEncounterNames["Raszageth the Storm-Eater"],
+    maximumPhases: 1,
+  },
+  {
+    triggerEventType: [EventType.RemoveBuffEvent],
+    triggerEventId: [396734],
+    previousPhase: "Knock Back",
+    nextPhase: "Phase 3",
+    isDamageable: true,
+    bossName: VOTIEncounterNames["Raszageth the Storm-Eater"],
+    maximumPhases: 1,
+  },
+];

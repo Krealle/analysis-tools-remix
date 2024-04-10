@@ -2,13 +2,15 @@ import { WCLReport } from "../../wcl/types/graphql/queryTypes";
 import { AnyEvent } from "../../wcl/types/events/eventTypes";
 import { ReportFight } from "../../wcl/types/report/report";
 import { SummaryTable } from "../../wcl/types/report/summaryTable";
-import { getFilter, getPhaseEventsFilter } from "../../wcl/util/filters";
+import { getFilter } from "../../wcl/util/filters";
 import {
   EventVariables,
   getEvents,
   getSummaryTable,
 } from "../../wcl/util/queryWCL";
 import { ReportParseError } from "../../wcl/util/parseWCLUrl";
+import { getEventTriggerFilter } from "./generatePhaseEvents";
+import { EncounterPhaseTriggers } from "../../util/encounters/encounters";
 
 export type FightDataSet = {
   fight: ReportFight & { reportCode: string };
@@ -45,8 +47,14 @@ export async function* fetchFightData(
       variables.filterExpression = getFilter();
       const events = await getEvents(variables);
 
+      const activeTriggers = EncounterPhaseTriggers.filter(
+        (trigger) =>
+          (!trigger.isActive || trigger.isActive(fight)) &&
+          trigger.bossName === fight.name
+      );
+
       /** Split from events to reduce complexity */
-      variables.filterExpression = getPhaseEventsFilter();
+      variables.filterExpression = getEventTriggerFilter(activeTriggers);
       const phaseEvents = await getEvents(variables);
 
       return {
