@@ -2,7 +2,7 @@ import { EncounterMap, EnemyType } from "./types";
 import { createEnemy } from "./encounters";
 
 export const AberrusEncounterNames = {
-  Kazzara: "Kazzara",
+  "Kazzara, the Hellforged": "Kazzara, the Hellforged",
   "Assault of the Zaqali": "Assault of the Zaqali",
   "Rashok, the Elder": "Rashok, the Elder",
   "The Amalgamation Chamber": "The Amalgamation Chamber",
@@ -15,9 +15,9 @@ export const AberrusEncounterNames = {
 
 export const Abberus: EncounterMap = new Map([
   [
-    AberrusEncounterNames.Kazzara,
+    AberrusEncounterNames["Kazzara, the Hellforged"],
     {
-      name: AberrusEncounterNames.Kazzara,
+      name: AberrusEncounterNames["Kazzara, the Hellforged"],
       id: -1,
       image:
         "https://wow.zamimg.com/images/wow/journal/ui-ej-boss-kazzara-the-hellforged.png",

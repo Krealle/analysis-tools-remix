@@ -46,7 +46,7 @@ export const initialEncounterEbonMightWindows: EncounterEbonMightWindows = {
   [EncounterNames.Default]: {
     0: [],
   },
-  [EncounterNames.Kazzara]: {
+  [EncounterNames["Kazzara, the Hellforged"]]: {
     0: [],
   },
   [EncounterNames["Assault of the Zaqali"]]: {
