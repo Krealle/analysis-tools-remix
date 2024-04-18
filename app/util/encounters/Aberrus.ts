@@ -15,7 +15,7 @@ export const AberrusEncounterNames = {
   "Scalecommander Sarkareth": "Scalecommander Sarkareth",
 } as const;
 
-export const Abberus: EncounterMap = new Map([
+export const Aberrus: EncounterMap = new Map([
   [
     AberrusEncounterNames["Kazzara, the Hellforged"],
     {

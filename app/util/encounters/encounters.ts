@@ -1,7 +1,7 @@
 import { PhaseEventTrigger } from "../../analysis/util/generatePhaseEvents";
 import { ReportFight } from "../../wcl/types/report/report";
 import {
-  Abberus,
+  Aberrus,
   AberrusEncounterNames,
   AberrusPhaseTriggers,
 } from "./Aberrus";
@@ -31,7 +31,7 @@ const DefaultEncounter: EncounterMap = new Map([
 
 export const Encounters = {
   Default: DefaultEncounter,
-  Abberus,
+  Aberrus,
   Amirdrassil,
   VaultOfTheIncarnate,
 } as const;
@@ -50,7 +50,7 @@ export const EncounterPhaseTriggers: PhaseEventTrigger[] = [
 ];
 
 export const CombinedEncounters: EncounterMap = new Map([
-  ...Abberus.entries(),
+  ...Aberrus.entries(),
   ...Amirdrassil.entries(),
   ...VaultOfTheIncarnate.entries(),
 ]);
