@@ -112,6 +112,7 @@ const useIntervalParametersStore = create<intervalParametersStore>((set) => ({
       );
       if (storedEncounterWindows) {
         try {
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
           const parsedEncounterWindows = JSON.parse(storedEncounterWindows);
           const maybeProperInput = validateIntervalFormat(
             parsedEncounterWindows
@@ -141,15 +142,14 @@ const useIntervalParametersStore = create<intervalParametersStore>((set) => ({
 
                 if (phaseDifference > 0) {
                   console.warn(
-                    `Phase difference detected for ${encounterName}! Adding missing phases.`
+                    `Phase difference detected for ${encounterName}! Adding ${phaseDifference} missing phases.`
                   );
-                  for (
-                    let i = currentInitialPhases.length - phaseDifference;
-                    i > 0;
-                    i -= 1
-                  ) {
-                    maybeProperInput[encounterName][i] = defaultValue[i];
-                  }
+
+                  currentInitialPhases.forEach(([, interval], idx) => {
+                    if (!currentLocalPhases[idx]) {
+                      maybeProperInput[encounterName][idx] = interval;
+                    }
+                  });
                 }
               }
             }
