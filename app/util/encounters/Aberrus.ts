@@ -1,5 +1,7 @@
 import { EncounterMap, EnemyType } from "./types";
 import { createEnemy } from "./encounters";
+import { PhaseEventTrigger } from "../../analysis/util/generatePhaseEvents";
+import { EventType } from "../../wcl/types/events/eventEnums";
 
 export const AberrusEncounterNames = {
   "Kazzara, the Hellforged": "Kazzara, the Hellforged",
@@ -131,3 +133,91 @@ export const Abberus: EncounterMap = new Map([
     },
   ],
 ]);
+
+export const AberrusPhaseTriggers: PhaseEventTrigger[] = [
+  //region AMALGAMATION
+  {
+    triggerEventType: [EventType.ApplyBuffEvent],
+    triggerEventId: [406730],
+    previousPhase: "Phase 1",
+    nextPhase: "Immune",
+    isDamageable: false,
+    bossName: AberrusEncounterNames["The Amalgamation Chamber"],
+    maximumPhases: 1,
+  },
+  {
+    triggerEventType: [EventType.RemoveBuffEvent],
+    triggerEventId: [406730],
+    previousPhase: "Immune",
+    nextPhase: "Phase 2",
+    isDamageable: true,
+    bossName: AberrusEncounterNames["The Amalgamation Chamber"],
+    maximumPhases: 1,
+  },
+  //region ASSAULT
+  {
+    triggerEventType: [EventType.ApplyBuffEvent],
+    triggerEventId: [409359],
+    previousPhase: "Phase 1",
+    nextPhase: "Phase 2",
+    isDamageable: true,
+    bossName: AberrusEncounterNames["Assault of the Zaqali"],
+    maximumPhases: 1,
+  },
+  //region ECHO
+  {
+    triggerEventType: [EventType.CastEvent],
+    triggerEventId: [409313],
+    previousPhase: "Phase 1",
+    nextPhase: "Phase 2",
+    isDamageable: true,
+    bossName: AberrusEncounterNames["Echo of Neltharion"],
+    maximumPhases: 1,
+  },
+  {
+    triggerEventType: [EventType.RemoveBuffEvent],
+    triggerEventId: [404045],
+    previousPhase: "Phase 2",
+    nextPhase: "Phase 3",
+    isDamageable: true,
+    bossName: AberrusEncounterNames["Echo of Neltharion"],
+    maximumPhases: 1,
+  },
+  //region SARKARETH
+  {
+    triggerEventType: [EventType.ApplyBuffEvent],
+    triggerEventId: [403284],
+    previousPhase: "Phase 1",
+    nextPhase: "Under 1",
+    isDamageable: false,
+    bossName: AberrusEncounterNames["Scalecommander Sarkareth"],
+    maximumPhases: 1,
+  },
+  {
+    triggerEventType: [EventType.RemoveBuffEvent],
+    triggerEventId: [410625],
+    previousPhase: "Under 1",
+    nextPhase: "Phase 2",
+    isDamageable: true,
+    bossName: AberrusEncounterNames["Scalecommander Sarkareth"],
+    maximumPhases: 1,
+  },
+  {
+    triggerEventType: [EventType.ApplyBuffEvent],
+    triggerEventId: [410654],
+    previousPhase: "Phase 2",
+    nextPhase: "Under 2",
+    isDamageable: false,
+    bossName: AberrusEncounterNames["Scalecommander Sarkareth"],
+    maximumPhases: 1,
+  },
+  {
+    triggerEventType: [EventType.RemoveBuffEvent],
+    triggerEventId: [410654],
+    previousPhase: "Under 2",
+    nextPhase: "Phase 3",
+    isDamageable: true,
+    bossName: AberrusEncounterNames["Scalecommander Sarkareth"],
+    maximumPhases: 1,
+  },
+];

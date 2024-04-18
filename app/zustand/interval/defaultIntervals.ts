@@ -50,13 +50,15 @@ export const initialEncounterEbonMightWindows: EncounterEbonMightWindows = {
     0: [],
   },
   [EncounterNames["Assault of the Zaqali"]]: {
-    0: [],
+    0: [], // p1
+    1: [], // p2
   },
   [EncounterNames["Rashok, the Elder"]]: {
     0: [],
   },
   [EncounterNames["The Amalgamation Chamber"]]: {
-    0: [],
+    0: [], // p1
+    1: [], // p2
   },
   [EncounterNames["The Forgotten Experiments"]]: {
     0: [],
@@ -68,10 +70,14 @@ export const initialEncounterEbonMightWindows: EncounterEbonMightWindows = {
     0: [],
   },
   [EncounterNames["Echo of Neltharion"]]: {
-    0: [],
+    0: [], // p1
+    1: [], // p2
+    2: [], // p3
   },
   [EncounterNames["Scalecommander Sarkareth"]]: {
-    0: [],
+    0: [], // p1
+    1: [], // p2
+    2: [], // p3
   },
   [EncounterNames.Gnarlroot]: {
     0: [],

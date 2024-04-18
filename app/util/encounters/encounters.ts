@@ -1,6 +1,10 @@
 import { PhaseEventTrigger } from "../../analysis/util/generatePhaseEvents";
 import { ReportFight } from "../../wcl/types/report/report";
-import { Abberus, AberrusEncounterNames } from "./Aberrus";
+import {
+  Abberus,
+  AberrusEncounterNames,
+  AberrusPhaseTriggers,
+} from "./Aberrus";
 import {
   Amirdrassil,
   AmirdrassilEncounterNames,
@@ -42,6 +46,7 @@ export const EncounterNames = {
 export const EncounterPhaseTriggers: PhaseEventTrigger[] = [
   ...AmirdrassilPhaseTriggers,
   ...VaultOfTheIncarnatePhaseTriggers,
+  ...AberrusPhaseTriggers,
 ];
 
 export const CombinedEncounters: EncounterMap = new Map([
