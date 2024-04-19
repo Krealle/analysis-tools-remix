@@ -1,7 +1,7 @@
+import React from "react";
 import useFightParametersStore from "../zustand/fightParametersStore";
 import useIntervalParametersStore from "../zustand/intervalParametersStore";
 
-/* eslint-disable react/prop-types */
 type FightButtonProps = {
   isFetching: boolean;
   handleButtonClick: (() => void) | (() => Promise<void>);
