@@ -9,6 +9,7 @@ import React, { useCallback, useEffect, useMemo } from "react";
 import { ReportFight } from "../wcl/types/report/report";
 import useIntervalParametersStore from "../zustand/intervalParametersStore";
 import { IsKnownEncounter } from "../util/encounters/types";
+import Collapse from "./generic/Collapse";
 
 type FightPercentageColor =
   | "kill"
@@ -51,8 +52,17 @@ const getFightPhase = (fight: ReportFight): string => {
   }
 };
 
+const fightsToInitialize = new Set<string>();
+
 const FightBoxes = (): JSX.Element => {
-  const { selectedIds, removeId, addId, setSelectedIds } = useFightBoxesStore();
+  const {
+    selectedIds,
+    removeId,
+    addId,
+    setSelectedIds,
+    collapsedFights,
+    collapseFight,
+  } = useFightBoxesStore();
 
   const isFetching = useStatusStore((state) => state.isFetching);
   const report = useWCLUrlInputStore((state) => state.fightReport);
@@ -85,7 +95,7 @@ const FightBoxes = (): JSX.Element => {
     }
   }, [changeIntervalToUse, report?.fights, selectedIds]);
 
-  const handleDivClick = useCallback(
+  const handleToggleFight = useCallback(
     (id: number) => {
       const isSelected = selectedIds.has(id);
       if (isSelected) {
@@ -97,9 +107,24 @@ const FightBoxes = (): JSX.Element => {
     [selectedIds, removeId, addId]
   );
 
-  const handleSelectFights = useCallback(
+  const handleSelectAllFights = useCallback(
     (ids: number[]) => setSelectedIds(ids),
     [setSelectedIds]
+  );
+
+  /** Initialize collapse store after page render */
+  useEffect(() => {
+    fightsToInitialize.forEach((fightName) => {
+      collapseFight(fightName, false);
+    });
+    fightsToInitialize.clear();
+  }, [collapseFight]);
+
+  const handleCollapseClick = useCallback(
+    (fightName: string, collapsed?: boolean) => {
+      collapseFight(fightName, collapsed);
+    },
+    [collapseFight]
   );
 
   type IndexedReportFight = ReportFight & { index: number };
@@ -108,7 +133,7 @@ const FightBoxes = (): JSX.Element => {
   /** Sort fights by Encounter and phases if relevant
    * Only change it when report updates */
   const fightsByName = useMemo(() => {
-    // Create our over fightIndex to mimic WCL fight index for each encounter
+    // Create our own fightIndex to mimic WCL fight index for each encounter
     const fightIndexMap = new Map<string, number>();
 
     return (report?.fights || []).reduce((acc, fight) => {
@@ -180,6 +205,10 @@ const FightBoxes = (): JSX.Element => {
         );
 
         const encounter = getEncounter(groupName);
+        const fightIsCollapsed = collapsedFights.get(groupName);
+        if (fightIsCollapsed === undefined) {
+          fightsToInitialize.add(groupName);
+        }
 
         return (
           <div key={groupName} className="flex column fightContainer">
@@ -188,86 +217,98 @@ const FightBoxes = (): JSX.Element => {
               {groupName}
               <button
                 className="fightSelectAll"
-                onClick={() => handleSelectFights(fightIds)}
+                onClick={() => {
+                  handleSelectAllFights(fightIds);
+                  if (fightIsCollapsed) handleCollapseClick(groupName);
+                }}
               >
                 Select All
               </button>
+
+              <button
+                className="fightSelectAll"
+                onClick={() => handleCollapseClick(groupName)}
+              >
+                {fightIsCollapsed ? "Expand" : "Collapse"}
+              </button>
             </div>
 
-            {Array.from(phases).map(([phaseName, fights], phaseIndex) => {
-              const phaseIds = fights.map((fight) => fight.id);
-              const formattedPhaseName =
-                encounter.wclPhases?.[phaseName] ?? "Unknown Phase Name";
+            <Collapse isExpanded={!fightIsCollapsed}>
+              {Array.from(phases).map(([phaseName, fights], phaseIndex) => {
+                const phaseIds = fights.map((fight) => fight.id);
+                const formattedPhaseName =
+                  encounter.wclPhases?.[phaseName] ?? "Unknown Phase Name";
 
-              return (
-                <React.Fragment key={`${groupIndex}-${phaseIndex}`}>
-                  {/** If the encounter uses phases make sure we divide them up */}
-                  {phases.size > 1 && (
-                    <div className="phaseDivider" key={formattedPhaseName}>
-                      {phaseName}:{"     "}
-                      {formattedPhaseName}
-                      <button
-                        className="fightSelectAll"
-                        onClick={() => handleSelectFights(phaseIds)}
-                      >
-                        Select Phase
-                      </button>
+                return (
+                  <React.Fragment key={`${groupIndex}-${phaseIndex}`}>
+                    {/** If the encounter uses phases make sure we divide them up */}
+                    {phases.size > 1 && (
+                      <div className="phaseDivider" key={formattedPhaseName}>
+                        {phaseName}:{"     "}
+                        {formattedPhaseName}
+                        <button
+                          className="fightSelectAll"
+                          onClick={() => handleSelectAllFights(phaseIds)}
+                        >
+                          Select Phase
+                        </button>
+                      </div>
+                    )}
+
+                    <div className="flex wrap" key={phaseName}>
+                      {Array.from(fights).map((fight) => {
+                        const fightPercentageColor =
+                          getFightPercentageColor(fight);
+
+                        const content = (
+                          <>
+                            <div className="flex column">
+                              <span
+                                className={`fightPercentage ${fightPercentageColor}`}
+                              >
+                                {fight.kill
+                                  ? "KILL"
+                                  : `${fight.fightPercentage}%`}
+                              </span>
+                              <span className="phase">
+                                {getFightPhase(fight)}
+                              </span>
+                            </div>
+                            <div className="flex column">
+                              <span className={fight.kill ? "kill" : "wipe"}>
+                                {`${fight.index} - (${
+                                  fight.keystoneTime
+                                    ? formatDuration(fight.keystoneTime)
+                                    : formatDuration(
+                                        fight.endTime - fight.startTime
+                                      )
+                                })`}
+                              </span>
+                              <span>
+                                {formatUnixTime(
+                                  fight.startTime + report.startTime
+                                )}
+                              </span>
+                            </div>
+                          </>
+                        );
+
+                        return (
+                          <ButtonCheckbox
+                            key={fight.id}
+                            onClick={() => handleToggleFight(fight.id)}
+                            selected={selectedIds.has(fight.id)}
+                            content={content}
+                            id="fightButton"
+                            disabled={isFetching}
+                          />
+                        );
+                      })}
                     </div>
-                  )}
-
-                  <div className="flex wrap" key={phaseName}>
-                    {Array.from(fights).map((fight) => {
-                      const fightPercentageColor =
-                        getFightPercentageColor(fight);
-
-                      const content = (
-                        <>
-                          <div className="flex column">
-                            <span
-                              className={`fightPercentage ${fightPercentageColor}`}
-                            >
-                              {fight.kill
-                                ? "KILL"
-                                : `${fight.fightPercentage}%`}
-                            </span>
-                            <span className="phase">
-                              {getFightPhase(fight)}
-                            </span>
-                          </div>
-                          <div className="flex column">
-                            <span className={fight.kill ? "kill" : "wipe"}>
-                              {`${fight.index} - (${
-                                fight.keystoneTime
-                                  ? formatDuration(fight.keystoneTime)
-                                  : formatDuration(
-                                      fight.endTime - fight.startTime
-                                    )
-                              })`}
-                            </span>
-                            <span>
-                              {formatUnixTime(
-                                fight.startTime + report.startTime
-                              )}
-                            </span>
-                          </div>
-                        </>
-                      );
-
-                      return (
-                        <ButtonCheckbox
-                          key={fight.id}
-                          onClick={() => handleDivClick(fight.id)}
-                          selected={selectedIds.has(fight.id)}
-                          content={content}
-                          id="fightButton"
-                          disabled={isFetching}
-                        />
-                      );
-                    })}
-                  </div>
-                </React.Fragment>
-              );
-            })}
+                  </React.Fragment>
+                );
+              })}
+            </Collapse>
           </div>
         );
       })}

@@ -44,3 +44,7 @@
   .error-bear-container p {
     padding-left: 1rem;
     color: #ef4444; }
+
+.collapse {
+  overflow: hidden;
+  transition: height 0.4s ease-in-out; }

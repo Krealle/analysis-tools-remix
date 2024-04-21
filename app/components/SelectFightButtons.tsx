@@ -4,7 +4,8 @@ import useFightBoxesStore from "../zustand/fightBoxesStore";
 
 const SelectFightButtons: React.FC = () => {
   const fightReport = useWCLUrlInputStore((state) => state.fightReport);
-  const { setSelectedIds } = useFightBoxesStore();
+  const { setSelectedIds, collapseFight, collapsedFights } =
+    useFightBoxesStore();
 
   const handleSelectFights = useCallback(
     (selectKills?: boolean) => {
@@ -26,12 +27,27 @@ const SelectFightButtons: React.FC = () => {
     [fightReport, setSelectedIds]
   );
 
+  const handleCollapseFights = useCallback(
+    (collapse: boolean) => {
+      collapsedFights.forEach((_isCollapsed, fightName) => {
+        collapseFight(fightName, collapse);
+      });
+    },
+    [collapsedFights, collapseFight]
+  );
+
   return (
     <div className="flex gap">
       <button onClick={() => handleSelectFights()}>Select All Fights</button>
       <button onClick={() => handleSelectFights(true)}>Select All Kills</button>
       <button onClick={() => handleSelectFights(false)}>
         Select All Wipes
+      </button>
+      <button onClick={() => handleCollapseFights(true)}>
+        Collapse All Fights
+      </button>
+      <button onClick={() => handleCollapseFights(false)}>
+        Expand All Fights
       </button>
     </div>
   );
