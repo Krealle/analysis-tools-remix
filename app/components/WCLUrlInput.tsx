@@ -14,7 +14,7 @@ const WCLUrlInput: React.FC = () => {
 
   const WCLReport = useWCLUrlInputStore();
   const status = useStatusStore();
-  const { setSelectedIds } = useFightBoxesStore();
+  const { setSelectedIds, clearCollapsedFights } = useFightBoxesStore();
   const { restoreFromLocalStorage } = useIntervalParametersStore();
 
   const handleSubmit = useCallback(
@@ -39,6 +39,7 @@ const WCLUrlInput: React.FC = () => {
 
         if (newFightReport.code !== WCLReport.fightReport?.code) {
           setSelectedIds([]);
+          clearCollapsedFights();
         }
 
         WCLReport.setFightReport(newFightReport);
@@ -53,7 +54,14 @@ const WCLUrlInput: React.FC = () => {
         restoreFromLocalStorage();
       }
     },
-    [url, WCLReport, status, setSelectedIds, restoreFromLocalStorage]
+    [
+      url,
+      WCLReport,
+      status,
+      setSelectedIds,
+      restoreFromLocalStorage,
+      clearCollapsedFights,
+    ]
   );
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>): void => {

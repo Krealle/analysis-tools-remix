@@ -112,13 +112,13 @@ const FightBoxes = (): JSX.Element => {
     [setSelectedIds]
   );
 
-  /** Initialize collapse store after page render */
+  /** Initialize collapse store after page render or on new report */
   useEffect(() => {
     fightsToInitialize.forEach((fightName) => {
       collapseFight(fightName, false);
     });
     fightsToInitialize.clear();
-  }, [collapseFight]);
+  }, [collapseFight, report?.code]);
 
   const handleCollapseClick = useCallback(
     (fightName: string, collapsed?: boolean) => {

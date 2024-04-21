@@ -12,6 +12,7 @@ type FightBoxesStore = {
    * value: true if collapsed */
   collapsedFights: Map<string, boolean>;
   collapseFight: (fightName: string, shouldCollapse?: boolean) => void;
+  clearCollapsedFights: () => void;
 };
 
 const useFightBoxesStore = create<FightBoxesStore>((set) => ({
@@ -43,6 +44,12 @@ const useFightBoxesStore = create<FightBoxesStore>((set) => ({
       );
 
       return { collapsedFights: newCollapsedFights };
+    }),
+  clearCollapsedFights: () =>
+    set((state) => {
+      const newSelectedIds = new Map(state.collapsedFights);
+      newSelectedIds.clear();
+      return { collapsedFights: newSelectedIds };
     }),
 }));
 
