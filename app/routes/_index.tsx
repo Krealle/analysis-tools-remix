@@ -3,6 +3,7 @@ import {
   TypedResponse,
   type MetaFunction,
   LoaderFunctionArgs,
+  HeadersFunction,
 } from "@remix-run/node";
 import "../styles/index.css";
 import WCLUrlInput from "../components/WCLUrlInput";
@@ -26,6 +27,45 @@ export const meta: MetaFunction = () => {
 type LoaderData = {
   hasAccessToken: boolean;
 };
+
+const cacheControl = "Cache-Control";
+const expires = "Expires";
+
+export const headers: HeadersFunction = ({ loaderHeaders }) => {
+  const loaderCache = loaderHeaders.get(cacheControl);
+
+  const headers: HeadersInit = {};
+
+  const expiresDate = loaderHeaders.get(expires);
+
+  if (expiresDate) {
+    // gets overwritten by cacheControl if present anyways
+    headers.Expires = expiresDate;
+  }
+
+  if (loaderCache) {
+    headers[cacheControl] = loaderCache;
+    headers["CDN-Cache-Control"] = loaderCache;
+    headers["Vercel-CDN-Cache-Control"] = loaderCache;
+  } else if (expiresDate) {
+    const diff = Math.round(
+      (new Date(expiresDate).getTime() - Date.now()) / 1000 - 10
+    );
+
+    if (diff > 0) {
+      headers[cacheControl] = `public, s-maxage=${diff}`;
+      headers["CDN-Cache-Control"] = headers[cacheControl];
+      headers["Vercel-CDN-Cache-Control"] = headers[cacheControl];
+    }
+  } else {
+    headers[cacheControl] = `public, s-maxage=1`;
+    headers["CDN-Cache-Control"] = `public, s-maxage=60`;
+    headers["Vercel-CDN-Cache-Control"] = `public, s-maxage=300`;
+  }
+
+  return headers;
+};
+
 /** Check if we have a proper Authorization cookie */
 export const loader = async ({
   request,

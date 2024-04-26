@@ -1,4 +1,4 @@
-import { HeadersFunction, LoaderFunction, json } from "@remix-run/node";
+import { /* HeadersFunction, */ LoaderFunction, json } from "@remix-run/node";
 import { GraphQLClient } from "graphql-request";
 import { Queries, QueryTypes } from "../wcl/types/graphql/queries";
 import { Variables } from "../wcl/util/queryWCL";
@@ -7,7 +7,7 @@ import { AccessSession, getSession } from "./sessions";
 /** Cache for storing reports, to not have to re-fetch data after a refresh */
 /* const CACHE = new Map<string, unknown>(); */
 
-const cacheControl = "Cache-Control";
+/* const cacheControl = "Cache-Control";
 const expires = "Expires";
 
 export const headers: HeadersFunction = ({ loaderHeaders }) => {
@@ -43,7 +43,7 @@ export const headers: HeadersFunction = ({ loaderHeaders }) => {
   }
 
   return headers;
-};
+}; */
 
 export const loader: LoaderFunction = async ({ request }) => {
   const url = new URL(request.url);
