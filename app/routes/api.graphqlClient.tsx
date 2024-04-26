@@ -1,4 +1,4 @@
-import { HeadersFunction, LoaderFunction, json } from "@remix-run/node";
+import { /* HeadersFunction, */ LoaderFunction, json } from "@remix-run/node";
 import { GraphQLClient } from "graphql-request";
 import { Queries, QueryTypes } from "../wcl/types/graphql/queries";
 import { Variables } from "../wcl/util/queryWCL";
@@ -7,17 +7,17 @@ import { AccessSession, getSession } from "./sessions";
 /** Cache for storing reports, to not have to re-fetch data after a refresh */
 /* const CACHE = new Map<string, unknown>(); */
 
-const cacheControl = "Cache-Control";
+/* const cacheControl = "Cache-Control";
 
 export const headers: HeadersFunction = () => {
   const headers: HeadersInit = {};
 
   headers[cacheControl] = `public, s-maxage=100`;
-    headers["CDN-Cache-Control"] = `public, s-maxage=60`;
-    headers["Vercel-CDN-Cache-Control"] = `public, s-maxage=300`;
+  headers["CDN-Cache-Control"] = `public, s-maxage=60`;
+  headers["Vercel-CDN-Cache-Control"] = `public, s-maxage=300`;
 
   return headers;
-};
+}; */
 
 export const loader: LoaderFunction = async ({ request }) => {
   const url = new URL(request.url);
@@ -64,11 +64,11 @@ export const loader: LoaderFunction = async ({ request }) => {
       },
     });
 
-    /* if (requestType !== "getWCLReportQuery") {
-      client.setHeader("Vercel-CDN-Cache-Control", "max-age=3600");
-      client.setHeader("CDN-Cache-Control", "max-age=60");
-      client.setHeader("Cache-Control", "max-age=10");
-    } */
+    /* if (requestType !== "getWCLReportQuery") { */
+    client.setHeader("Vercel-CDN-Cache-Control", "max-age=3600");
+    client.setHeader("CDN-Cache-Control", "max-age=60");
+    client.setHeader("Cache-Control", "max-age=100");
+    /* } */
 
     const data = await client.request(
       Queries[requestType as keyof QueryTypes],
