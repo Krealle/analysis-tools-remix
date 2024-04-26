@@ -1,4 +1,4 @@
-import { /* HeadersFunction, */ LoaderFunction, json } from "@remix-run/node";
+import { HeadersFunction, LoaderFunction, json } from "@remix-run/node";
 import { GraphQLClient } from "graphql-request";
 import { Queries, QueryTypes } from "../wcl/types/graphql/queries";
 import { Variables } from "../wcl/util/queryWCL";
@@ -7,43 +7,17 @@ import { AccessSession, getSession } from "./sessions";
 /** Cache for storing reports, to not have to re-fetch data after a refresh */
 /* const CACHE = new Map<string, unknown>(); */
 
-/* const cacheControl = "Cache-Control";
-const expires = "Expires";
+const cacheControl = "Cache-Control";
 
-export const headers: HeadersFunction = ({ loaderHeaders }) => {
-  const loaderCache = loaderHeaders.get(cacheControl);
-
+export const headers: HeadersFunction = () => {
   const headers: HeadersInit = {};
 
-  const expiresDate = loaderHeaders.get(expires);
-
-  if (expiresDate) {
-    // gets overwritten by cacheControl if present anyways
-    headers.Expires = expiresDate;
-  }
-
-  if (loaderCache) {
-    headers[cacheControl] = loaderCache;
-    headers["CDN-Cache-Control"] = loaderCache;
-    headers["Vercel-CDN-Cache-Control"] = loaderCache;
-  } else if (expiresDate) {
-    const diff = Math.round(
-      (new Date(expiresDate).getTime() - Date.now()) / 1000 - 10
-    );
-
-    if (diff > 0) {
-      headers[cacheControl] = `public, s-maxage=${diff}`;
-      headers["CDN-Cache-Control"] = headers[cacheControl];
-      headers["Vercel-CDN-Cache-Control"] = headers[cacheControl];
-    }
-  } else {
-    headers[cacheControl] = `public, s-maxage=1`;
+  headers[cacheControl] = `public, s-maxage=100`;
     headers["CDN-Cache-Control"] = `public, s-maxage=60`;
     headers["Vercel-CDN-Cache-Control"] = `public, s-maxage=300`;
-  }
 
   return headers;
-}; */
+};
 
 export const loader: LoaderFunction = async ({ request }) => {
   const url = new URL(request.url);
