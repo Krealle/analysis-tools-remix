@@ -58,7 +58,7 @@ export const headers: HeadersFunction = ({ loaderHeaders }) => {
       headers["Vercel-CDN-Cache-Control"] = headers[cacheControl];
     }
   } else {
-    headers[cacheControl] = `public, s-maxage=1`;
+    headers[cacheControl] = `public, s-maxage=100`;
     headers["CDN-Cache-Control"] = `public, s-maxage=60`;
     headers["Vercel-CDN-Cache-Control"] = `public, s-maxage=300`;
   }
