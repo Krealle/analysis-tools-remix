@@ -42,16 +42,27 @@ export async function* fetchFightData(
         endTime: fight.endTime,
         limit: 10000,
       };
-      const summaryTable = await getSummaryTable(variables);
-
-      variables.filterExpression = getFilter();
-      const events = await getEvents(variables);
 
       const activeTriggers = EncounterPhaseTriggers.filter(
         (trigger) =>
           (!trigger.isActive || trigger.isActive(fight)) &&
           trigger.bossName === fight.name
       );
+      const phaseEventVariables = getEventTriggerFilter(activeTriggers);
+
+      const queryParams = new URLSearchParams({
+        variables: JSON.stringify(variables),
+        phaseEventVariables: JSON.stringify(phaseEventVariables),
+      });
+      const response = await fetch("api/fightData?" + queryParams.toString());
+
+      const data: unknown = await response.json();
+      console.log(data);
+
+      const summaryTable = await getSummaryTable(variables);
+
+      variables.filterExpression = getFilter();
+      const events = await getEvents(variables);
 
       /** Split from events to reduce complexity */
       variables.filterExpression = getEventTriggerFilter(activeTriggers);
