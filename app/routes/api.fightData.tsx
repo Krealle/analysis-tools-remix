@@ -48,7 +48,8 @@ export const loader: LoaderFunction = async ({ request }) => {
       variables: JSON.stringify(parsedVariables),
       session: JSON.stringify(accessSession),
     });
-    const baseUrl = process.env.BASE_URL;
+    //const baseUrl = process.env.BASE_URL;
+    const baseUrl = url.origin;
 
     console.info(`${baseUrl}/api/graphqlClient?`);
 
