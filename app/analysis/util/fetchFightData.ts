@@ -55,7 +55,7 @@ export async function* fetchFightData(
         phaseEventVariables: JSON.stringify(phaseEventVariables),
       });
       const response = await fetch("api/fightData?" + queryParams.toString());
-
+      console.log(response);
       const data: unknown = await response.json();
       console.log(data);
 
