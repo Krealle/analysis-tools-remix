@@ -54,7 +54,8 @@ export const loader: LoaderFunction = async ({ request }) => {
     console.info(`${baseUrl}/api/graphqlClient?`);
 
     const response = await fetch(
-      `${baseUrl}/api/graphqlClient?` + queryParams.toString()
+      `${baseUrl}/api/graphqlClient?` + queryParams.toString(),
+      { credentials: "same-origin" }
     );
 
     /* console.log("");
