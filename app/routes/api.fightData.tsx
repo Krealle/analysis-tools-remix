@@ -49,7 +49,9 @@ export const loader: LoaderFunction = async ({ request }) => {
       session: JSON.stringify(accessSession),
     });
     const baseUrl = process.env.BASE_URL;
-    const response = await fetch("https://api.sampleapis.com/coffee/hot");
+    const response = await fetch(
+      `${baseUrl}/api/graphqlClient?` + queryParams.toString()
+    );
     const data = await response.json();
 
     /* parsedVariables.filterExpression = getFilter();
@@ -58,6 +60,7 @@ export const loader: LoaderFunction = async ({ request }) => {
 
     return {
       msg: "hello",
+      baseUrl: baseUrl,
       data: data,
     };
     /* return {
