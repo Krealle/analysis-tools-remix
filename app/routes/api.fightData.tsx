@@ -50,23 +50,30 @@ export const loader: LoaderFunction = async ({ request }) => {
     });
     const baseUrl = process.env.BASE_URL;
 
-    console.info("baseUrl", baseUrl);
-    console.info("queryParams", queryParams.toString());
+    console.info(`${baseUrl}/api/graphqlClient?`);
 
     const response = await fetch(
       `${baseUrl}/api/graphqlClient?` + queryParams.toString()
     );
-    const data = await response.json();
+
+    if (response.ok) {
+      const data = await response.json();
+      return {
+        msg: "Good response",
+        uri: `${baseUrl}/api/graphqlClient?`,
+        data: data,
+      };
+    }
+
+    return {
+      msg: "Bad response",
+      uri: `${baseUrl}/api/graphqlClient?`,
+    };
 
     /* parsedVariables.filterExpression = getFilter();
     const events = await getEvents(parsedVariables);
     const phaseEvents = await getEvents(parsedPhaseEventVariables); */
 
-    return {
-      msg: "hello",
-      baseUrl: baseUrl,
-      data: data,
-    };
     /* return {
       summaryTable: summaryTable.table.data,
       events: events,
