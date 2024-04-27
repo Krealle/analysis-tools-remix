@@ -20,6 +20,7 @@ export const loader: LoaderFunction = async ({ request }) => {
 
   const session = await getSession(request.headers.get("Cookie"));
   const accessSession = session.get("accToken") as AccessSession;
+  accessSession.accessToken += "a";
 
   if (!variables) {
     return json({ error: "Missing variables" });
@@ -75,12 +76,13 @@ export const loader: LoaderFunction = async ({ request }) => {
       };
     }
     console.info(
-      `${response.status} - ${response.statusText} - ${response.type} - ${response.url}`
+      `${response.status} - ${response.statusText} - ${response.type}`
     );
-    console.info(response.headers);
-    console.info(response.body);
+    console.info(response);
     return {
       msg: "Bad response",
+      status: response.status,
+      statusText: response.statusText,
       uri: `${baseUrl}/api/graphqlClient?`,
     };
 
