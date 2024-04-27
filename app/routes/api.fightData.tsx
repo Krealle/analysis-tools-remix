@@ -49,18 +49,17 @@ export const loader: LoaderFunction = async ({ request }) => {
       session: JSON.stringify(accessSession),
     });
     const baseUrl = process.env.BASE_URL;
-    const response = await fetch(
-      `${baseUrl}/api/graphqlClient?` + queryParams.toString()
-    );
+    const response = await fetch("https://api.sampleapis.com/coffee/hot");
     const data = await response.json();
-    console.info(JSON.stringify(data));
-    console.warn(JSON.stringify(data));
 
     /* parsedVariables.filterExpression = getFilter();
     const events = await getEvents(parsedVariables);
     const phaseEvents = await getEvents(parsedPhaseEventVariables); */
 
-    return data;
+    return {
+      msg: "hello",
+      data: data,
+    };
     /* return {
       summaryTable: summaryTable.table.data,
       events: events,
