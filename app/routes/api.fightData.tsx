@@ -57,6 +57,14 @@ export const loader: LoaderFunction = async ({ request }) => {
       `${baseUrl}/api/graphqlClient?` + queryParams.toString()
     );
 
+    /* console.log("");
+    console.log(
+      `${response.status} - ${response.statusText} - ${response.type} - ${response.url} `
+    );
+    console.log(response.headers);
+    console.log(response.body);
+    console.log(""); */
+
     if (response.ok) {
       const data = await response.json();
       return {
@@ -65,7 +73,11 @@ export const loader: LoaderFunction = async ({ request }) => {
         data: data,
       };
     }
-
+    console.info(
+      `${response.status} - ${response.statusText} - ${response.type} - ${response.url}`
+    );
+    console.info(response.headers);
+    console.info(response.body);
     return {
       msg: "Bad response",
       uri: `${baseUrl}/api/graphqlClient?`,
@@ -81,6 +93,8 @@ export const loader: LoaderFunction = async ({ request }) => {
       phaseEvents: phaseEvents,
     }; */
   } catch (error) {
+    console.error((error as Error).toString());
+
     return error; /* {
       error: error as ReportParseError,
       fight: parsedVariables?.fightIDs?.[0] || -1,
