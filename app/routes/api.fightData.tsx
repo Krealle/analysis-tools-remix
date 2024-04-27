@@ -20,7 +20,6 @@ export const loader: LoaderFunction = async ({ request }) => {
 
   const session = await getSession(request.headers.get("Cookie"));
   const accessSession = session.get("accToken") as AccessSession;
-  accessSession.accessToken += "a";
 
   if (!variables) {
     return json({ error: "Missing variables" });
