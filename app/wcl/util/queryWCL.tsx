@@ -84,16 +84,18 @@ export async function fetchReportData<T extends AnyReport>(
         throw new Error(ReportParseError.UNKNOWN_ERROR);
       }
 
+      console.log(maybeRootReport.data.reportData.report);
       return maybeRootReport.data.reportData.report;
     } catch (error) {
       attempts += 1;
+      console.log(error);
 
       if (attempts >= MAX_RETRIES) {
+        console.log(error);
         throw error;
       }
     }
   }
-
   // If all retries fail, throw an error
   throw new Error(ReportParseError.UNKNOWN_ERROR);
 }
