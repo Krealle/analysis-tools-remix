@@ -53,7 +53,8 @@ export const loader: LoaderFunction = async ({ request }) => {
       `${baseUrl}/api/graphqlClient?` + queryParams.toString()
     );
     const data = await response.json();
-    console.info(data);
+    console.info(JSON.stringify(data));
+    console.warn(JSON.stringify(data));
 
     /* parsedVariables.filterExpression = getFilter();
     const events = await getEvents(parsedVariables);
