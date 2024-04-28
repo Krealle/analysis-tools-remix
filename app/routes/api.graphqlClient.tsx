@@ -10,7 +10,7 @@ export const loader: LoaderFunction = async ({ request }) => {
   const requestType = url.searchParams.get("requestType") as keyof QueryTypes;
   const variables = url.searchParams.get("variables");
   const session = await getSession(request.headers.get("Cookie"));
-  const maybeAccessSession = url.searchParams.get("session");
+  const maybeAccessSession = url.searchParams.get("foo");
 
   console.info("We do be requesting", requestType);
   console.info("maybeAccessSession", maybeAccessSession);
