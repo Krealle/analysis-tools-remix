@@ -3,7 +3,6 @@ import {
   TypedResponse,
   type MetaFunction,
   LoaderFunctionArgs,
-  HeadersFunction,
 } from "@remix-run/node";
 import "../styles/index.css";
 import WCLUrlInput from "../components/WCLUrlInput";
@@ -28,46 +27,6 @@ type LoaderData = {
   hasAccessToken: boolean;
 };
 
-const cacheControl = "Cache-Control";
-const expires = "Expires";
-
-export const headers: HeadersFunction = ({ loaderHeaders }) => {
-  const loaderCache = loaderHeaders.get(cacheControl);
-
-  const headers: HeadersInit = {};
-
-  const expiresDate = loaderHeaders.get(expires);
-
-  if (expiresDate) {
-    // gets overwritten by cacheControl if present anyways
-    headers.Expires = expiresDate;
-  }
-
-  if (loaderCache) {
-    headers[cacheControl] = loaderCache;
-    headers["CDN-Cache-Control"] = loaderCache;
-    headers["Vercel-CDN-Cache-Control"] = loaderCache;
-  } else if (expiresDate) {
-    const diff = Math.round(
-      (new Date(expiresDate).getTime() - Date.now()) / 1000 - 10
-    );
-
-    if (diff > 0) {
-      headers[cacheControl] = `public, max-age=0, must-revalidate`;
-      headers["CDN-Cache-Control"] = headers[cacheControl];
-      headers["Vercel-CDN-Cache-Control"] = headers[cacheControl];
-    }
-  } else {
-    headers[cacheControl] = `public, max-age=0, must-revalidate`;
-    headers["CDN-Cache-Control"] = `public, s-maxage=60`;
-    headers["Vercel-CDN-Cache-Control"] = `public, s-maxage=300`;
-  }
-
-  console.info(`Headers: ${JSON.stringify(headers)}`);
-
-  return headers;
-};
-
 /** Check if we have a proper Authorization cookie */
 export const loader = async ({
   request,
@@ -80,8 +39,6 @@ export const loader = async ({
     Boolean(accessSession.accessToken) &&
     accessSession.expirationTime > Math.floor(Date.now() / 1000);
 
-  console.info(`Has valid token: ${hasValidToken}`);
-
   return json({ hasAccessToken: hasValidToken ? true : false });
 };
 
@@ -89,8 +46,6 @@ export default function Index(): JSX.Element {
   const fightReport = useWCLUrlInputStore((state) => state.fightReport);
   const { hasAccessToken } = useLoaderData<typeof loader>();
   const { setHasAuth } = useStatusStore();
-
-  console.log(hasAccessToken);
 
   useEffect(() => {
     setHasAuth(hasAccessToken);
