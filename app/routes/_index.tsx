@@ -3,7 +3,6 @@ import {
   TypedResponse,
   type MetaFunction,
   LoaderFunctionArgs,
-  HeadersFunction,
 } from "@remix-run/node";
 import "../styles/index.css";
 import WCLUrlInput from "../components/WCLUrlInput";
@@ -26,18 +25,6 @@ export const meta: MetaFunction = () => {
 
 type LoaderData = {
   hasAccessToken: boolean;
-};
-
-const cacheControl = "Cache-Control";
-
-export const headers: HeadersFunction = () => {
-  const headers: HeadersInit = {};
-
-  headers[cacheControl] = `public, s-maxage=100`;
-  headers["CDN-Cache-Control"] = `public, s-maxage=60`;
-  headers["Vercel-CDN-Cache-Control"] = `public, s-maxage=300`;
-
-  return headers;
 };
 
 /** Check if we have a proper Authorization cookie */
