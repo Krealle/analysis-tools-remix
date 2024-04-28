@@ -90,6 +90,8 @@ export default function Index(): JSX.Element {
   const { hasAccessToken } = useLoaderData<typeof loader>();
   const { setHasAuth } = useStatusStore();
 
+  console.log(hasAccessToken);
+
   useEffect(() => {
     setHasAuth(hasAccessToken);
   }, [hasAccessToken, setHasAuth]);
