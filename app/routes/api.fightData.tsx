@@ -37,8 +37,7 @@ export const loader: LoaderFunction = async ({ request }) => {
     console.info(queryParams);
 
     const response = await fetch(
-      `${baseUrl}/api/graphqlClient?` + queryParams.toString(),
-      { credentials: "include" }
+      `${baseUrl}/api/graphqlClient?` + queryParams.toString()
     );
 
     if (response.ok) {
