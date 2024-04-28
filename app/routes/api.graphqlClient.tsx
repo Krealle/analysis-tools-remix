@@ -11,6 +11,9 @@ export const loader: LoaderFunction = async ({ request }) => {
   const session = await getSession(request.headers.get("Cookie"));
   const maybeAccessSession = url.searchParams.get("session");
 
+  console.info("We do be requesting", requestType);
+  console.info("maybeAccessSession", maybeAccessSession);
+
   if (!requestType) {
     return json({ error: `Missing request type` });
   }
@@ -27,12 +30,15 @@ export const loader: LoaderFunction = async ({ request }) => {
 
   if (!accessSession) {
     if (!maybeAccessSession) {
+      console.info("Totally no session present");
       return json({ error: `Missing authorization` });
     }
 
     const parsedMaybeSession = JSON.parse(maybeAccessSession) as AccessSession;
     accessSession = parsedMaybeSession;
   }
+
+  console.info(accessSession);
 
   if (
     !accessSession.expirationTime ||
@@ -42,6 +48,7 @@ export const loader: LoaderFunction = async ({ request }) => {
   }
 
   try {
+    console.info("We do be attempting a query");
     const API_URL =
       process.env.NODE_ENV !== "development"
         ? "https://www.warcraftlogs.com/api/v2/user"
@@ -59,6 +66,7 @@ export const loader: LoaderFunction = async ({ request }) => {
 
     return data;
   } catch (error) {
+    console.info(`We do be failing a query: ${(error as Error).toString()}`);
     return json({ error: `Failed query ${(error as Error).toString()}` });
   }
 };
