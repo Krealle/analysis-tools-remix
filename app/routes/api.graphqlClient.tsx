@@ -9,6 +9,7 @@ export const loader: LoaderFunction = async ({ request }) => {
   const requestType = url.searchParams.get("requestType") as keyof QueryTypes;
   const variables = url.searchParams.get("variables");
   const session = await getSession(request.headers.get("Cookie"));
+  const maybeAccessSession = url.searchParams.get("session");
 
   if (!requestType) {
     return json({ error: `Missing request type` });
@@ -22,10 +23,14 @@ export const loader: LoaderFunction = async ({ request }) => {
 
   const parsedVariables = JSON.parse(variables) as Variables;
 
-  const accessSession = session.get("accToken") as AccessSession;
-
+  let accessSession = session.get("accToken") as AccessSession;
   if (!accessSession) {
-    return json({ error: `Missing authorization` });
+    if (!maybeAccessSession) {
+      return json({ error: `Missing authorization` });
+    }
+
+    const parsedMaybeSession = JSON.parse(maybeAccessSession) as AccessSession;
+    accessSession = parsedMaybeSession;
   }
 
   if (

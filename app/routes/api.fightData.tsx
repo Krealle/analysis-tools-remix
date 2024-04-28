@@ -29,20 +29,24 @@ export const loader: LoaderFunction = async ({ request }) => {
     const queryParams = new URLSearchParams({
       requestType: "getSummaryTableQuery",
       variables: JSON.stringify(parsedVariables),
+      session: JSON.stringify(accessSession),
     });
     const baseUrl = url.origin;
-
     const response = await fetch(
       `${baseUrl}/api/graphqlClient?` + queryParams.toString()
     );
 
     if (response.ok) {
       const data = await response.json();
-      return {
-        msg: "Good response",
-        uri: `${baseUrl}/api/graphqlClient?`,
-        data: data,
-      };
+
+      return json(
+        { data },
+        {
+          headers: {
+            "Cache-Control": "max-age=0, s-maxage=86400",
+          },
+        }
+      );
     }
 
     console.info(response);
