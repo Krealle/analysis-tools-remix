@@ -14,7 +14,7 @@ export const loader: LoaderFunction = async ({ params }) => {
     },
     {
       headers: {
-        "Cache-Control": "public, max-age=0, s-maxage=3000",
+        "Cache-Control": "public, max-age=3000, s-maxage=3000",
         "CDN-Cache-Control": "public, s-maxage=3000",
         "Vercel-CDN-Cache-Control": "public, s-maxage=3000",
       },
