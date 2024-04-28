@@ -14,7 +14,7 @@ const { getSession, commitSession, destroySession } =
       name: "__session",
       secure: process.env.NODE_ENV !== "development" ? true : false,
       secrets: [process.env.SESSION_SECRET!],
-      sameSite: "lax",
+      sameSite: "none",
       httpOnly: true,
       maxAge: SESSION_DEFAULT_MAX_AGE,
     },
