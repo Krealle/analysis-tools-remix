@@ -10,10 +10,10 @@ export const loader: LoaderFunction = async ({ request }) => {
   const requestType = url.searchParams.get("requestType") as keyof QueryTypes;
   const variables = url.searchParams.get("variables");
   const session = await getSession(request.headers.get("Cookie"));
-  const maybeAccessSession = url.searchParams.get("foo");
+  /* const maybeAccessSession = url.searchParams.get("foo"); */
 
   console.info("We do be requesting", requestType);
-  console.info("maybeAccessSession", maybeAccessSession);
+  /*   console.info("maybeAccessSession", maybeAccessSession); */
 
   if (!requestType) {
     return json({ error: `Missing request type` });
@@ -27,16 +27,15 @@ export const loader: LoaderFunction = async ({ request }) => {
 
   const parsedVariables = JSON.parse(variables) as Variables;
 
-  let accessSession = session.get("accToken") as AccessSession;
+  const accessSession = session.get("accToken") as AccessSession;
 
   if (!accessSession) {
-    if (!maybeAccessSession) {
-      console.info("Totally no session present");
-      return json({ error: `Missing authorization` });
-    }
+    /* if (!maybeAccessSession) { */
+    return json({ error: `Missing authorization` });
+    /* }
 
     const parsedMaybeSession = JSON.parse(maybeAccessSession) as AccessSession;
-    accessSession = parsedMaybeSession;
+    accessSession = parsedMaybeSession; */
   }
 
   console.info(accessSession);
@@ -45,11 +44,10 @@ export const loader: LoaderFunction = async ({ request }) => {
     !accessSession.expirationTime ||
     accessSession.expirationTime < Math.floor(Date.now() / 1000)
   ) {
-    return json({ error: `Missing authorization` });
+    return json({ error: `Authorization expired` });
   }
 
   try {
-    console.info("We do be attempting a query");
     const API_URL =
       process.env.NODE_ENV !== "development"
         ? "https://www.warcraftlogs.com/api/v2/user"
@@ -67,7 +65,6 @@ export const loader: LoaderFunction = async ({ request }) => {
 
     return data;
   } catch (error) {
-    console.info(`We do be failing a query: ${(error as Error).toString()}`);
     return json({ error: `Failed query ${(error as Error).toString()}` });
   }
 };

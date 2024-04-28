@@ -29,7 +29,7 @@ export const loader: LoaderFunction = async ({ request }) => {
     const queryParams = new URLSearchParams({
       requestType: "getSummaryTableQuery",
       variables: JSON.stringify(parsedVariables),
-      foo: JSON.stringify(accessSession),
+      /* foo: JSON.stringify(accessSession), */
     });
     const baseUrl = url.origin;
 
