@@ -5,6 +5,7 @@ import { Variables } from "../wcl/util/queryWCL";
 import { AccessSession, getSession } from "./sessions";
 
 export const loader: LoaderFunction = async ({ request }) => {
+  console.info("Requesting...");
   const url = new URL(request.url);
   const requestType = url.searchParams.get("requestType") as keyof QueryTypes;
   const variables = url.searchParams.get("variables");
