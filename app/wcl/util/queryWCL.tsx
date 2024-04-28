@@ -1,4 +1,4 @@
-import { ReportQueries } from "../types/graphql/queries";
+import { ReportQueries, ReportQueryKey } from "../types/graphql/queries";
 import { EventType } from "../types/events/eventEnums";
 import {
   AnyReport,
@@ -36,7 +36,7 @@ export type EventVariables = Variables & {
  * @throws Will throw an error if the GraphQL request fails after maximum retries.
  */
 export async function fetchReportData<T extends AnyReport>(
-  type: keyof typeof ReportQueries,
+  type: ReportQueryKey,
   variables: Variables
 ): Promise<T> {
   const MAX_RETRIES = 3;
@@ -46,13 +46,18 @@ export async function fetchReportData<T extends AnyReport>(
     try {
       const { requestType, responseType } = ReportQueries[type];
 
-      const queryParams = new URLSearchParams({
+      /* const queryParams = new URLSearchParams({
         requestType: requestType,
         variables: JSON.stringify(variables),
       });
       const response = await fetch(
         "api/graphqlClient?" + queryParams.toString()
-      );
+      ); */
+      const queryParams = new URLSearchParams({
+        type: type,
+        variables: JSON.stringify(variables),
+      });
+      const response = await fetch("api/fightData?" + queryParams.toString());
 
       const data: unknown = await response.json();
       const maybeRootReport = validateData<T>(data, responseType);
@@ -121,6 +126,54 @@ export async function getWCLReport(variables: Variables): Promise<WCLReport> {
 }
 
 export async function getEvents<T extends AnyEvent>(
+  variables: EventVariables,
+  eventType?: EventType,
+  previousEvents?: T[],
+  recurse: boolean = false
+): Promise<T[]> {
+  /** Xeph should fix so I don't need to do this.
+   * Rare edge case where you hit your limit and only get parsed some of the events on the endTime timestamp.
+   * If nextPageTimestamp then is equal to endTime, WCL will throw a hissy fit. */
+  if (variables.startTime === variables.endTime) {
+    variables.endTime += 1;
+  }
+
+  /** Add event type filter if eventType is provided. */
+  if (!recurse) {
+    if (eventType) {
+      const eventFilter = `type = "${eventType}"`;
+      variables.filterExpression += variables.filterExpression
+        ? ` AND ` + eventFilter
+        : eventFilter;
+    }
+  }
+
+  try {
+    const response = await fetchReportData<EventsResponse>("events", variables);
+
+    const { data = [], nextPageTimestamp = null } = response.events ?? {};
+
+    const allEvents: T[] = [...(previousEvents ?? []), ...(data as T[])];
+
+    if (nextPageTimestamp) {
+      return getEvents(
+        { ...variables, startTime: nextPageTimestamp },
+        eventType,
+        allEvents,
+        true
+      );
+    }
+
+    return allEvents;
+  } catch (error) {
+    if (error instanceof Error) {
+      throw error.message;
+    }
+    throw ReportParseError.UNKNOWN_ERROR;
+  }
+}
+
+export async function getEventsNew<T extends AnyEvent>(
   variables: EventVariables,
   eventType?: EventType,
   previousEvents?: T[],

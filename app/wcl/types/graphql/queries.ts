@@ -94,16 +94,23 @@ query getTable(
 `,
 } as const;
 
+export const ReportQueryKeys = {
+  summaryTable: "summaryTable",
+  events: "events",
+  WCLReport: "WCLReport",
+} as const;
+export type ReportQueryKey = keyof typeof ReportQueryKeys;
+
 export const ReportQueries = {
-  summaryTable: {
+  [ReportQueryKeys.summaryTable]: {
     requestType: "getSummaryTableQuery",
     responseType: GetSummaryTableQuery,
   },
-  events: {
+  [ReportQueryKeys.events]: {
     requestType: "getEventsQuery",
     responseType: GetEventsQuery,
   },
-  WCLReport: {
+  [ReportQueryKeys.WCLReport]: {
     requestType: "getWCLReportQuery",
     responseType: GetWCLReportQuery,
   },

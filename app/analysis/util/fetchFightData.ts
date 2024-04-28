@@ -1,4 +1,8 @@
-import { WCLReport } from "../../wcl/types/graphql/queryTypes";
+import {
+  EventsResponse,
+  SummaryTableResponse,
+  WCLReport,
+} from "../../wcl/types/graphql/queryTypes";
 import { AnyEvent } from "../../wcl/types/events/eventTypes";
 import { ReportFight } from "../../wcl/types/report/report";
 import { SummaryTable } from "../../wcl/types/report/summaryTable";
@@ -6,11 +10,13 @@ import { getFilter } from "../../wcl/util/filters";
 import {
   EventVariables,
   getEvents,
+  getEventsNew,
   getSummaryTable,
 } from "../../wcl/util/queryWCL";
 import { ReportParseError } from "../../wcl/util/parseWCLUrl";
 import { getEventTriggerFilter } from "./generatePhaseEvents";
 import { EncounterPhaseTriggers } from "../../util/encounters/encounters";
+import { ReportQueryKeys } from "../../wcl/types/graphql/queries";
 
 export type FightDataSet = {
   fight: ReportFight & { reportCode: string };
@@ -48,29 +54,52 @@ export async function* fetchFightData(
           (!trigger.isActive || trigger.isActive(fight)) &&
           trigger.bossName === fight.name
       );
-      const phaseEventVariables = getEventTriggerFilter(activeTriggers);
+      /* const phaseEventVariables = getEventTriggerFilter(activeTriggers); */
 
       const queryParams = new URLSearchParams({
         variables: JSON.stringify(variables),
-        phaseEventVariables: JSON.stringify(phaseEventVariables),
+        type: ReportQueryKeys.summaryTable,
       });
-      const response = await fetch("api/fightData?" + queryParams.toString());
-      console.log(response);
-      const data: unknown = await response.json();
-      console.log(data);
+
+      /* const summaryTableRes = await fetch(
+        "api/fightData?" + queryParams.toString()
+      );
+      const summaryTable =
+        (await summaryTableRes.json()) as SummaryTableResponse;
+      console.log(summaryTable); */
 
       const summaryTable = await getSummaryTable(variables);
 
       variables.filterExpression = getFilter();
-      const events = await getEvents(variables);
+      /* const eventQueryParams = new URLSearchParams({
+        variables: JSON.stringify(variables),
+        type: ReportQueryKeys.events,
+      }); */
+      const events = await getEventsNew(variables);
+      /* const eventsRes = await fetch(
+        "api/fightData?" + eventQueryParams.toString()
+      );
+      const events = (await eventsRes.json()) as EventsResponse; */
+      /* console.log(events); */
 
       /** Split from events to reduce complexity */
       variables.filterExpression = getEventTriggerFilter(activeTriggers);
-      const phaseEvents = await getEvents(variables);
+      /* const phaseEventQueryParams = new URLSearchParams({
+        variables: JSON.stringify(variables),
+        type: ReportQueryKeys.events,
+      }); */
+      const phaseEvents = await getEventsNew(variables);
+
+      //const events = await getEvents(variables);
+      /* const phaseEventsRes = await fetch(
+        "api/fightData?" + phaseEventQueryParams.toString()
+      );
+      const phaseEvents = (await phaseEventsRes.json()) as EventsResponse; */
+      /* console.log(phaseEvents); */
 
       return {
         fight: { ...fight, reportCode: WCLReport.code },
-        summaryTable: summaryTable,
+        summaryTable: summaryTable /* .table.data */,
         events: events,
         phaseEvents: phaseEvents,
       };
