@@ -11,7 +11,6 @@ import { isGraphQLError } from "../../util/typeChecks";
 import { AnyEvent } from "../types/events/eventTypes";
 import { SummaryTable } from "../types/report/summaryTable";
 import { ReportParseError } from "./parseWCLUrl";
-/* import { getMockData } from "../__test__/getMockData"; */
 
 export type Variables = {
   reportID: string;
@@ -40,18 +39,6 @@ export async function fetchReportData<T extends AnyReport>(
   type: keyof typeof ReportQueries,
   variables: Variables
 ): Promise<T> {
-  /* if (process.env.NODE_ENV === "development") {
-    try {
-      const mockData = getMockData(variables, requestType);
-
-      const rootReport = mockData as RootReport;
-      const report = rootReport.reportData.report;
-
-      return report;
-    } catch (error) {
-      console.error("Failed to get mock data:", error);
-    }
-  } */
   const MAX_RETRIES = 3;
   let attempts = 0;
 
@@ -72,7 +59,10 @@ export async function fetchReportData<T extends AnyReport>(
 
       if (!maybeRootReport.data) {
         if (isGraphQLError(data)) {
-          if (data.error === "Missing authorization") {
+          if (
+            data.error === "Missing authorization" ||
+            data.error === "Authorization expired"
+          ) {
             throw new Error(ReportParseError.MISSING_AUTHORIZATION);
           }
           throw new Error(ReportParseError.UNKNOWN_GRAPHQL_ERROR);
@@ -136,14 +126,6 @@ export async function getEvents<T extends AnyEvent>(
   previousEvents?: T[],
   recurse: boolean = false
 ): Promise<T[]> {
-  /* if (process.env.NODE_ENV === "development") {
-    try {
-      const mockData = getMockData(variables, "getEventsQuery");
-      return mockData as T[];
-    } catch (error) {
-      console.error("Failed to get mock data:", error);
-    }
-  } */
   /** Xeph should fix so I don't need to do this.
    * Rare edge case where you hit your limit and only get parsed some of the events on the endTime timestamp.
    * If nextPageTimestamp then is equal to endTime, WCL will throw a hissy fit. */
@@ -158,15 +140,11 @@ export async function getEvents<T extends AnyEvent>(
       variables.filterExpression += variables.filterExpression
         ? ` AND ` + eventFilter
         : eventFilter;
-      //console.log(`added type: "` + eventType + `" to filter`);
     }
-    //console.log("filter for fetching Events:", variables.filterExpression);
   }
 
   try {
     const response = await fetchReportData<EventsResponse>("events", variables);
-
-    //console.log("Event response:", response);
 
     const { data = [], nextPageTimestamp = null } = response.events ?? {};
 

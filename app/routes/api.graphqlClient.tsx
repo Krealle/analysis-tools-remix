@@ -5,15 +5,10 @@ import { Variables } from "../wcl/util/queryWCL";
 import { AccessSession, getSession } from "./sessions";
 
 export const loader: LoaderFunction = async ({ request }) => {
-  console.info("Requesting...");
   const url = new URL(request.url);
   const requestType = url.searchParams.get("requestType") as keyof QueryTypes;
   const variables = url.searchParams.get("variables");
   const session = await getSession(request.headers.get("Cookie"));
-  /* const maybeAccessSession = url.searchParams.get("foo"); */
-
-  console.info("We do be requesting", requestType);
-  /*   console.info("maybeAccessSession", maybeAccessSession); */
 
   if (!requestType) {
     return json({ error: `Missing request type` });
@@ -30,15 +25,8 @@ export const loader: LoaderFunction = async ({ request }) => {
   const accessSession = session.get("accToken") as AccessSession;
 
   if (!accessSession) {
-    /* if (!maybeAccessSession) { */
     return json({ error: `Missing authorization` });
-    /* }
-
-    const parsedMaybeSession = JSON.parse(maybeAccessSession) as AccessSession;
-    accessSession = parsedMaybeSession; */
   }
-
-  console.info(accessSession);
 
   if (
     !accessSession.expirationTime ||

@@ -29,12 +29,8 @@ export const loader: LoaderFunction = async ({ request }) => {
     const queryParams = new URLSearchParams({
       requestType: "getSummaryTableQuery",
       variables: JSON.stringify(parsedVariables),
-      /* foo: JSON.stringify(accessSession), */
     });
     const baseUrl = url.origin;
-
-    console.info(`${baseUrl}/api/graphqlClient?`);
-    console.info(queryParams);
 
     const response = await fetch(
       `${baseUrl}/api/graphqlClient?` + queryParams.toString()
@@ -48,10 +44,9 @@ export const loader: LoaderFunction = async ({ request }) => {
         data: data,
       };
     }
-    console.info(
-      `${response.status} - ${response.statusText} - ${response.type}`
-    );
+
     console.info(response);
+
     return {
       msg: "Bad response",
       status: response.status,
@@ -59,7 +54,6 @@ export const loader: LoaderFunction = async ({ request }) => {
       uri: `${baseUrl}/api/graphqlClient?`,
     };
   } catch (error) {
-    console.error((error as Error).toString());
-    return error;
+    return json({ error: `Failed fetch ${(error as Error).toString()}` });
   }
 };
