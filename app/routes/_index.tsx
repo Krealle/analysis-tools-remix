@@ -63,6 +63,8 @@ export const headers: HeadersFunction = ({ loaderHeaders }) => {
     headers["Vercel-CDN-Cache-Control"] = `public, s-maxage=300`;
   }
 
+  console.info(`Headers: ${JSON.stringify(headers)}`);
+
   return headers;
 };
 
@@ -77,6 +79,8 @@ export const loader = async ({
     accessSession &&
     Boolean(accessSession.accessToken) &&
     accessSession.expirationTime > Math.floor(Date.now() / 1000);
+
+  console.info(`Has valid token: ${hasValidToken}`);
 
   return json({ hasAccessToken: hasValidToken ? true : false });
 };
