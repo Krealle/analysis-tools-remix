@@ -56,7 +56,14 @@ export const loader: LoaderFunction = async ({ request }) => {
       parsedVariables
     );
 
-    return data;
+    // Don't cache reports so we can get new fight info
+    if (requestType === "getWCLReportQuery") return data;
+
+    return json(data, {
+      headers: {
+        "Cache-Control": "max-age=0, s-maxage=86400",
+      },
+    });
   } catch (error) {
     return json({ error: `Failed query ${(error as Error).toString()}` });
   }
