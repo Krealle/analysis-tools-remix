@@ -21,6 +21,10 @@ const WCLUrlInput: React.FC = () => {
     async (event: FormEvent) => {
       event.preventDefault();
 
+      const response = await fetch("/report/test/123");
+      const data = await response.json();
+      console.log(data);
+
       const { reportCode, error } = parseWCLUrl(url);
       if (!reportCode || error) {
         setErrorBear(error);
