@@ -62,6 +62,7 @@ export const headers: HeadersFunction = ({ loaderHeaders }) => {
     headers["CDN-Cache-Control"] = `public, s-maxage=60`;
     headers["Vercel-CDN-Cache-Control"] = `public, s-maxage=300`;
   }
+  headers["Vary"] = "Cookie";
 
   console.info(`Headers: ${JSON.stringify(headers)}`);
 
