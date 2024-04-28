@@ -11,6 +11,7 @@ export const loader: LoaderFunction = async ({ params }) => {
     {
       reportCode,
       fightId,
+      region: process.env.VERCEL_REGION,
     },
     {
       headers: {
