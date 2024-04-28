@@ -53,16 +53,15 @@ export const headers: HeadersFunction = ({ loaderHeaders }) => {
     );
 
     if (diff > 0) {
-      headers[cacheControl] = `public, s-maxage=${diff}`;
+      headers[cacheControl] = `public, max-age=0, must-revalidate`;
       headers["CDN-Cache-Control"] = headers[cacheControl];
       headers["Vercel-CDN-Cache-Control"] = headers[cacheControl];
     }
   } else {
-    headers[cacheControl] = `public, s-maxage=1`;
+    headers[cacheControl] = `public, max-age=0, must-revalidate`;
     headers["CDN-Cache-Control"] = `public, s-maxage=60`;
     headers["Vercel-CDN-Cache-Control"] = `public, s-maxage=300`;
   }
-  headers["Vary"] = "Cookie";
 
   console.info(`Headers: ${JSON.stringify(headers)}`);
 
