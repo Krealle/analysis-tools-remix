@@ -11,7 +11,6 @@ const WCLAuthorization: React.FC = () => {
 
     const data = await response.json();
 
-    console.log(data);
     if (response.ok) {
       setAuthorizationUrl(data.authorizationUrl);
     } else {
