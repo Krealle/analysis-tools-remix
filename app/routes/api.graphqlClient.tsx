@@ -1,4 +1,4 @@
-import { /* HeadersFunction, */ LoaderFunction, json } from "@remix-run/node";
+import { /* HeadersFunction, */ LoaderFunction, json } from "@vercel/remix";
 import { GraphQLClient } from "graphql-request";
 import { Queries, QueryTypes } from "../wcl/types/graphql/queries";
 import { Variables } from "../wcl/util/queryWCL";

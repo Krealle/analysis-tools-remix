@@ -3,7 +3,7 @@ import {
   TypedResponse,
   type MetaFunction,
   LoaderFunctionArgs,
-} from "@remix-run/node";
+} from "@vercel/remix";
 import "../styles/index.css";
 import WCLUrlInput from "../components/WCLUrlInput";
 import Footer from "../components/Footer";

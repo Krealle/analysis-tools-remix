@@ -1,4 +1,4 @@
-import { LoaderFunction, json } from "@remix-run/node";
+import { LoaderFunction, json } from "@vercel/remix";
 import { redirect } from "react-router-dom";
 import crypto from "crypto";
 import {
