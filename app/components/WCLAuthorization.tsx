@@ -4,7 +4,7 @@ const WCLAuthorization: React.FC = () => {
   const [authorizationUrl, setAuthorizationUrl] = useState<string | null>(null);
 
   const handleAuthorization = async (): Promise<string | undefined> => {
-    const response = await fetch("/api/userAuth?init");
+    const response = await fetch("/wclAuth?init");
 
     /** Dev token set */
     if (response.redirected) return (window.location.href = response.url);
@@ -25,7 +25,17 @@ const WCLAuthorization: React.FC = () => {
   return (
     <>
       <h2>Warcraft Logs Authorization</h2>
-      <button onClick={handleAuthorization}>Get WCL Auth</button>
+      <button
+        onClick={() => {
+          const res = handleAuthorization();
+
+          if (res instanceof Promise) {
+            res.catch((err) => console.error(err));
+          }
+        }}
+      >
+        Get WCL Auth
+      </button>
     </>
   );
 };
