@@ -113,7 +113,7 @@ export const loader: LoaderFunction = async ({ request }) => {
     }
 
     if (!accToken.accessToken) {
-      throw new Error("Failed to get authorization from WCL");
+      throw new Error("No token received from WCL");
     }
 
     session.set("accToken", accToken);
