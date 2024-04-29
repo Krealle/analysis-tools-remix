@@ -21,7 +21,7 @@ const WCLUrlInput: React.FC = () => {
     async (event: FormEvent) => {
       event.preventDefault();
 
-      const response = await fetch("/report/test/123", {
+      const response = await fetch("/report/test/456", {
         cache: "force-cache",
       });
       const data = await response.json();
