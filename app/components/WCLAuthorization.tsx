@@ -25,7 +25,7 @@ const WCLAuthorization: React.FC = () => {
   return (
     <>
       <h2>Warcraft Logs Authorization</h2>
-      <button onClick={handleAuthorization}>Get WCL Auth</button>
+      <button onClick={() => handleAuthorization}>Get WCL Auth</button>
     </>
   );
 };
