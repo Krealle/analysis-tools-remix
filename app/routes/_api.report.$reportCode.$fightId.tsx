@@ -1,11 +1,6 @@
 import { json } from "@remix-run/node";
 import { LoaderFunction } from "react-router-dom";
 
-export const config = {
-  runtime: "edge",
-  regions: ["sfo1"],
-};
-
 export const loader: LoaderFunction = async ({ params }) => {
   const { reportCode, fightId } = params;
 
