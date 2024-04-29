@@ -2,7 +2,7 @@
 import { LoaderFunctionArgs, json } from "@vercel/remix";
 /* import { LoaderFunction } from "react-router-dom"; */
 
-export const config = { runtime: "edge" };
+export const config = { runtime: "edge", regions: ["sfo1"] };
 
 /* export const loader: LoaderFunction = async ({ params, request }) => {
   const { reportCode, fightId } = params;
