@@ -1,8 +1,11 @@
 import { json } from "@remix-run/node";
 import { LoaderFunction } from "react-router-dom";
 
-export const loader: LoaderFunction = async ({ params }) => {
+export const loader: LoaderFunction = async ({ params, request }) => {
   const { reportCode, fightId } = params;
+  const header = request.headers;
+
+  console.info(header);
 
   // await a timer
   await new Promise((resolve) => setTimeout(resolve, 100));
