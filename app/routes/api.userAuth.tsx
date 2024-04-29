@@ -9,6 +9,11 @@ import {
 } from "./sessions";
 import { isString } from "../util/typeChecks";
 
+type TokenResponse = {
+  access_token: string;
+  expires_in: number;
+};
+
 export const loader: LoaderFunction = async ({ request }) => {
   const { searchParams } = new URL(request.url);
   const code = searchParams.get("code");
@@ -59,6 +64,8 @@ export const loader: LoaderFunction = async ({ request }) => {
     grant_type: tokenParams.grant_type,
   });
   try {
+    let accToken: AccessSession;
+
     if (isDev) {
       const devTokenResponse = await fetch(
         "https://www.warcraftlogs.com/oauth/token",
@@ -76,20 +83,13 @@ export const loader: LoaderFunction = async ({ request }) => {
         }
       );
 
-      const { access_token, expires_in } = await devTokenResponse.json();
+      const { access_token, expires_in } =
+        (await devTokenResponse.json()) as TokenResponse;
 
-      const accToken: AccessSession = {
+      accToken = {
         accessToken: access_token,
         expirationTime: Math.round(Date.now() / 1000) + expires_in,
       };
-
-      session.set("accToken", accToken);
-
-      return redirect("/", {
-        headers: {
-          "set-cookie": await commitSession(session),
-        },
-      });
     } else {
       const tokenResponse = await fetch(tokenEndpoint, {
         method: "POST",
@@ -104,21 +104,25 @@ export const loader: LoaderFunction = async ({ request }) => {
         body: tokenSearchParams.toString(),
       });
 
-      const tokenData = await tokenResponse.json();
+      const { access_token } = (await tokenResponse.json()) as TokenResponse;
 
-      const accToken: AccessSession = {
-        accessToken: tokenData.access_token,
+      accToken = {
+        accessToken: access_token,
         expirationTime: Math.round(Date.now() / 1000) + SESSION_DEFAULT_MAX_AGE,
       };
-
-      session.set("accToken", accToken);
-
-      return redirect("/", {
-        headers: {
-          "set-cookie": await commitSession(session),
-        },
-      });
     }
+
+    if (!accToken.accessToken) {
+      throw new Error("Failed to get authorization from WCL");
+    }
+
+    session.set("accToken", accToken);
+
+    return redirect("/", {
+      headers: {
+        "set-cookie": await commitSession(session),
+      },
+    });
   } catch (error) {
     console.error("Error exchanging code for token:", error);
     return redirect("/error?message=Failed to get authorization from WCL");
