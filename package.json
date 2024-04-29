@@ -14,10 +14,10 @@
     "dev:css": "npm run build:css && node-sass -rw ./styles -o ./app/styles"
   },
   "dependencies": {
-    "@remix-run/css-bundle": "^2.4.0",
-    "@remix-run/node": "^2.4.0",
-    "@remix-run/react": "^2.4.0",
-    "@remix-run/serve": "^2.4.0",
+    "@remix-run/css-bundle": "^2.9.1",
+    "@remix-run/node": "^2.9.1",
+    "@remix-run/react": "^2.9.1",
+    "@remix-run/serve": "^2.9.1",
     "@sinclair/typebox": "^0.32.5",
     "@vercel/analytics": "^1.1.1",
     "@vercel/speed-insights": "^1.0.2",
@@ -34,7 +34,7 @@
     "zustand": "^4.4.7"
   },
   "devDependencies": {
-    "@remix-run/dev": "^2.4.0",
+    "@remix-run/dev": "^2.9.1",
     "@types/luxon": "^3.3.7",
     "@types/react": "^18.2.20",
     "@types/react-dom": "^18.2.7",
