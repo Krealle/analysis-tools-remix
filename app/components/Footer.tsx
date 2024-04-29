@@ -26,6 +26,17 @@ const Footer: React.FC = () => {
             .
           </span>
           <span>
+            Support me on&nbsp;
+            <a
+              href="https://patreon.com/Vollmerino"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Patreon
+            </a>
+            .
+          </span>
+          <span>
             Results shown here are not 100% accurate, for more details&nbsp;
             <a
               href="https://github.com/Krealle/analysis-tools-remix/issues/1"
