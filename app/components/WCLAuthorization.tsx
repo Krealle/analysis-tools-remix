@@ -11,6 +11,7 @@ const WCLAuthorization: React.FC = () => {
 
     const data = await response.json();
 
+    console.log(data);
     if (response.ok) {
       setAuthorizationUrl(data.authorizationUrl);
     } else {
@@ -25,7 +26,17 @@ const WCLAuthorization: React.FC = () => {
   return (
     <>
       <h2>Warcraft Logs Authorization</h2>
-      <button onClick={() => handleAuthorization}>Get WCL Auth</button>
+      <button
+        onClick={() => {
+          const res = handleAuthorization();
+
+          if (res instanceof Promise) {
+            res.catch((err) => console.error(err));
+          }
+        }}
+      >
+        Get WCL Auth
+      </button>
     </>
   );
 };
