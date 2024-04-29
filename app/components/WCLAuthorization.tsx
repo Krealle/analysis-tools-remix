@@ -4,7 +4,7 @@ const WCLAuthorization: React.FC = () => {
   const [authorizationUrl, setAuthorizationUrl] = useState<string | null>(null);
 
   const handleAuthorization = async (): Promise<string | undefined> => {
-    const response = await fetch("/api/userAuth?init");
+    const response = await fetch("/wclAuth?init");
 
     /** Dev token set */
     if (response.redirected) return (window.location.href = response.url);
