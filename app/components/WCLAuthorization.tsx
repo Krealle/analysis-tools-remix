@@ -1,22 +1,26 @@
 import { useState } from "react";
 import { WclAuthUrl } from "../routes/_auth.wclAuth";
+import ErrorBear from "./generic/ErrorBear";
+import { ReportParseError } from "../wcl/util/parseWCLUrl";
 
 const WCLAuthorization: React.FC = () => {
   const [authorizationUrl, setAuthorizationUrl] = useState<string | null>(null);
+  const [errorBear, setErrorBear] = useState<ReportParseError | null>();
 
   const handleAuthorization = async (): Promise<string | undefined> => {
+    setErrorBear(null);
     const response = await fetch("/wclAuth?init");
 
     /** Dev token set */
     if (response.redirected) return (window.location.href = response.url);
 
     const data = (await response.json()) as WclAuthUrl;
-    console.log(data);
 
-    if (response.ok) {
+    if (response.ok && data.authorizationUrl) {
       setAuthorizationUrl(data.authorizationUrl);
     } else {
-      console.error(data);
+      setErrorBear(ReportParseError.MISSING_REDIRECT_URI);
+      throw new Error("No authorizationUrl in response");
     }
   };
 
@@ -38,6 +42,7 @@ const WCLAuthorization: React.FC = () => {
       >
         Get WCL Auth
       </button>
+      {errorBear && <ErrorBear error={errorBear} />}
     </>
   );
 };

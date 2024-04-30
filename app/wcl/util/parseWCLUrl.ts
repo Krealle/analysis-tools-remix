@@ -9,6 +9,7 @@ export enum ReportParseError {
   BAD_RESPONSE = "BAD_RESPONSE",
   UNKNOWN_ERROR = "UNKNOWN_ERROR",
   UNKNOWN_GRAPHQL_ERROR = "UNKNOWN_GRAPHQL_ERROR",
+  MISSING_REDIRECT_URI = "MISSING_REDIRECT_URI",
 }
 
 export const reportParseErrorMap: Record<ReportParseError, string> = {
@@ -24,6 +25,7 @@ export const reportParseErrorMap: Record<ReportParseError, string> = {
   BAD_RESPONSE: "Bad data response from WCL",
   UNKNOWN_ERROR: "Unknown error",
   UNKNOWN_GRAPHQL_ERROR: "Unknown GraphQL error",
+  MISSING_REDIRECT_URI: "Redirect URL not found, try again.",
 };
 
 export const reportParseErrorIconMap: Record<ReportParseError, string> = {
@@ -37,6 +39,7 @@ export const reportParseErrorIconMap: Record<ReportParseError, string> = {
   BAD_RESPONSE: "/static/bear/dead-48.png",
   UNKNOWN_ERROR: "/static/bear/dead-48.png",
   UNKNOWN_GRAPHQL_ERROR: "/static/bear/dead-48.png",
+  MISSING_REDIRECT_URI: "/static/bear/lost-48.png",
 };
 
 export const parseWCLUrl = (
