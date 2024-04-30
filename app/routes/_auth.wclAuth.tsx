@@ -14,6 +14,10 @@ type TokenResponse = {
   expires_in: number;
 };
 
+export type WclAuthUrl = {
+  authorizationUrl: string;
+};
+
 export const loader: LoaderFunction = async ({ request }) => {
   const { searchParams } = new URL(request.url);
   const code = searchParams.get("code");

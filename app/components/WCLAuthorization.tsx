@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { WclAuthUrl } from "../routes/_auth.wclAuth";
 
 const WCLAuthorization: React.FC = () => {
   const [authorizationUrl, setAuthorizationUrl] = useState<string | null>(null);
@@ -9,7 +10,7 @@ const WCLAuthorization: React.FC = () => {
     /** Dev token set */
     if (response.redirected) return (window.location.href = response.url);
 
-    const data = await response.json();
+    const data = (await response.json()) as WclAuthUrl;
     console.log(data);
 
     if (response.ok) {
