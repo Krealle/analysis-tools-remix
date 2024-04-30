@@ -63,9 +63,7 @@ export async function fetchReportData<T extends AnyReport>(
         requestType: requestType,
         variables: JSON.stringify(variables),
       });
-      const response = await fetch(
-        "api/graphqlClient?" + queryParams.toString()
-      );
+      const response = await fetch("/graphqlClient?" + queryParams.toString());
 
       const data: unknown = await response.json();
       const maybeRootReport = validateData<T>(data, responseType);
