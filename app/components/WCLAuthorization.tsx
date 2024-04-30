@@ -10,6 +10,7 @@ const WCLAuthorization: React.FC = () => {
     if (response.redirected) return (window.location.href = response.url);
 
     const data = await response.json();
+    console.log(data);
 
     if (response.ok) {
       setAuthorizationUrl(data.authorizationUrl);
