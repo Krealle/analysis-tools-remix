@@ -23,11 +23,17 @@ export const Stats = Type.Object({
   Strength: Type.Optional(Stat),
 });
 
+/*  legacy 
 export const Talent = Type.Object({
   icon: Type.String(),
   spellID: Type.Number(),
   spellType: Type.Number(),
   rank: Type.Number(),
+});*/
+export const Talent = Type.Object({
+  id: Type.Number(),
+  rank: Type.Number(),
+  nodeID: Type.Number(),
 });
 export type Talent = Static<typeof Talent>;
 

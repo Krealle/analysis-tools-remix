@@ -106,7 +106,7 @@ export function hasTalent(talentId: number, combatant: Combatant): boolean {
     return false;
   }
 
-  return combatant.talents.some((talent) => talent.spellID === talentId);
+  return combatant.talents.some((talent) => talent.id === talentId);
 }
 
 function getTalents(combatant: Player): Talent[] {
