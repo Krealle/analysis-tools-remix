@@ -37,3 +37,4 @@ __test__
 *.sw?
 app/routes/api.graphqlClientPost.tsx
 app/routes/api.graphqlClientXHR.tsx
+.vercel
