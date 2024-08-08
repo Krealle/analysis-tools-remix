@@ -1,4 +1,5 @@
 import { EncounterNames } from "../../util/encounters/encounters";
+import { initialNerubarPalace } from "../../util/encounters/TWW/NerubarPalace";
 import { EncounterEbonMightWindows } from "../intervalParametersStore";
 
 const initialVOTI: EncounterEbonMightWindows = {
@@ -141,4 +142,5 @@ export const initialEncounterEbonMightWindows: EncounterEbonMightWindows = {
     ],
   },
   ...initialVOTI,
+  ...initialNerubarPalace,
 };

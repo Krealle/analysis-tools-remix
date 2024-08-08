@@ -1,7 +1,7 @@
-import { EncounterMap, EnemyType } from "./types";
-import { createEnemy } from "./encounters";
-import { PhaseEventTrigger } from "../../analysis/util/generatePhaseEvents";
-import { EventType } from "../../wcl/types/events/eventEnums";
+import { EncounterMap, EnemyType } from "../types";
+import { createEnemy } from "../encounters";
+import { PhaseEventTrigger } from "../../../analysis/util/generatePhaseEvents";
+import { EventType } from "../../../wcl/types/events/eventEnums";
 
 export const AberrusEncounterNames = {
   "Kazzara, the Hellforged": "Kazzara, the Hellforged",

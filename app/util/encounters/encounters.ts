@@ -4,17 +4,22 @@ import {
   Aberrus,
   AberrusEncounterNames,
   AberrusPhaseTriggers,
-} from "./Aberrus";
+} from "./DF/Aberrus";
 import {
   Amirdrassil,
   AmirdrassilEncounterNames,
   AmirdrassilPhaseTriggers,
-} from "./Amirdrassil";
+} from "./DF/Amirdrassil";
 import {
   VOTIEncounterNames,
   VaultOfTheIncarnate,
   VaultOfTheIncarnatePhaseTriggers,
-} from "./VaultOfTheIncarnates";
+} from "./DF/VaultOfTheIncarnates";
+import {
+  NerubarPalace,
+  NerubarPalaceEncounterNames,
+  NerubarPalacePhaseTriggers,
+} from "./TWW/NerubarPalace";
 import { Encounter, EncounterMap, EnemyType, Enemy } from "./types";
 
 /** Default encounter used as fallback for unknown encounters or multi fights */
@@ -34,6 +39,7 @@ export const Encounters = {
   Aberrus,
   Amirdrassil,
   VaultOfTheIncarnate,
+  NerubarPalace,
 } as const;
 
 export const EncounterNames = {
@@ -41,18 +47,21 @@ export const EncounterNames = {
   ...AberrusEncounterNames,
   ...AmirdrassilEncounterNames,
   ...VOTIEncounterNames,
+  ...NerubarPalaceEncounterNames,
 } as const;
 
 export const EncounterPhaseTriggers: PhaseEventTrigger[] = [
   ...AmirdrassilPhaseTriggers,
   ...VaultOfTheIncarnatePhaseTriggers,
   ...AberrusPhaseTriggers,
+  ...NerubarPalacePhaseTriggers,
 ];
 
 export const CombinedEncounters: EncounterMap = new Map([
   ...Aberrus.entries(),
   ...Amirdrassil.entries(),
   ...VaultOfTheIncarnate.entries(),
+  ...NerubarPalace.entries(),
 ]);
 
 export function getEncounter(encounter: string): Encounter {
